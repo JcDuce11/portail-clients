@@ -1,30 +1,25 @@
 const db = require("../config/db");
  
-async function getUsersCount() {
-const [rows] = await db.execute(
-"SELECT COUNT(*) AS total FROM users"
-);
- 
-return rows[0].total;
-}
- 
 async function getAllUsers() {
 const [rows] = await db.execute(`
 SELECT
 u.id,
-u.email,
 u.firstname,
 u.lastname,
-r.name AS role
+u.email,
+r.name AS role,
+c.name AS company
 FROM users u
-INNER JOIN roles r
+LEFT JOIN roles r
 ON r.id = u.role_id
+LEFT JOIN companies c
+ON c.id = u.company_id
+ORDER BY u.lastname
 `);
  
 return rows;
 }
  
 module.exports = {
-getUsersCount,
 getAllUsers,
 };

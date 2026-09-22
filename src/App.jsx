@@ -1,7 +1,7 @@
-import Login from "./pages/Login.jsx";
+import Users from "./pages/Users";
  
 function App() {
-return <Login />;
+return <Users />;
 }
  
 export default App;
