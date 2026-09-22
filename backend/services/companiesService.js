@@ -1,9 +1,23 @@
 const db = require("../config/db");
  
 async function getAllCompanies() {
-const [rows] = await db.execute(
-"SELECT * FROM companies ORDER BY id"
-);
+const [rows] = await db.execute(`
+SELECT *
+FROM companies
+WHERE deleted = 0
+ORDER BY id
+`);
+ 
+return rows;
+}
+ 
+async function getArchivedCompanies() {
+const [rows] = await db.execute(`
+SELECT *
+FROM companies
+WHERE deleted = 1
+ORDER BY id
+`);
  
 return rows;
 }
@@ -80,13 +94,42 @@ country,
 siret,
 website,
 notes,
-id
+id,
 ]
+);
+}
+ 
+async function archiveCompany(id) {
+await db.execute(
+`
+UPDATE companies
+SET
+status = 'ARCHIVED',
+deleted = 1
+WHERE id = ?
+`,
+[id]
+);
+}
+ 
+async function restoreCompany(id) {
+await db.execute(
+`
+UPDATE companies
+SET
+status = 'ACTIVE',
+deleted = 0
+WHERE id = ?
+`,
+[id]
 );
 }
  
 module.exports = {
 getAllCompanies,
+getArchivedCompanies,
 createCompany,
 updateCompany,
+archiveCompany,
+restoreCompany,
 };

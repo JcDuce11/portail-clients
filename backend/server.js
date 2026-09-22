@@ -3,8 +3,11 @@ const cors = require("cors");
  
 const {
 getAllCompanies,
+getArchivedCompanies,
 createCompany,
 updateCompany,
+archiveCompany,
+restoreCompany,
 } = require("./services/companiesService");
  
 const {
@@ -122,6 +125,90 @@ erreur: error.message,
 }
 });
  
+app.delete("/companies/:id", async (req, res) => {
+try {
+const { id } = req.params;
+ 
+await archiveCompany(id);
+ 
+res.json({
+success: true,
+});
+ 
+} catch (error) {
+ 
+console.error(error);
+ 
+res.status(500).json({
+success: false,
+erreur: error.message,
+});
+ 
+}
+});
+app.get("/companies/archived", async (req, res) => {
+try {
+ 
+const companies =
+await getArchivedCompanies();
+ 
+res.json(companies);
+ 
+} catch (error) {
+ 
+res.status(500).json({
+success: false,
+erreur: error.message,
+});
+ 
+}
+});
+ 
+app.delete("/companies/:id", async (req, res) => {
+try {
+ 
+await archiveCompany(
+req.params.id
+);
+ 
+res.json({
+success: true,
+});
+ 
+} catch (error) {
+ 
+res.status(500).json({
+success: false,
+erreur: error.message,
+});
+ 
+}
+});
+ 
+app.put(
+"/companies/:id/restore",
+async (req, res) => {
+try {
+ 
+await restoreCompany(
+req.params.id
+);
+ 
+res.json({
+success: true,
+});
+ 
+} catch (error) {
+ 
+res.status(500).json({
+success: false,
+erreur:
+error.message,
+});
+ 
+}
+}
+);
 app.listen(3000, () => {
  
 console.log(

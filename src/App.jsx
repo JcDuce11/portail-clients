@@ -1,7 +1,7 @@
-import Users from "./pages/Users";
+import Companies from "./pages/Companies";
  
 function App() {
-return <Users />;
+return <Companies />;
 }
  
 export default App;
