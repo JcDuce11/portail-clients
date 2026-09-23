@@ -4,11 +4,60 @@ function Companies() {
 const [companies, setCompanies] = useState([]);
 const [selectedCompany, setSelectedCompany] = useState(null);
 const [archivedCompanies, setArchivedCompanies] = useState([]);
+const [services, setServices] = useState([]);
+const [companyServices, setCompanyServices] = useState([]);
 useEffect(() => {
 loadCompanies();
 loadArchivedCompanies();
+loadServices();
 }, []);
  
+async function loadServices() {
+
+  try {
+
+    const response = await fetch(
+      "http://localhost:3000/services"
+    );
+
+    const data =
+      await response.json();
+
+    setServices(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+}
+async function loadCompanyServices(
+  companyId
+) {
+
+  try {
+
+    const response = await fetch(
+      `http://localhost:3000/companies/${companyId}/services`
+    );
+
+    const data =
+      await response.json();
+
+    setCompanyServices(
+      data.map(
+        (service) =>
+          service.id
+      )
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+}
+
 async function loadArchivedCompanies() {
  
 try {
@@ -140,6 +189,7 @@ const response = await fetch(
 const data = await response.json();
  
 setCompanies(data);
+console.log("COMPANIES", data);
 } catch (error) {
 console.error(error);
 }
@@ -252,9 +302,24 @@ selectedCompany.notes || "",
 const data = await response.json();
  
 if (data.success) {
-alert("✅ Société enregistrée");
- 
-await loadCompanies();
+
+  await fetch(
+    `http://localhost:3000/companies/${selectedCompany.id}/services`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        serviceIds: companyServices,
+      }),
+    }
+  );
+
+  alert("✅ Société enregistrée");
+
+  await loadCompanies();
+
 }
 } catch (error) {
 console.error(error);
@@ -269,6 +334,9 @@ error.message
 return (
 <div style={{ padding: "20px" }}>
 <h1>Sociétés</h1>
+<h3>
+Nombre de sociétés : {companies.length}
+</h3>
  
 <div
 style={{
@@ -304,11 +372,16 @@ style={{
 cursor:
 "pointer",
 }}
-onClick={() =>
-setSelectedCompany(
-company
-)
-}
+onClick={() => {
+
+  setSelectedCompany(
+    company
+  );
+
+  loadCompanyServices(
+    company.id
+  );
+}}
 >
 <td>
 {
@@ -536,7 +609,47 @@ e.target.value,
 })
 }
 />
- 
+<hr />
+
+<h3>Offres souscrites</h3>
+
+{services.map((service) => (
+  <div key={service.id}>
+    <label>
+      <input
+        type="checkbox"
+        checked={companyServices.includes(
+          service.id
+        )}
+        onChange={(e) => {
+
+          if (e.target.checked) {
+
+            setCompanyServices([
+              ...companyServices,
+              service.id,
+            ]);
+
+          } else {
+
+            setCompanyServices(
+              companyServices.filter(
+                (id) =>
+                  id !== service.id
+              )
+            );
+
+          }
+
+        }}
+      />
+
+      {" "}
+      {service.name}
+
+    </label>
+  </div>
+))}
 <p>Commentaires</p>
  
 <textarea

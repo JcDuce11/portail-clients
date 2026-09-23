@@ -241,3 +241,30 @@ Objectif :
 
 Préparer les menus dynamiques
 Technicien / Commercial / Client.
+## v0.1.2
+
+### Services souscrits
+
+✅ Création table services
+
+✅ Création table company_services
+
+✅ API GET /services
+
+✅ API GET /companies/:id/services
+
+✅ API PUT /companies/:id/services
+
+✅ Chargement dynamique React
+
+✅ Sauvegarde MariaDB
+
+✅ Liaison Société ↔ Services
+
+Services disponibles :
+
+- Téléphonie
+- Réseau
+- Serveurs
+- Sauvegardes
+- Supervision
