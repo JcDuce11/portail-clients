@@ -213,3 +213,31 @@ Architecture :
 - Multi-clients
 - Multi-rôles
 - Facilement extensible
+
+## v0.1.1
+
+### Services souscrits
+
+Ajout :
+
+- table services
+- table company_services
+
+Services :
+
+- Téléphonie
+- Réseau
+- Serveurs
+- Sauvegardes
+- Supervision
+
+API :
+
+- GET /services
+- GET /companies/:id/services
+- PUT /companies/:id/services
+
+Objectif :
+
+Préparer les menus dynamiques
+Technicien / Commercial / Client.

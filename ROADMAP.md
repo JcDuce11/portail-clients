@@ -85,15 +85,21 @@ Le logiciel doit être :
 
 ---
 
-## Services Souscrits
+## Services souscrits
 
-Implémentation backend terminée :
+✅ Table services
 
-- services
-- company_services
-- GET /services
-- GET /companies/:id/services
-- PUT /companies/:id/services
+✅ Table company_services
+
+✅ GET /services
+
+✅ GET /companies/:id/services
+
+✅ PUT /companies/:id/services
+
+✅ Sauvegarde MariaDB
+
+✅ Liaison Société ↔ Services
 
 ---
 
@@ -390,6 +396,28 @@ Peut :
 ## État
 
 ✅ Terminé V1
+
+---
+## Contrat
+
+Champs :
+
+- contract_type
+- sla_level
+
+Types de contrat :
+
+- AUCUN
+- MSP
+- FORFAIT
+- REGIE
+- PROJET
+
+Niveaux SLA :
+
+- STANDARD
+- PREMIUM
+- CRITIQUE
 
 ---
 
@@ -890,6 +918,14 @@ Mes devis
 ## Phase 4
 
 - Utilisateurs V2
+
+Champs supplémentaires :
+
+- language
+- theme
+- force_password_change
+- last_login
+- is_active
 
 ---
 
