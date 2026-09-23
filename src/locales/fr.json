@@ -1,0 +1,25 @@
+{
+  "companies": {
+    "title": "Sociétés",
+    "save": "Enregistrer",
+    "phone": "Téléphone",
+    "email": "Email",
+    "city": "Ville",
+    "country": "Pays",
+    "postalCode": "Code postal",
+    "address": "Adresse",
+    "website": "Site Web",
+    "siret": "SIRET",
+    "notes": "Commentaires",
+    "contractType": "Type de contrat",
+    "sla": "SLA",
+    "subscribedServices": "Offres souscrites",
+    "reference": "Référence",
+    "name": "Nom",
+    "activeCompanies": "Sociétés actives",
+    "archivedCompanies": "Sociétés archivées",
+    "restore": "Restaurer",
+    "archive": "Archiver",
+    "noCompanySelected": "Sélectionnez une société"
+  }
+}

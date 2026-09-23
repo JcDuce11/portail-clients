@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
  
 function Companies() {
+const { t, i18n } = useTranslation();
 const [companies, setCompanies] = useState([]);
 const [selectedCompany, setSelectedCompany] = useState(null);
 const [archivedCompanies, setArchivedCompanies] = useState([]);
@@ -371,8 +373,27 @@ gap: "20px",
 }}
 >
 <div style={{ width: "40%" }}>
-<h2>Liste</h2>
+<h2>{t("companies.title")}</h2>
  
+<button
+onClick={() =>
+i18n.changeLanguage("fr")
+}
+>
+FR
+</button>
+ 
+<button
+onClick={() =>
+i18n.changeLanguage("en")
+}
+style={{
+marginLeft: "10px",
+}}
+>
+EN
+</button>
+
 <table
 border="1"
 cellPadding="10"
@@ -500,7 +521,7 @@ selectedCompany.name
 }
 </p>
  
-<p>Téléphone</p>
+<p>{t("companies.phone")}</p>
  
 <input
 type="text"
@@ -517,7 +538,7 @@ e.target.value,
 }
 />
  
-<p>Email</p>
+<p>{t("companies.email")}</p>
  
 <input
 type="text"
@@ -534,7 +555,7 @@ e.target.value,
 }
 />
  
-<p>Rue</p>
+<p>{t("companies.address")}</p>
  
 <input
 type="text"
@@ -551,7 +572,7 @@ e.target.value,
 }
 />
  
-<p>Code postal</p>
+<p>{t("companies.postalCode")}</p>
  
 <input
 type="text"
@@ -568,7 +589,7 @@ e.target.value,
 }
 />
  
-<p>Ville</p>
+<p>{t("companies.city")}</p>
  
 <input
 type="text"
@@ -585,7 +606,7 @@ e.target.value,
 }
 />
  
-<p>Pays</p>
+<p>{t("companies.country")}</p>
  
 <input
 type="text"
@@ -602,7 +623,7 @@ e.target.value,
 }
 />
  
-<p>SIRET</p>
+<p>{t("companies.siret")}</p>
  
 <input
 type="text"
@@ -635,7 +656,7 @@ e.target.value,
 })
 }
 />
-<p>Type de contrat</p>
+<p>{t("companies.contractType")}</p>
 
 <select
   value={
@@ -670,8 +691,8 @@ e.target.value,
     Projet
   </option>
 </select>
-``
-<p>SLA</p>
+
+<p>{t("companies.sla")}</p>
 
 <select
   value={
@@ -701,7 +722,7 @@ e.target.value,
 
 <hr />
 
-<h3>Offres souscrites</h3>
+<h3>{t("companies.subscribedServices")}</h3>
 
 {services.map((service) => (
   <div key={service.id}>

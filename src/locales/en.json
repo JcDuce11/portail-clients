@@ -1,0 +1,25 @@
+{
+  "companies": {
+    "title": "Companies",
+    "save": "Save",
+    "phone": "Phone",
+    "email": "Email",
+    "city": "City",
+    "country": "Country",
+    "postalCode": "Postal Code",
+    "address": "Address",
+    "website": "Website",
+    "siret": "Company Registration Number",
+    "notes": "Notes",
+    "contractType": "Contract Type",
+    "sla": "SLA",
+    "subscribedServices": "Subscribed Services",
+    "reference": "Reference",
+    "name": "Name",
+    "activeCompanies": "Active Companies",
+    "archivedCompanies": "Archived Companies",
+    "restore": "Restore",
+    "archive": "Archive",
+    "noCompanySelected": "Select a company"
+  }
+}
