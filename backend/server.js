@@ -2,12 +2,15 @@ const express = require("express");
 const cors = require("cors");
  
 const {
-getAllCompanies,
-getArchivedCompanies,
-createCompany,
-updateCompany,
-archiveCompany,
-restoreCompany,
+  getAllCompanies,
+  getArchivedCompanies,
+  createCompany,
+  updateCompany,
+  archiveCompany,
+  restoreCompany,
+  getCompanyServices,
+  getAllServices,
+  saveCompanyServices,
 } = require("./services/companiesService");
  
 const {
@@ -208,6 +211,77 @@ error.message,
  
 }
 }
+);
+app.get("/services", async (req, res) => {
+  try {
+
+    const services =
+      await getAllServices();
+
+    res.json(services);
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      erreur: error.message,
+    });
+
+  }
+});
+app.get(
+  "/companies/:id/services",
+  async (req, res) => {
+
+    try {
+
+      const services =
+        await getCompanyServices(
+          req.params.id
+        );
+
+      res.json(services);
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+  }
+);
+app.put(
+  "/companies/:id/services",
+  async (req, res) => {
+
+    try {
+
+      const {
+        serviceIds,
+      } = req.body;
+
+      await saveCompanyServices(
+        req.params.id,
+        serviceIds
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+  }
 );
 app.listen(3000, () => {
  

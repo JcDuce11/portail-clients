@@ -85,6 +85,18 @@ Le logiciel doit être :
 
 ---
 
+## Services Souscrits
+
+Implémentation backend terminée :
+
+- services
+- company_services
+- GET /services
+- GET /companies/:id/services
+- PUT /companies/:id/services
+
+---
+
 # Principes d'architecture
 
 Principes fondamentaux :
@@ -99,6 +111,154 @@ Principes fondamentaux :
   - le rôle utilisateur
   - la société sélectionnée
   - les services souscrits
+
+---
+# Internationalisation (I18N)
+
+Le portail doit être nativement multilingue.
+
+Langues supportées :
+
+- 🇫🇷 Français
+- 🇬🇧 Anglais
+- 🇪🇸 Espagnol
+- 🇮🇹 Italien
+- 🇩🇪 Allemand
+
+---
+
+## Principe
+
+Aucun texte de l'interface ne doit être codé en dur.
+
+Mauvais exemple :
+
+```jsx
+<h1>Sociétés</h1>
+```
+
+Bon exemple :
+
+```jsx
+<h1>{t("companies.title")}</h1>
+```
+
+---
+
+## Architecture
+
+Structure prévue :
+
+```text
+src
+│
+├── locales
+│   ├── fr.json
+│   ├── en.json
+│   ├── es.json
+│   ├── it.json
+│   └── de.json
+│
+├── i18n
+│   └── index.js
+```
+
+---
+
+## Langue utilisateur
+
+Chaque utilisateur possède une langue préférée :
+
+- Français
+- English
+- Español
+- Italiano
+- Deutsch
+
+La langue est enregistrée dans son profil.
+
+---
+
+## Interfaces concernées
+
+Toutes les interfaces doivent être traduisibles :
+
+- Administrateur
+- Technicien
+- Commercial
+- Client
+
+---
+
+## Menus dynamiques
+
+Les intitulés affichés doivent être traduits automatiquement.
+
+Exemple :
+
+Français :
+
+```text
+Sociétés
+Tickets
+Interventions
+```
+
+Anglais :
+
+```text
+Companies
+Tickets
+Interventions
+```
+
+Allemand :
+
+```text
+Unternehmen
+Tickets
+Interventionen
+```
+
+---
+
+## Génération PDF
+
+Les documents PDF doivent être générés dans la langue du client.
+
+Documents concernés :
+
+- Devis
+- Bons d'intervention
+- Exports PDF
+
+Exemple :
+
+Client allemand
+
+↓
+
+Bon d'intervention généré en allemand.
+
+---
+
+## Notifications
+
+Les emails automatiques doivent être générés dans la langue du destinataire.
+
+Exemples :
+
+- Nouveau ticket
+- Nouveau devis
+- Validation intervention
+- Refus intervention
+- Notification système
+
+---
+
+## Priorité projet
+
+L'internationalisation doit être intégrée dès les premières versions de l'interface afin d'éviter une refonte complète ultérieure.
 
 ---
 
