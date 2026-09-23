@@ -268,3 +268,31 @@ Services disponibles :
 - Serveurs
 - Sauvegardes
 - Supervision
+
+## v0.1.3
+
+### Internationalisation
+
+✅ Installation i18next
+
+✅ Installation react-i18next
+
+✅ Configuration FR / EN
+
+✅ Changement de langue dynamique
+
+✅ Première traduction du module Sociétés
+
+---
+
+### Sociétés
+
+✅ Gestion des services souscrits
+
+✅ Gestion du type de contrat
+
+✅ Gestion des SLA
+
+✅ Sauvegarde MariaDB
+
+✅ Rechargement automatique
