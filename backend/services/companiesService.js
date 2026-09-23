@@ -98,7 +98,9 @@ async function updateCompany(
   country,
   siret,
   website,
-  notes
+  notes,
+  contract_type,
+  sla_level
 ) {
   await db.execute(
     `
@@ -112,7 +114,9 @@ async function updateCompany(
       country = ?,
       siret = ?,
       website = ?,
-      notes = ?
+      notes = ?,
+      contract_type = ?,
+      sla_level = ?
     WHERE id = ?
     `,
     [
@@ -125,6 +129,8 @@ async function updateCompany(
       siret,
       website,
       notes,
+      contract_type,
+      sla_level,
       id,
     ]
   );

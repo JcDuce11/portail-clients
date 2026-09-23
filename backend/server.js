@@ -79,9 +79,31 @@ city,
 country,
 siret,
 website,
+contract_type,
+sla_level,
 notes,
 } = req.body;
  
+console.log({
+  contract_type,
+  sla_level,
+});
+console.log("UPDATE COMPANY PARAMS");
+
+console.log({
+  id: req.params.id,
+  phone,
+  email,
+  address,
+  postal_code,
+  city,
+  country,
+  siret,
+  website,
+  notes,
+  contract_type,
+  sla_level,
+});
 await updateCompany(
 id,
 phone,
@@ -92,20 +114,26 @@ city,
 country,
 siret,
 website,
-notes
+notes,
+contract_type,
+sla_level
 );
  
 res.json({
 success: true,
 });
  
-} catch (error) {
- 
-res.status(500).json({
-success: false,
-erreur: error.message,
-});
- 
+} 
+catch (error) {
+
+  console.error("ERREUR UPDATE COMPANY");
+  console.error(error);
+
+  res.status(500).json({
+    success: false,
+    erreur: error.message,
+  });
+
 }
 });
  

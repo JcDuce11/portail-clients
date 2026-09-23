@@ -259,7 +259,7 @@ alert(
 }
 }
 async function saveCompany() {
-if (!selectedCompany) {
+    if (!selectedCompany) {
 return;
 }
  
@@ -271,8 +271,18 @@ alert("Adresse email invalide");
 return;
 }
  
+console.log(
+  "CONTRAT:",
+  selectedCompany.contract_type
+);
+
+console.log(
+  "SLA:",
+  selectedCompany.sla_level
+);
 try {
-const response = await fetch(
+console.log(selectedCompany)
+    const response = await fetch(
 `http://localhost:3000/companies/${selectedCompany.id}`,
 {
 method: "PUT",
@@ -280,21 +290,37 @@ headers: {
 "Content-Type": "application/json",
 },
 body: JSON.stringify({
-phone: selectedCompany.phone || "",
-email: selectedCompany.email || "",
-address: selectedCompany.address || "",
-postal_code:
-selectedCompany.postal_code || "",
-city:
-selectedCompany.city || "",
-country:
-selectedCompany.country || "",
-siret:
-selectedCompany.siret || "",
-website:
-selectedCompany.website || "",
-notes:
-selectedCompany.notes || "",
+  phone: selectedCompany.phone || "",
+
+  email: selectedCompany.email || "",
+
+  address: selectedCompany.address || "",
+
+  postal_code:
+    selectedCompany.postal_code || "",
+
+  city:
+    selectedCompany.city || "",
+
+  country:
+    selectedCompany.country || "",
+
+  siret:
+    selectedCompany.siret || "",
+
+  website:
+    selectedCompany.website || "",
+
+  contract_type:
+    selectedCompany.contract_type ||
+    "AUCUN",
+
+  sla_level:
+    selectedCompany.sla_level ||
+    "STANDARD",
+
+  notes:
+    selectedCompany.notes || "",
 }),
 }
 );
@@ -609,6 +635,70 @@ e.target.value,
 })
 }
 />
+<p>Type de contrat</p>
+
+<select
+  value={
+    selectedCompany.contract_type ||
+    "AUCUN"
+  }
+  onChange={(e) =>
+    setSelectedCompany({
+      ...selectedCompany,
+      contract_type:
+        e.target.value,
+    })
+  }
+>
+  <option value="AUCUN">
+    Aucun
+  </option>
+
+  <option value="MSP">
+    MSP
+  </option>
+
+  <option value="FORFAIT">
+    Forfait
+  </option>
+
+  <option value="REGIE">
+    Régie
+  </option>
+
+  <option value="PROJET">
+    Projet
+  </option>
+</select>
+``
+<p>SLA</p>
+
+<select
+  value={
+    selectedCompany.sla_level ||
+    "STANDARD"
+  }
+  onChange={(e) =>
+    setSelectedCompany({
+      ...selectedCompany,
+      sla_level:
+        e.target.value,
+    })
+  }
+>
+  <option value="STANDARD">
+    Standard
+  </option>
+
+  <option value="PREMIUM">
+    Premium
+  </option>
+
+  <option value="CRITIQUE">
+    Critique
+  </option>
+</select>
+
 <hr />
 
 <h3>Offres souscrites</h3>
