@@ -1,3 +1,8 @@
+const {
+  getCompanySites,
+  getSiteServices,
+  saveSiteServices,
+} = require("./services/sitesService");
 const express = require("express");
 const cors = require("cors");
  
@@ -309,6 +314,87 @@ app.put(
       });
 
     }
+  }
+);
+app.get(
+  "/companies/:id/sites",
+  async (req, res) => {
+
+    try {
+
+      const sites =
+        await getCompanySites(
+          req.params.id
+        );
+
+      res.json(sites);
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+  }
+);
+app.get(
+  "/sites/:id/services",
+  async (req, res) => {
+
+    try {
+
+      const services =
+        await getSiteServices(
+          req.params.id
+        );
+
+      res.json(services);
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+  }
+);
+app.put(
+  "/sites/:id/services",
+  async (req, res) => {
+
+    try {
+
+      const {
+        serviceIds,
+      } = req.body;
+
+      await saveSiteServices(
+        req.params.id,
+        serviceIds
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+
   }
 );
 app.listen(3000, () => {
