@@ -51,6 +51,66 @@ data[0].id
   }
 
 }
+async function createSite() {
+
+  if (!selectedCompany) {
+    return;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        `http://localhost:3000/companies/${selectedCompany.id}/sites`,
+        {
+          method: "POST",
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (data.success) {
+
+      await loadSites(
+        selectedCompany.id
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
+async function archiveSelectedSite() {
+
+  if (!selectedSite) {
+    return;
+  }
+
+  try {
+
+    await fetch(
+      `http://localhost:3000/sites/${selectedSite.id}/archive`,
+      {
+        method: "PUT",
+      }
+    );
+
+    await loadSites(
+      selectedCompany.id
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
 async function loadSiteServices(
   siteId
 ) {
@@ -740,6 +800,30 @@ color: "white",
   </div>
 
 ))}
+<button
+  onClick={createSite}
+  style={{
+    marginTop: "10px",
+    width: "100%",
+  }}
+>
+  ➕ Ajouter un site
+</button>
+<br />
+<br />
+<br />
+
+<button
+  onClick={archiveSelectedSite}
+  style={{
+    background: "#cc0000",
+    color: "white",
+  }}
+>
+  🗑 Archiver le site
+</button>
+<br />
+<br />
 {selectedSite && (
 
   <>

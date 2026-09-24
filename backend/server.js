@@ -2,6 +2,8 @@ const {
   getCompanySites,
   getSiteServices,
   saveSiteServices,
+  createSite,
+  archiveSite,
 } = require("./services/sitesService");
 const express = require("express");
 const cors = require("cors");
@@ -391,6 +393,63 @@ app.put(
         success: false,
         erreur:
           error.message,
+      });
+
+    }
+
+  }
+);
+app.post(
+  "/companies/:id/sites",
+  async (req, res) => {
+
+    try {
+
+      const site =
+        await createSite(
+          req.params.id
+        );
+
+      res.json({
+        success: true,
+        site,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+
+  }
+);
+app.put(
+  "/sites/:id/archive",
+  async (req, res) => {
+
+    try {
+
+      await archiveSite(
+        req.params.id
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur: error.message,
       });
 
     }

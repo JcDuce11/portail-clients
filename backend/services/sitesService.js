@@ -90,9 +90,88 @@ async function saveSiteServices(
   }
 
 }
+async function createSite(
+  companyId
+) {
 
+  const [companyRows] =
+    await db.execute(
+      `
+      SELECT company_code
+      FROM companies
+      WHERE id = ?
+      `,
+      [companyId]
+    );
+
+  const companyCode =
+    companyRows[0].company_code;
+
+  const [siteRows] =
+    await db.execute(
+      `
+      SELECT COUNT(*) AS total
+      FROM sites
+      WHERE company_id = ?
+      `,
+      [companyId]
+    );
+
+  const nextNumber =
+    siteRows[0].total + 1;
+
+  const siteCode =
+    `${companyCode}-${String(
+      nextNumber
+    ).padStart(2, "0")}`;
+
+  const [result] =
+    await db.execute(
+      `
+      INSERT INTO sites
+      (
+        company_id,
+        site_code,
+        site_name
+      )
+      VALUES
+      (
+        ?,
+        ?,
+        'Nouveau site'
+      )
+      `,
+      [
+        companyId,
+        siteCode,
+      ]
+    );
+
+  return {
+    id: result.insertId,
+    siteCode,
+  };
+}
+async function archiveSite(
+  siteId
+) {
+
+  await db.execute(
+    `
+    UPDATE sites
+    SET
+      deleted = 1,
+      status = 'ARCHIVED'
+    WHERE id = ?
+    `,
+    [siteId]
+  );
+
+}
 module.exports = {
   getCompanySites,
   getSiteServices,
   saveSiteServices,
+  createSite,
+  archiveSite,
 };
