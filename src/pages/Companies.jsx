@@ -649,7 +649,49 @@ selectedCompany.name
     Critique
   </option>
 </select>
+<br />
+<br /> 
+<button
+onClick={
+saveCompany
+}
+>
+Enregistrer
+</button>
 
+{" "}
+
+{selectedCompany?.deleted === 0 ? (
+<button
+onClick={archiveCompany}
+style={{
+marginLeft: "10px",
+background: "#cc0000",
+color: "white",
+}}
+>
+🗑 Archiver
+</button>
+) : null}
+ 
+{selectedCompany?.deleted === 1 ? (
+<button
+onClick={() =>
+restoreArchivedCompany(
+selectedCompany.id
+)
+}
+style={{
+marginLeft: "10px",
+background: "#27ae60",
+color: "white",
+}}
+>
+♻ Restaurer
+</button>
+) : null}
+<br />
+<br />
 <hr />
 
 <h3>{t("sites.title")}</h3>
@@ -866,7 +908,7 @@ selectedCompany.name
     </label>
   </div>
 ))}
-<p>Commentaires</p>
+<p>{t("companies.notes")}</p>
  
 <textarea
 rows="4"
@@ -886,42 +928,7 @@ e.target.value,
 <br />
 <br />
  
-<button
-onClick={
-saveCompany
-}
->
-Enregistrer
-</button>
-{selectedCompany?.deleted === 0 ? (
-<button
-onClick={archiveCompany}
-style={{
-marginLeft: "10px",
-background: "#cc0000",
-color: "white",
-}}
->
-🗑 Archiver
-</button>
-) : null}
- 
-{selectedCompany?.deleted === 1 ? (
-<button
-onClick={() =>
-restoreArchivedCompany(
-selectedCompany.id
-)
-}
-style={{
-marginLeft: "10px",
-background: "#27ae60",
-color: "white",
-}}
->
-♻ Restaurer
-</button>
-) : null}
+
 </>
 )}
 </div>
