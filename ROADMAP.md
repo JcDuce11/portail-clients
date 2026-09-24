@@ -282,6 +282,234 @@ Toutes les sociétés possèdent automatiquement :
 
 Ces modules ne sont jamais désactivables.
 
+--- 
+
+# Nouvelle Architecture Multi-Sites
+
+## Principe
+
+Une société peut posséder un ou plusieurs sites.
+
+Les services souscrits sont rattachés aux sites et non directement à la société.
+
+---
+
+## Société
+
+Exemple :
+
+CLI-000002
+
+DUPONT
+
+La société contient :
+
+- Informations générales
+- Contrat
+- SLA
+- Utilisateurs
+- Sites
+
+---
+
+## Sites
+
+Chaque site possède :
+
+- Référence site
+- Nom du site
+- Rue
+- Code postal
+- Ville
+- Pays
+- Téléphone
+- Email
+- SIRET
+- Notes
+
+Exemple :
+
+CLI-000002-01
+
+Siège Paris
+
+CLI-000002-02
+
+Agence Lyon
+
+CLI-000002-03
+
+Entrepôt Lille
+
+---
+
+## Référence Site
+
+Format :
+
+CLI-000002-01
+
+CLI-000002-02
+
+CLI-000002-03
+
+Règle :
+
+Référence société
++
+Numéro de site sur 2 chiffres
+
+---
+
+## Services Souscrits
+
+Les services sont désormais associés à chaque site.
+
+Services optionnels :
+
+- Téléphonie
+- Réseau
+- Serveurs
+- Sauvegardes
+- Supervision
+
+---
+
+## Modules obligatoires
+
+Tous les sites disposent automatiquement de :
+
+- Documentation
+- Interventions
+
+Ces modules ne sont jamais désactivables.
+
+---
+
+## Application des services
+
+Possibilité lors de la création ou de la modification :
+
+[ Appliquer ces services à tous les sites ]
+
+Cette action copie automatiquement les services sélectionnés sur chaque site de la société.
+
+---
+
+## Exemple
+
+### Société
+
+DUPONT
+
+### Site Paris
+
+✅ Téléphonie
+
+✅ Réseau
+
+✅ Serveurs
+
+✅ Sauvegardes
+
+✅ Supervision
+
+---
+
+### Site Lyon
+
+✅ Téléphonie
+
+✅ Réseau
+
+---
+
+### Site Lille
+
+✅ Sauvegardes
+
+✅ Supervision
+
+---
+
+# Impacts futurs
+
+## Tickets
+
+Les tickets seront rattachés à un site.
+
+Exemple :
+
+Ticket #123
+
+Société :
+DUPONT
+
+Site :
+Paris
+
+---
+
+## Interventions
+
+Les interventions seront rattachées à un site.
+
+Exemple :
+
+BI-2026-000123
+
+Société :
+DUPONT
+
+Site :
+Lyon
+
+---
+
+## Documentation
+
+La documentation sera rattachée à un site.
+
+Les documents spécifiques au site seront isolés.
+
+---
+
+## Technicien
+
+Sélection :
+
+Société :
+DUPONT
+
+Site :
+Paris ▼
+
+Le menu dynamique sera construit à partir des services du site sélectionné.
+
+---
+
+## Client
+
+Le client verra :
+
+- Ses sites
+- Les services de chaque site
+- Les tickets par site
+- Les interventions par site
+- Les devis de la société
+
+---
+
+# Priorité d'architecture
+
+La notion de site doit être implémentée avant :
+
+- Tickets
+- Interventions
+- Documentation
+- Menus dynamiques
+
+afin d'éviter une refonte ultérieure du modèle de données.
 ---
 
 ## Services optionnels
