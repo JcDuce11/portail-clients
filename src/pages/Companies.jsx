@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
  
+
 function Companies() {
+const [sites, setSites] = useState([]);
+const [selectedSite, setSelectedSite] = useState(null);
 const { t, i18n } = useTranslation();
 const [companies, setCompanies] = useState([]);
 const [selectedCompany, setSelectedCompany] = useState(null);
@@ -14,6 +17,68 @@ loadArchivedCompanies();
 loadServices();
 }, []);
  
+async function loadSites(
+  companyId
+) {
+
+  try {
+
+    const response =
+      await fetch(
+        `http://localhost:3000/companies/${companyId}/sites`
+      );
+
+    const data =
+      await response.json();
+
+    setSites(data);
+ 
+if (data.length > 0) {
+ 
+setSelectedSite(
+data[0]
+);
+ 
+loadSiteServices(
+data[0].id
+);
+ 
+}
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
+async function loadSiteServices(
+  siteId
+) {
+
+  try {
+
+    const response =
+      await fetch(
+        `http://localhost:3000/sites/${siteId}/services`
+      );
+
+    const data =
+      await response.json();
+
+    setCompanyServices(
+      data.map(
+        (service) =>
+          service.id
+      )
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
 async function loadServices() {
 
   try {
@@ -421,13 +486,13 @@ cursor:
 }}
 onClick={() => {
 
-  setSelectedCompany(
-    company
-  );
+ setSelectedCompany(
+  company
+);
 
-  loadCompanyServices(
-    company.id
-  );
+loadSites(
+  company.id
+);
 }}
 >
 <td>
@@ -521,141 +586,6 @@ selectedCompany.name
 }
 </p>
  
-<p>{t("companies.phone")}</p>
- 
-<input
-type="text"
-value={
-selectedCompany.phone ||
-""
-}
-onChange={(e) =>
-setSelectedCompany({
-...selectedCompany,
-phone:
-e.target.value,
-})
-}
-/>
- 
-<p>{t("companies.email")}</p>
- 
-<input
-type="text"
-value={
-selectedCompany.email ||
-""
-}
-onChange={(e) =>
-setSelectedCompany({
-...selectedCompany,
-email:
-e.target.value,
-})
-}
-/>
- 
-<p>{t("companies.address")}</p>
- 
-<input
-type="text"
-value={
-selectedCompany.address ||
-""
-}
-onChange={(e) =>
-setSelectedCompany({
-...selectedCompany,
-address:
-e.target.value,
-})
-}
-/>
- 
-<p>{t("companies.postalCode")}</p>
- 
-<input
-type="text"
-value={
-selectedCompany.postal_code ||
-""
-}
-onChange={(e) =>
-setSelectedCompany({
-...selectedCompany,
-postal_code:
-e.target.value,
-})
-}
-/>
- 
-<p>{t("companies.city")}</p>
- 
-<input
-type="text"
-value={
-selectedCompany.city ||
-""
-}
-onChange={(e) =>
-setSelectedCompany({
-...selectedCompany,
-city:
-e.target.value,
-})
-}
-/>
- 
-<p>{t("companies.country")}</p>
- 
-<input
-type="text"
-value={
-selectedCompany.country ||
-""
-}
-onChange={(e) =>
-setSelectedCompany({
-...selectedCompany,
-country:
-e.target.value,
-})
-}
-/>
- 
-<p>{t("companies.siret")}</p>
- 
-<input
-type="text"
-value={
-selectedCompany.siret ||
-""
-}
-onChange={(e) =>
-setSelectedCompany({
-...selectedCompany,
-siret:
-e.target.value,
-})
-}
-/>
- 
-<p>Site Web</p>
- 
-<input
-type="text"
-value={
-selectedCompany.website ||
-""
-}
-onChange={(e) =>
-setSelectedCompany({
-...selectedCompany,
-website:
-e.target.value,
-})
-}
-/>
 <p>{t("companies.contractType")}</p>
 
 <select
@@ -722,7 +652,182 @@ e.target.value,
 
 <hr />
 
-<h3>{t("companies.subscribedServices")}</h3>
+<h3>{t("sites.title")}</h3>
+
+{sites.map((site) => (
+
+  <div
+    key={site.id}
+    style={{
+      marginBottom: "10px",
+    }}
+  >
+
+    <button
+  style={{
+    backgroundColor:
+      selectedSite?.id === site.id
+        ? "#4CAF50"
+        : "#f0f0f0",
+    color:
+      selectedSite?.id === site.id
+        ? "white"
+        : "black",
+    padding: "8px",
+    marginBottom: "5px",
+    width: "100%",
+    textAlign: "left",
+    border: "1px solid #ccc",
+    cursor: "pointer",
+  }}
+  onClick={() => {
+
+    setSelectedSite(site);
+
+    loadSiteServices(
+      site.id
+    );
+
+  }}
+>
+  {site.site_code}
+  {" - "}
+  {site.site_name}
+</button>
+
+  </div>
+
+))}
+{selectedSite && (
+
+  <>
+    <hr />
+
+    <h3>
+      {t("sites.selectedSite")}
+    </h3>
+
+    <p>
+      <strong>
+        {t("sites.reference")}
+      </strong>
+      {" : "}
+      {selectedSite.site_code}
+    </p>
+
+    <p>
+      <strong>
+        {t("sites.name")}
+      </strong>
+      {" : "}
+      {selectedSite.site_name}
+    </p>
+
+    <p>
+      <strong>
+        {t("companies.phone")}
+      </strong>
+    </p>
+
+    <input
+      type="text"
+      value={
+        selectedSite.phone || ""
+      }
+      readOnly
+    />
+
+    <p>
+      <strong>
+        {t("companies.email")}
+      </strong>
+    </p>
+
+    <input
+      type="text"
+      value={
+        selectedSite.email || ""
+      }
+      readOnly
+    />
+
+    <p>
+      <strong>
+        {t("companies.street")}
+      </strong>
+    </p>
+
+    <input
+      type="text"
+      value={
+        selectedSite.address || ""
+      }
+      readOnly
+    />
+
+    <p>
+      <strong>
+        {t("companies.postalCode")}
+      </strong>
+    </p>
+
+    <input
+      type="text"
+      value={
+        selectedSite.postal_code || ""
+      }
+      readOnly
+    />
+
+    <p>
+      <strong>
+        {t("sites.city")}
+      </strong>
+    </p>
+
+    <input
+      type="text"
+      value={
+        selectedSite.city || ""
+      }
+      readOnly
+    />
+
+    <p>
+      <strong>
+        {t("companies.country")}
+      </strong>
+    </p>
+
+    <input
+      type="text"
+      value={
+        selectedSite.country || ""
+      }
+      readOnly
+    />
+
+    <p>
+      <strong>
+        {t("companies.siret")}
+      </strong>
+    </p>
+
+    <input
+      type="text"
+      value={
+        selectedSite.siret || ""
+      }
+      readOnly
+    />
+
+  </>
+
+)}
+
+<hr />
+
+<h3>{t("sites.siteServices")}</h3>
 
 {services.map((service) => (
   <div key={service.id}>

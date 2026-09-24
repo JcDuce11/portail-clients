@@ -8,6 +8,7 @@
     "country": "Pays",
     "postalCode": "Code postal",
     "address": "Adresse",
+    "street": "Rue",
     "website": "Site Web",
     "siret": "SIRET",
     "notes": "Commentaires",
@@ -21,5 +22,19 @@
     "restore": "Restaurer",
     "archive": "Archiver",
     "noCompanySelected": "Sélectionnez une société"
+
+  },
+
+  "sites": {
+    "title": "Sites",
+    "selectedSite": "Site sélectionné",
+    "reference": "Référence",
+    "name": "Nom",
+    "city": "Ville",
+    "mainSite": "Site principal",
+    "yes": "Oui",
+    "no": "Non",
+    "siteServices": "Services du site"
   }
+
 }

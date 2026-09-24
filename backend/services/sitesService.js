@@ -6,13 +6,28 @@ async function getCompanySites(companyId) {
     `
     SELECT
       id,
+
       site_code,
       site_name,
+
+      address,
+      postal_code,
       city,
+      country,
+
+      phone,
+      email,
+
+      siret,
+
       is_main_site
+
     FROM sites
+
     WHERE company_id = ?
+
       AND deleted = 0
+
     ORDER BY site_code
     `,
     [companyId]

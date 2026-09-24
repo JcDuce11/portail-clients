@@ -8,6 +8,7 @@
     "country": "Country",
     "postalCode": "Postal Code",
     "address": "Address",
+    "street": "Street",
     "website": "Website",
     "siret": "Company Registration Number",
     "notes": "Notes",
@@ -21,5 +22,18 @@
     "restore": "Restore",
     "archive": "Archive",
     "noCompanySelected": "Select a company"
+  },
+
+  "sites": {
+    "title": "Sites",
+    "selectedSite": "Selected Site",
+    "reference": "Reference",
+    "name": "Name",
+    "city": "City",
+    "mainSite": "Main Site",
+    "yes": "Yes",
+    "no": "No",
+    "siteServices": "Site Services"
   }
+
 }
