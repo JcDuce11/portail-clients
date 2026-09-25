@@ -21,7 +21,9 @@
     "archivedCompanies": "Sociétés archivées",
     "restore": "Restaurer",
     "archive": "Archiver",
-    "noCompanySelected": "Sélectionnez une société"
+    "noCompanySelected": "Pas de société sélectionnée",
+    "companyDetails": "Fiche société",
+    "selectCompany": "Sélectionnez une société"
 
   },
 

@@ -777,12 +777,11 @@ color: "white",
 
 </table>
 <div style={{ width: "60%" }}>
-<h2>Fiche société</h2>
+<h2>{t("companies.companyDetails")}</h2>
  
 {!selectedCompany && (
 <p>
-Sélectionnez une
-société
+{t("companies.selectCompany")}
 </p>
 )}
  
