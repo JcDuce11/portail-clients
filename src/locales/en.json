@@ -23,7 +23,8 @@
     "archive": "Archive",
     "noCompanySelected": "Select a company",
     "companyDetails": "Company Details",
-    "selectCompany": "Select a company"
+    "selectCompany": "Select a company",
+    "count": "Number of Companies"
     
   },
 
@@ -39,8 +40,18 @@
     "siteServices": "Site Services",
     "archivedSites": "Archived Sites",
     "restore": "Restore",
-    "companyArchived": "Company Archived"
-    
+    "companyArchived": "Company Archived",
+  "companyReference": "Company Ref",
+  "company": "Company",
+  "site": "Site",
+  "addSite": "Add Site",
+  "archiveSite": "Archive Site"
+
+  },
+
+"common": {
+  "action": "Action",
+  "restore": "Restore"
   }
 
 }

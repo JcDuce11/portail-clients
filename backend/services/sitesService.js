@@ -168,6 +168,28 @@ async function archiveSite(
   );
 
 }
+async function deleteSiteForever(
+  siteId
+) {
+
+  await db.execute(
+    `
+    DELETE FROM site_services
+    WHERE site_id = ?
+    `,
+    [siteId]
+  );
+
+  await db.execute(
+    `
+    DELETE FROM sites
+    WHERE id = ?
+    `,
+    [siteId]
+  );
+
+}
+
 async function getArchivedSites() {
 
   const [rows] =

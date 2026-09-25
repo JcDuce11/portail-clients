@@ -511,6 +511,64 @@ app.put(
 
   }
 );
+app.delete(
+  "/companies/:id/forever",
+  async (req, res) => {
+
+    try {
+
+      await deleteCompanyForever(
+        req.params.id
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+
+  }
+);
+
+app.delete(
+  "/sites/:id/forever",
+  async (req, res) => {
+
+    try {
+
+      await deleteSiteForever(
+        req.params.id
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+
+  }
+);
+
 app.listen(3000, () => {
  
 console.log(

@@ -302,7 +302,7 @@ window.confirm(
 Référence :
 ${selectedCompany.company_code}
  
-Nom :
+{t("companies.name")} :
 ${selectedCompany.name}`
 );
  
@@ -373,7 +373,7 @@ const confirmation = window.confirm(
 Référence :
 ${selectedCompany.company_code}
  
-Nom :
+{t("companies.name")} :
 ${selectedCompany.name}
  
 Cette opération conservera :
@@ -523,9 +523,9 @@ error.message
  
 return (
 <div style={{ padding: "20px" }}>
-<h1>Sociétés</h1>
+<h1>{t("companies.title")}</h1>
 <h3>
-Nombre de sociétés : {companies.length}
+{t("companies.count")} : {companies.length}
 </h3>
  
 <div
@@ -567,8 +567,8 @@ borderCollapse:
 >
 <thead>
 <tr>
-<th>Référence</th>
-<th>Nom</th>
+<th>{t("companies.reference")}</th>
+<th>{t("companies.name")}</th>
 </tr>
 </thead>
  
@@ -625,9 +625,9 @@ borderCollapse: "collapse",
 >
 <thead>
 <tr>
-<th>Référence</th>
-<th>Nom</th>
-<th>Action</th>
+<th>{t("companies.reference")}</th>
+<th>{t("companies.name")}</th>
+<th>{t("common.action")}</th>
 </tr>
 </thead>
  
@@ -650,7 +650,7 @@ background: "#27ae60",
 color: "white",
 }}
 >
-♻ Restaurer
+♻ {t("common.restore")}
 </button>
 </td>
 </tr>
@@ -667,21 +667,13 @@ color: "white",
 
     <tr>
 
-      <th>
-        Réf société
-      </th>
+        <th>{t("sites.companyReference")}</th>
 
-      <th>
-        Société
-      </th>
+      <th>{t("sites.company")}</th>
 
-      <th>
-        Site
-      </th>
+      <th>{t("sites.site")}</th>
 
-      <th>
-        Action
-      </th>
+      <th>{t("common.action")}</th>
 
     </tr>
 
@@ -798,7 +790,7 @@ selectedCompany.company_code
  
 <p>
 <strong>
-Nom :
+{t("companies.name")} :
 </strong>{" "}
 {
 selectedCompany.name
@@ -875,7 +867,7 @@ onClick={
 saveCompany
 }
 >
-Enregistrer
+{t("companies.save")}
 </button>
 
 {" "}
@@ -889,7 +881,7 @@ background: "#cc0000",
 color: "white",
 }}
 >
-🗑 Archiver
+🗑 {t("companies.archive")}
 </button>
 ) : null}
  
@@ -966,7 +958,7 @@ color: "white",
     width: "100%",
   }}
 >
-  ➕ Ajouter un site
+  ➕ {t("sites.addSite")}
 </button>
 <br />
 <br />
@@ -979,7 +971,7 @@ color: "white",
     color: "white",
   }}
 >
-  🗑 Archiver le site
+  🗑 {t("sites.archiveSite")}
 </button>
 <br />
 <br />

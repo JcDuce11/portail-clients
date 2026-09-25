@@ -23,7 +23,8 @@
     "archive": "Archiver",
     "noCompanySelected": "Pas de société sélectionnée",
     "companyDetails": "Fiche société",
-    "selectCompany": "Sélectionnez une société"
+    "selectCompany": "Sélectionnez une société",
+    "count": "Nombre de sociétés"
 
   },
 
@@ -39,7 +40,18 @@
     "siteServices": "Services du site",
     "archivedSites": "Sites archivés",
     "restore": "Restaurer",
-    "companyArchived": "Société archivée"
+    "companyArchived": "Société archivée",
+    "companyReference": "Réf société",
+    "company": "Société",
+    "site": "Site",
+    "addSite": "Ajouter un site",
+    "archiveSite": "Archiver le site"
+
+  },
+
+"common": {
+  "action": "Action",
+  "restore": "Restaurer"
 
   }
 

@@ -11,6 +11,38 @@ async function getAllCompanies() {
   return rows;
 }
 
+async function deleteCompanyForever(id) {
+
+  await db.execute(
+    `
+    DELETE FROM site_services
+    WHERE site_id IN (
+      SELECT id
+      FROM sites
+      WHERE company_id = ?
+    )
+    `,
+    [id]
+  );
+
+  await db.execute(
+    `
+    DELETE FROM sites
+    WHERE company_id = ?
+    `,
+    [id]
+  );
+
+  await db.execute(
+    `
+    DELETE FROM companies
+    WHERE id = ?
+    `,
+    [id]
+  );
+
+}
+
 async function getArchivedCompanies() {
   const [rows] = await db.execute(`
     SELECT *
