@@ -11,6 +11,18 @@ const express = require("express");
 const cors = require("cors");
  
 const {
+  login,
+  findUserByEmail,
+} = require(
+  "./services/authService"
+);
+
+console.log(
+  "LOGIN FUNCTION:",
+  typeof login
+);
+
+const {
   getAllCompanies,
   getArchivedCompanies,
   createCompany,
@@ -553,6 +565,39 @@ app.delete(
       res.json({
         success: true,
       });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+
+  }
+);
+app.post(
+  "/auth/login",
+  async (req, res) => {
+
+    try {
+
+      const {
+        email,
+        password,
+      } = req.body;
+
+      const result =
+        await login(
+          email,
+          password
+        );
+
+      res.json(result);
 
     } catch (error) {
 
