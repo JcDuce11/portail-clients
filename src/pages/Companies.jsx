@@ -11,12 +11,41 @@ const [selectedCompany, setSelectedCompany] = useState(null);
 const [archivedCompanies, setArchivedCompanies] = useState([]);
 const [services, setServices] = useState([]);
 const [companyServices, setCompanyServices] = useState([]);
+const [archivedSites, setArchivedSites] =
+  useState([]);
 useEffect(() => {
 loadCompanies();
 loadArchivedCompanies();
 loadServices();
+loadArchivedSites();
 }, []);
  
+async function loadArchivedSites() {
+
+  try {
+
+    const response =
+      await fetch(
+        "http://localhost:3000/archived-sites"
+      );
+
+    const data =
+      await response.json();
+
+      console.log(
+  "ARCHIVED SITES DATA",
+  data
+);
+
+    setArchivedSites(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
 async function loadSites(
   companyId
 ) {
@@ -100,6 +129,14 @@ async function archiveSelectedSite() {
       }
     );
 
+      await loadSites(
+      selectedCompany.id
+    );
+
+    await loadArchivedSites();
+    await loadSites(
+  selectedCompany.id
+);
     await loadSites(
       selectedCompany.id
     );
@@ -553,6 +590,10 @@ onClick={() => {
 loadSites(
   company.id
 );
+
+loadArchivedSites(
+company.id
+);
 }}
 >
 <td>
@@ -572,7 +613,7 @@ company.company_code
 </div>
  <hr />
  
-<h2>Sociétés archivées</h2>
+<h2>{t("companies.archivedCompanies")}</h2>
  
 <table
 border="1"
@@ -615,6 +656,125 @@ color: "white",
 </tr>
 ))}
 </tbody>
+</table>
+<br />
+
+<h2>{t("sites.archivedSites")}</h2>
+
+<table border="1" width="100%">
+
+  <thead>
+
+    <tr>
+
+      <th>
+        Réf société
+      </th>
+
+      <th>
+        Société
+      </th>
+
+      <th>
+        Site
+      </th>
+
+      <th>
+        Action
+      </th>
+
+    </tr>
+
+  </thead>
+
+  <tbody>
+
+    {archivedSites.map((site) => (
+
+      <tr key={site.id}>
+
+        <td>
+          {site.company_code}
+        </td>
+
+        <td>
+          {site.company_name}
+        </td>
+
+        <td>
+          {site.site_name}
+        </td>
+
+        <td>
+
+          {Number(site.company_deleted) === 1 ? (
+            
+  <span
+    style={{
+      color: "#cc0000",
+      fontWeight: "bold",
+    }}
+  >
+    🔒 {t("sites.companyArchived")}
+  </span>
+
+) : (
+
+  <button
+    onClick={async () => {
+
+      try {
+
+        const response =
+          await fetch(
+            `http://localhost:3000/sites/${site.id}/restore`,
+            {
+              method: "PUT",
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if (!data.success) {
+
+          alert(
+            data.erreur
+          );
+
+          return;
+
+        }
+
+        await loadArchivedSites(
+          selectedCompany?.id
+        );
+
+        await loadSites(
+          selectedCompany?.id
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    }}
+  >
+    ♻ Restaurer
+  </button>
+
+)}
+
+        </td>
+
+      </tr>
+
+    ))}
+
+  </tbody>
+
 </table>
 <div style={{ width: "60%" }}>
 <h2>Fiche société</h2>

@@ -168,10 +168,87 @@ async function archiveSite(
   );
 
 }
+async function getArchivedSites() {
+
+  const [rows] =
+    await db.execute(
+      `
+      SELECT
+
+        s.id,
+
+        c.company_code,
+
+        c.name AS company_name,
+
+        c.deleted AS company_deleted,
+
+        s.site_code,
+
+        s.site_name
+
+      FROM sites s
+
+      INNER JOIN companies c
+        ON c.id = s.company_id
+
+      WHERE s.deleted = 1
+
+      ORDER BY
+        c.company_code,
+        s.site_code
+      `
+    );
+
+  return rows;
+
+}
+
+async function restoreSite(siteId) {
+
+  const [rows] = await db.execute(
+    `
+    SELECT
+      c.deleted
+    FROM companies c
+
+    INNER JOIN sites s
+      ON s.company_id = c.id
+
+    WHERE s.id = ?
+    `,
+    [siteId]
+  );
+
+  if (
+    rows.length > 0 &&
+    rows[0].deleted === 1
+  ) {
+
+    throw new Error(
+      "La société est archivée"
+    );
+
+  }
+
+  await db.execute(
+    `
+    UPDATE sites
+    SET
+      deleted = 0,
+      status = 'ACTIVE'
+    WHERE id = ?
+    `,
+    [siteId]
+  );
+
+}
 module.exports = {
   getCompanySites,
   getSiteServices,
   saveSiteServices,
   createSite,
   archiveSite,
+  getArchivedSites,
+  restoreSite,
 };

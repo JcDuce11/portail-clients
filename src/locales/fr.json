@@ -34,7 +34,11 @@
     "mainSite": "Site principal",
     "yes": "Oui",
     "no": "Non",
-    "siteServices": "Services du site"
+    "siteServices": "Services du site",
+    "archivedSites": "Sites archivés",
+    "restore": "Restaurer",
+    "companyArchived": "Société archivée"
+
   }
 
 }

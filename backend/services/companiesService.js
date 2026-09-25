@@ -137,6 +137,12 @@ async function updateCompany(
 }
 
 async function archiveCompany(id) {
+
+  console.log(
+    "ARCHIVE COMPANY SERVICE",
+    id
+  );
+
   await db.execute(
     `
     UPDATE companies
@@ -147,9 +153,29 @@ async function archiveCompany(id) {
     `,
     [id]
   );
+
+  const [result] = await db.execute(
+    `
+    UPDATE sites
+    SET
+      deleted = 1,
+      status = 'ARCHIVED'
+    WHERE company_id = ?
+    `,
+    [id]
+  );
+
+  console.log(result);
+
 }
 
 async function restoreCompany(id) {
+
+  console.log(
+    "RESTORE COMPANY",
+    id
+  );
+
   await db.execute(
     `
     UPDATE companies
@@ -160,6 +186,21 @@ async function restoreCompany(id) {
     `,
     [id]
   );
+
+  const [result] =
+    await db.execute(
+      `
+      UPDATE sites
+      SET
+        deleted = 0,
+        status = 'ACTIVE'
+      WHERE company_id = ?
+      `,
+      [id]
+    );
+
+  console.log(result);
+
 }
 
 async function getAllServices() {

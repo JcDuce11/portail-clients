@@ -4,6 +4,8 @@ const {
   saveSiteServices,
   createSite,
   archiveSite,
+  getArchivedSites,
+  restoreSite,
 } = require("./services/sitesService");
 const express = require("express");
 const cors = require("cors");
@@ -450,6 +452,59 @@ app.put(
       res.status(500).json({
         success: false,
         erreur: error.message,
+      });
+
+    }
+
+  }
+);
+app.get(
+  "/archived-sites",
+  async (req, res) => {
+
+    try {
+
+      const sites =
+        await getArchivedSites();
+
+      res.json(sites);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
+      });
+
+    }
+
+  }
+);
+app.put(
+  "/sites/:id/restore",
+  async (req, res) => {
+
+    try {
+
+      await restoreSite(
+        req.params.id
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur:
+          error.message,
       });
 
     }
