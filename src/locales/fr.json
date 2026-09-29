@@ -53,6 +53,46 @@
   "action": "Action",
   "restore": "Restaurer"
 
-  }
+  },
+
+  "menu": {
+    "dashboard": "Tableau de bord",
+    "tickets": "Tickets",
+    "documentation": "Documentation",
+    "interventions": "Interventions",
+    "contracts": "Contrats",
+    "quotes": "Devis",
+    "users": "Utilisateurs",
+    "services": "Services",
+    "configuration": "Configuration",
+    "telephony": "Téléphonie",
+    "network": "Réseau",
+    "servers": "Serveurs",
+    "backup": "Sauvegardes",
+    "supervision": "Supervision"
+  },
+
+  "userMenu": {
+  "profile": "Mon profil",
+  "preferences": "Préférences",
+  "security": "Sécurité",
+  "history": "Historique",
+  "configuration": "Configuration",
+  "logout": "Déconnexion",
+  "super_admin": "Super Administrateur",
+  "admin": "Administrateur",
+  "technicien": "Technicien",
+  "commercial": "Commercial",
+  "client": "Client"
+},
+
+"sidebar": {
+  "portal": "Portail Clients"
+},
+
+"companySelector": {
+  "search": "Rechercher une société..."
+}
+
 
 }

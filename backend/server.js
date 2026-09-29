@@ -614,6 +614,31 @@ app.post(
   }
 );
 
+app.get(
+  "/companies/active",
+  async (req, res) => {
+
+    try {
+
+      const companies =
+        await getAllCompanies();
+
+      res.json(companies);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        erreur: error.message,
+      });
+
+    }
+
+  }
+);
+
 app.listen(3000, () => {
  
 console.log(

@@ -52,6 +52,45 @@
 "common": {
   "action": "Action",
   "restore": "Restore"
-  }
+  },
+
+"menu": {
+    "dashboard": "Dashboard",
+    "tickets": "Tickets",
+    "documentation": "Documentation",
+    "interventions": "Interventions",
+    "contracts": "Contracts",
+    "quotes": "Quotes",
+    "users": "Users",
+    "services": "Services",
+    "configuration": "Configuration",
+    "telephony": "Telephony",
+    "network": "Network",
+    "servers": "Servers",
+    "backup": "Backups",
+    "supervision": "Monitoring"
+  },
+ 
+"userMenu": {
+    "profile": "My Profile",
+    "preferences": "Preferences",
+    "security": "Security",
+    "history": "History",
+    "configuration": "Configuration",
+    "logout": "Logout",
+    "super_admin": "Super Administrator",
+    "admin": "Administrator",
+    "technicien": "Technician",
+    "commercial": "Sales",
+    "client": "Client"
+  },
+
+  "sidebar": {
+  "portal": "Client Portal"
+},
+
+"companySelector": {
+  "search": "Search a company..."
+}
 
 }

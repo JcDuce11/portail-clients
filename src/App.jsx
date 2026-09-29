@@ -1,7 +1,7 @@
-import Companies from "./pages/Companies";
- 
+import Dashboard from "./pages/Dashboard";
+
 function App() {
-return <Companies />;
+  return <Dashboard />;
 }
- 
+
 export default App;
