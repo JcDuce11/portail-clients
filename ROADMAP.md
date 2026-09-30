@@ -1199,3 +1199,77 @@ Modules futurs :
 - KPI MSP
 
 Le cœur du logiciel ne doit jamais être modifié pour ajouter un nouveau module.
+
+# Authentification
+
+## Login V2
+
+- [ ] Fond personnalisé administrable
+- [ ] Logo personnalisable
+- [ ] Vérification adresse e-mail
+- [ ] Vérification mot de passe
+- [ ] Gestion des tentatives échouées
+- [ ] Blocage automatique après plusieurs échecs
+- [ ] Support OTP
+- [ ] Support Google Authenticator
+- [ ] Support MFA optionnelle
+- [ ] Authentification JWT
+- [ ] Déconnexion automatique
+- [ ] Gestion des sessions
+
+## Interface Login
+
+- [ ] Écran e-mail
+- [ ] Animation e-mail → mot de passe
+- [ ] Animation mot de passe → OTP
+- [ ] Animation d'erreur (shake)
+- [ ] Messages d'erreur contextualisés
+- [ ] Responsive mobile
+
+# Interface utilisateur
+
+## Sidebar
+
+- [x] Mode réduit
+- [x] Icônes Lucide
+- [x] Badge rôle utilisateur
+- [x] Design modernisé
+- [ ] Upload logo
+- [ ] Gestion du logo depuis Configuration
+- [ ] État actif avancé
+- [ ] Tooltips en mode réduit
+
+## Dashboard
+
+- [ ] Dashboard Super Admin
+- [ ] Dashboard Admin
+- [ ] Dashboard Commercial
+- [ ] Dashboard Technicien
+- [ ] Dashboard Client
+
+
+## [En développement]
+
+### Ajouté
+
+- Refonte complète de la sidebar
+- Support du mode réduit
+- Intégration Lucide React
+- Nouveau badge de rôle utilisateur
+- Ajout du bouton de repli de la navigation
+- Modernisation du design global
+- Préparation du système de rôles dynamiques
+
+### Modifié
+
+- Refonte visuelle de la navigation principale
+- Amélioration de l'expérience utilisateur
+- Préparation de l'authentification multi-étapes
+
+### Prévu
+
+- Nouvelle interface de connexion animée
+- Support OTP
+- Support MFA
+- Fond personnalisable
+- Tableau de bord dynamique selon le rôle

@@ -1,50 +1,62 @@
+import {
+  LayoutDashboard,
+  Ticket,
+  BookOpen,
+  Wrench,
+  FileText,
+  Calculator,
+  Users,
+  Boxes,
+  Settings
+} from "lucide-react";
+
 export const sidebarModules = {
 
   SUPER_ADMIN: [
 
     {
       key: "dashboard",
-      icon: "🏠",
+      icon: <LayoutDashboard size={22} />
     },
 
     {
       key: "tickets",
-      icon: "🎫",
+      icon: <Ticket size={22} />
     },
 
     {
       key: "documentation",
-      icon: "📚",
+      icon: <BookOpen size={22} />
     },
 
     {
       key: "interventions",
-      icon: "🛠",
+      icon: <Wrench size={22} />
     },
 
     {
       key: "contracts",
-      icon: "📑",
+      icon: <FileText size={22} />
     },
 
     {
       key: "quotes",
-      icon: "💰",
+      icon: <Calculator size={22} />
     },
 
     {
       key: "users",
-      icon: "👥",
+      icon: <Users size={22} />
     },
 
     {
       key: "services",
-      icon: "📦",
+      icon: <Boxes size={22} />
     },
 
     {
       key: "configuration",
-      icon: "⚙️",
+      icon: <Settings size={22} />
     },
 
   ],

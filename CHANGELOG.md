@@ -296,3 +296,31 @@ Services disponibles :
 ✅ Sauvegarde MariaDB
 
 ✅ Rechargement automatique
+
+## [En développement]
+
+### Ajouté
+
+- Nouvelle architecture du layout principal
+- Header applicatif
+- Sidebar dynamique basée sur les rôles
+- Intégration complète i18n sur la navigation
+- Gestion des modules activés par rôle
+- Badge visuel du rôle utilisateur
+- Dégradé moderne de la sidebar
+- Intégration des icônes Lucide React
+- Sidebar rétractable
+- Préparation du système d'authentification
+
+### Modifié
+
+- Refonte complète de l'identité visuelle de la sidebar
+- Amélioration des animations hover
+- Nouveau système de navigation responsive
+- Préparation du support logo personnalisable
+
+### Technique
+
+- Ajout de lucide-react
+- Préparation du système d'authentification basé sur MariaDB
+- Préparation du support OTP / MFA

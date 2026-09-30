@@ -407,3 +407,28 @@ Politique configurable :
 Gestion par :
 
 SUPER_ADMIN
+
+# Gestion des rôles
+
+## Rôles prévus
+
+- [ ] SUPER_ADMIN
+- [ ] ADMIN
+- [ ] COMMERCIAL
+- [ ] TECHNICIEN
+- [ ] CLIENT
+
+## Dashboard dynamique
+
+- [ ] Dashboard Super Admin
+- [ ] Dashboard Admin
+- [ ] Dashboard Commercial
+- [ ] Dashboard Technicien
+- [ ] Dashboard Client
+
+## Navigation dynamique
+
+- [x] Sidebar dynamique
+- [ ] Gestion complète des permissions
+- [ ] Gestion des modules activés
+- [ ] Visibilité conditionnelle des menus
