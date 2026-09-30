@@ -91,6 +91,35 @@
 
 "companySelector": {
   "search": "Search a company..."
-}
+}, 
+
+  "login": {
+    "welcome": "Sign in",
+    "email": "Email address",
+    "password": "Password",
+    "continue": "Continue",
+    "login": "Sign in",
+    "otp": "Two-factor authentication",
+    "verify": "Verify",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "invalidEmail": "This account does not exist.",
+    "createAccount": "Create an account",
+    "invalidPassword": "Incorrect password.",
+    "remainingAttempts": "You have {{count}} attempts remaining.",
+    "accountLocked": "Your account has been locked.",
+    "otpInvalid": "Invalid authentication code.",
+    "welcomeBack": "Welcome back",
+    "enterPassword": "Enter your password",
+    "enterOtp": "Enter your authentication code"
+  },
+
+  "roles": {
+    "super_admin": "Super Administrator",
+    "admin": "Administrator",
+    "technician": "Technician",
+    "commercial": "Sales Representative",
+    "client": "Client"
+  }
 
 }

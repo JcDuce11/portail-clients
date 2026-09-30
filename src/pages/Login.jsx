@@ -1,109 +1,57 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./Login.css";
 
-function Login() {
+export default function Login() {
+  const { t } = useTranslation();
 
-  const [email, setEmail] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
-
-  async function handleLogin() {
-
-    try {
-
-      const response =
-        await fetch(
-          "http://localhost:3000/auth/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-            body: JSON.stringify({
-              email,
-              password,
-            }),
-          }
-        );
-
-      const data =
-        await response.json();
-
-      console.log(data);
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
-  }
+  const [step, setStep] = useState("email");
+  const [email, setEmail] = useState("");
 
   return (
-
-    <div className="login-container">
-
+    <div className="login-page">
       <div className="login-card">
 
-        <h1>
-          Portail Clients MSP
-        </h1>
-
-        <p className="subtitle">
-          Connexion au portail
-        </p>
-
-        <div className="login-form">
-
-          <label>
-            Email
-          </label>
-
-          <input
-            type="email"
-            value={email}
-            onChange={(e) =>
-              setEmail(
-                e.target.value
-              )
-            }
-            placeholder="alexandre@portail.local"
-          />
-
-          <label>
-            Mot de passe
-          </label>
-
-          <input
-            type="password"
-            value={password}
-            onChange={(e) =>
-              setPassword(
-                e.target.value
-              )
-            }
-            placeholder="********"
-          />
-
-          <button
-            onClick={
-              handleLogin
-            }
-          >
-            Connexion
-          </button>
-
+        <div className="login-logo">
+          LOGO
         </div>
 
+        {step === "email" && (
+          <>
+            <h1>{t("login.welcome")}</h1>
+
+            <input
+              type="email"
+              value={email}
+              placeholder={t("login.email")}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <button
+              type="button"
+              onClick={() => setStep("password")}
+            >
+              {t("login.continue")}
+            </button>
+          </>
+        )}
+
+        {step === "password" && (
+          <>
+            <h1>{email}</h1>
+
+            <input
+              type="password"
+              placeholder={t("login.password")}
+            />
+
+            <button type="button">
+              {t("login.login")}
+            </button>
+          </>
+        )}
+
       </div>
-
     </div>
-
   );
-
 }
-
-export default Login;

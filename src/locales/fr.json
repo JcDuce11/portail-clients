@@ -92,7 +92,35 @@
 
 "companySelector": {
   "search": "Rechercher une société..."
-}
+},
 
+  "login": {
+    "welcome": "Connexion",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "continue": "Continuer",
+    "login": "Connexion",
+    "otp": "Double authentification",
+    "verify": "Vérifier",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié ?",
+    "invalidEmail": "Votre identifiant n'existe pas.",
+    "createAccount": "Créer un compte",
+    "invalidPassword": "Mot de passe incorrect.",
+    "remainingAttempts": "Il vous reste {{count}} tentatives.",
+    "accountLocked": "Votre compte est bloqué.",
+    "otpInvalid": "Code d'authentification invalide.",
+    "welcomeBack": "Bon retour",
+    "enterPassword": "Saisissez votre mot de passe",
+    "enterOtp": "Saisissez votre code d'authentification"
+  },
+
+  "roles": {
+    "super_admin": "Super Administrateur",
+    "admin": "Administrateur",
+    "technician": "Technicien",
+    "commercial": "Commercial",
+    "client": "Client"
+  }
 
 }
