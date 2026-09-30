@@ -1217,14 +1217,21 @@ Le cœur du logiciel ne doit jamais être modifié pour ajouter un nouveau modul
 - [ ] Déconnexion automatique
 - [ ] Gestion des sessions
 
-## Interface Login
+## Interface Login V3
 
+- [ ] Fond personnalisé administrable
+- [ ] Logo personnalisable
 - [ ] Écran e-mail
-- [ ] Animation e-mail → mot de passe
-- [ ] Animation mot de passe → OTP
-- [ ] Animation d'erreur (shake)
-- [ ] Messages d'erreur contextualisés
+- [ ] Vérification email MariaDB
+- [ ] Animation email → mot de passe
+- [ ] Vérification mot de passe
+- [ ] Affichage tentatives restantes
+- [ ] Blocage après plusieurs échecs
+- [ ] Animation shake sur erreur
+- [ ] OTP conditionnel
+- [ ] Animation OTP → Dashboard
 - [ ] Responsive mobile
+- [ ] Compatible i18n
 
 # Interface utilisateur
 

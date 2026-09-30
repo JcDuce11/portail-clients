@@ -242,3 +242,121 @@ Phase 4
 
 2FA obligatoire configurable
 par le SUPER_ADMIN.
+
+# Interface de connexion nouvelle génération
+
+## Design
+
+- [ ] Fond personnalisable depuis la configuration Super Admin
+- [ ] Support image d'arrière-plan
+- [ ] Support logo personnalisable
+- [ ] Animation fluide entre les étapes
+- [ ] Responsive mobile / tablette
+- [ ] Compatible i18n
+
+## Authentification
+
+### Vérification e-mail
+
+- [ ] Saisie e-mail
+- [ ] Vérification existence utilisateur MariaDB
+- [ ] Animation erreur utilisateur inconnu
+- [ ] Lien création de compte
+
+### Vérification mot de passe
+
+- [ ] Validation du mot de passe
+- [ ] Gestion des erreurs
+- [ ] Affichage du nombre de tentatives restantes
+- [ ] Blocage automatique après 5 échecs
+
+### OTP
+
+- [ ] Option OTP configurable
+- [ ] Intégration Google Authenticator
+- [ ] Vérification TOTP
+- [ ] Écran OTP animé
+
+### Session
+
+- [ ] JWT
+- [ ] Refresh Token
+- [ ] Déconnexion sécurisée
+- [ ] Protection des routes React
+
+## Authentification progressive
+
+Objectif :
+
+Remplacer l'écran de connexion classique par une authentification
+étape par étape avec animations.
+
+Workflow :
+
+EMAIL
+↓
+PASSWORD
+↓
+OTP (si activé)
+↓
+DASHBOARD
+
+---
+
+### Écran Email
+
+- [ ] Vérification immédiate de l'existence du compte
+- [ ] Animation de transition vers le mot de passe
+- [ ] Affichage d'erreur utilisateur inconnu
+- [ ] Proposition de création de compte
+
+Message :
+
+"Votre identifiant n'existe pas."
+
+Lien :
+
+"Créer un compte"
+
+---
+
+### Écran Mot de passe
+
+- [ ] Validation du mot de passe
+- [ ] Animation d'erreur shake
+- [ ] Affichage du nombre de tentatives restantes
+- [ ] Blocage automatique configurable
+
+Message :
+
+"Mot de passe incorrect"
+
+"Il vous reste 4 tentatives."
+
+---
+
+### Écran OTP
+
+- [ ] Affichage uniquement si 2FA activé
+- [ ] Vérification TOTP
+- [ ] Animation d'erreur
+
+---
+
+### Animations
+
+- [ ] Slide Up à chaque étape validée
+- [ ] Fade In du panneau suivant
+- [ ] Shake sur erreur
+- [ ] Transitions fluides
+
+---
+
+### Personnalisation
+
+Configuration Super Admin
+
+- [ ] Logo affiché sur la page de connexion
+- [ ] Fond d'écran personnalisable
+- [ ] Couleurs de connexion personnalisables
+- [ ] Message d'accueil personnalisable

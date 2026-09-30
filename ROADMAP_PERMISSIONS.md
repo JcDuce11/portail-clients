@@ -432,3 +432,87 @@ SUPER_ADMIN
 - [ ] Gestion complète des permissions
 - [ ] Gestion des modules activés
 - [ ] Visibilité conditionnelle des menus
+
+### Dashboard SUPER_ADMIN
+
+- [ ] Nombre de sociétés
+- [ ] Nombre de sites
+- [ ] Nombre d'utilisateurs
+- [ ] Nombre de tickets
+- [ ] Nombre d'interventions
+- [ ] Alertes plateforme
+- [ ] Licences
+
+### Dashboard ADMIN
+
+- [ ] Statistiques société
+- [ ] Contrats
+- [ ] Services souscrits
+- [ ] Activité utilisateurs
+
+### Dashboard COMMERCIAL
+
+- [ ] Pipeline devis
+- [ ] Contrats à renouveler
+- [ ] Nouveaux clients
+
+### Dashboard TECHNICIEN
+
+- [ ] Tickets assignés
+- [ ] Interventions du jour
+- [ ] Alertes supervision
+
+### Dashboard CLIENT
+
+- [ ] Tickets ouverts
+- [ ] Interventions
+- [ ] Contrats
+- [ ] Services souscrits
+`
+
+## Permissions granulaire
+
+### Utilisateurs
+
+- USER_CREATE
+- USER_EDIT
+- USER_DELETE
+- USER_RESTORE
+
+### Sociétés
+
+- COMPANY_CREATE
+- COMPANY_EDIT
+- COMPANY_ARCHIVE
+- COMPANY_DELETE
+
+### Sites
+
+- SITE_CREATE
+- SITE_EDIT
+- SITE_ARCHIVE
+- SITE_DELETE
+
+### Contrats
+
+- CONTRACT_READ
+- CONTRACT_WRITE
+
+### Tickets
+
+- TICKET_READ
+- TICKET_WRITE
+- TICKET_ASSIGN
+- TICKET_CLOSE
+
+## Personnalisation portail
+
+SUPER_ADMIN
+
+- [ ] Nom du logiciel
+- [ ] Logo portail
+- [ ] Logo société
+- [ ] Image fond connexion
+- [ ] Couleur principale
+- [ ] Couleur secondaire
+- [ ] Message d'accueil
