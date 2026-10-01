@@ -1,17 +1,36 @@
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
-function App() {
+import {
+  AuthProvider,
+  useAuth,
+} from "./context/AuthContext";
 
-  const user = JSON.parse(
-    localStorage.getItem("user")
-  );
+function AppContent() {
 
-  if (user) {
+  const {
+    isAuthenticated,
+  } = useAuth();
+
+  if (
+    isAuthenticated
+  ) {
     return <Dashboard />;
   }
 
   return <Login />;
+}
+
+function App() {
+
+  return (
+    <AuthProvider>
+
+      <AppContent />
+
+    </AuthProvider>
+  );
+
 }
 
 export default App;

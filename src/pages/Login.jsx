@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./Login.css";
-
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -13,17 +13,15 @@ export default function Login() {
   const [shake, setShake] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [otpCode, setOtpCode] = useState("");
+  const { login } = useAuth();
   const handleOtpSubmit = () => {
 
   if (otpCode === "123456") {
 
-  localStorage.setItem(
-    "user",
-    JSON.stringify({
-      email,
-      role: "SUPER_ADMIN"
-    })
-  );
+  login({
+  email,
+  role: "SUPER_ADMIN",
+});
 
   window.location.reload();
 

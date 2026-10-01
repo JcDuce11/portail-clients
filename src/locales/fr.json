@@ -126,6 +126,11 @@
     "technician": "Technicien",
     "commercial": "Commercial",
     "client": "Client"
-  }
+  },
+
+  "dashboard": {
+  "welcome": "Bienvenue",
+  "inProgress": "Dashboard en construction"
+}
 
 }

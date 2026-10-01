@@ -124,6 +124,11 @@
     "technician": "Technician",
     "commercial": "Sales Representative",
     "client": "Client"
-  }
+  },
+
+  "dashboard": {
+  "welcome": "Welcome",
+  "inProgress": "Dashboard under construction"
+}
 
 }

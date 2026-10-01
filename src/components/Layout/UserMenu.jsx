@@ -4,6 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import "./UserMenu.css";
 
+import { useAuth }
+from "../../context/AuthContext";
+
 export default function UserMenu({
   user,
 }) {
@@ -15,7 +18,9 @@ export default function UserMenu({
     setOpen] =
       useState(false);
 
-  return (
+    const { logout } = useAuth();
+
+return (
 
     <div
       className="user-menu"
@@ -118,7 +123,9 @@ export default function UserMenu({
 
           <hr />
 
-          <button>
+          <button
+onClick={logout}
+>
   🚪 {t("userMenu.logout")}
 </button>
         </div>
