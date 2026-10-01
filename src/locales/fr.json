@@ -116,7 +116,8 @@
     "enterOtpProvider": "Microsoft Authenticator, Google Authenticator ou Authy.",
     "otpPlaceholder": "Code de sécurité",
     "otpTitle": "Vérification de sécurité",
-    "resetEmailSent": "Email de réinitialisation envoyé."
+    "resetEmailSent": "Email de réinitialisation envoyé.",
+    "invalidOtp": "Le code de sécurité est invalide."
   },
 
   "roles": {

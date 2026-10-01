@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./Login.css";
 
+
 export default function Login() {
   const { t } = useTranslation();
   const [info, setInfo] = useState("");
@@ -12,7 +13,31 @@ export default function Login() {
   const [shake, setShake] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [otpCode, setOtpCode] = useState("");
-  const handleEmailSubmit = () => {
+  const handleOtpSubmit = () => {
+
+  if (otpCode === "123456") {
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify({
+      email,
+      role: "SUPER_ADMIN"
+    })
+  );
+
+  window.location.reload();
+
+  return;
+}
+
+  setError(
+    t("login.invalidOtp")
+  );
+
+  triggerShake();
+};
+
+const handleEmailSubmit = () => {
 
   setError("");
 
@@ -228,11 +253,18 @@ const [transitioning, setTransitioning] =
       }
     />
 
+{error && (
+  <div className="login-error">
+    {error}
+  </div>
+)}
+
     <button
-      type="button"
-    >
-      {t("login.verify")}
-    </button>
+  type="button"
+  onClick={handleOtpSubmit}
+>
+  {t("login.verify")}
+</button>
 
   </div>
 )}
