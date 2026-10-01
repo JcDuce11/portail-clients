@@ -4,13 +4,133 @@ import "./Login.css";
 
 export default function Login() {
   const { t } = useTranslation();
-
+  const [info, setInfo] = useState("");
   const [step, setStep] = useState("email");
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
+  const [shake, setShake] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [otpCode, setOtpCode] = useState("");
+  const handleEmailSubmit = () => {
 
-  return (
-    <div className="login-page">
-      <div className="login-card">
+  setError("");
+
+  if (
+    email.toLowerCase() ===
+    "alexandre@test.fr"
+  ) {
+    setTransitioning(true);
+
+setTimeout(() => {
+  setStep("password");
+  setTransitioning(false);
+}, 450);
+
+    return;
+  }
+
+  setError(
+    t("login.invalidEmail")
+  );
+
+  triggerShake();
+};
+
+const handlePasswordSubmit = () => {
+
+  const maxAttempts = 4;
+
+  // SIMULATION TEMPORAIRE
+
+  if (password === "Password123!") {
+
+  setError("");
+  setFailedAttempts(0);
+
+  const otpEnabled = true;
+
+  if (otpEnabled) {
+
+    setTransitioning(true);
+
+    setTimeout(() => {
+      setStep("otp");
+      setTransitioning(false);
+    }, 450);
+
+  } else {
+
+    console.log(
+      "Dashboard"
+    );
+
+  }
+
+  return;
+}
+
+  const newAttempts =
+    failedAttempts + 1;
+
+  setFailedAttempts(newAttempts);
+
+  const remainingAttempts =
+    Math.max(
+      0,
+      maxAttempts - newAttempts
+    );
+
+  if (remainingAttempts <= 0) {
+
+    setError(
+      t("login.accountLocked")
+    );
+
+    triggerShake();
+
+    return;
+  }
+
+  setError(
+    t("login.invalidPassword", {
+      count: remainingAttempts,
+    })
+  );
+
+  triggerShake();
+};
+
+const handleForgotPassword = () => {
+
+  // TODO API
+
+  setInfo(
+    t("login.resetEmailSent")
+  );
+
+};
+
+const triggerShake = () => {
+  setShake(true);
+
+  setTimeout(() => {
+    setShake(false);
+  }, 500);
+};
+const [transitioning, setTransitioning] =
+  useState(false);
+
+ return (
+  <div className="login-page">
+
+    <div
+  className={`
+    login-card
+    ${shake ? "shake" : ""}
+    ${transitioning ? "slide-out" : ""}
+  `}
+>
 
         <div className="login-logo">
           LOGO
@@ -24,32 +144,98 @@ export default function Login() {
               type="email"
               value={email}
               placeholder={t("login.email")}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
             />
 
-            <button
-              type="button"
-              onClick={() => setStep("password")}
-            >
-              {t("login.continue")}
-            </button>
+{error && (
+<div className="login-error">
+{error}
+</div>
+)}
+
+<button
+  type="button"
+  onClick={handleEmailSubmit}
+>
+  {t("login.continue")}
+</button>
           </>
         )}
 
         {step === "password" && (
-          <>
-            <h1>{email}</h1>
+  <div className="slide-in">
 
-            <input
-              type="password"
-              placeholder={t("login.password")}
-            />
+    <input
+      type="password"
+      value={password}
+      placeholder={t("login.password")}
+      onChange={(e) =>
+        setPassword(e.target.value)
+      }
+    />
 
-            <button type="button">
-              {t("login.login")}
-            </button>
-          </>
-        )}
+    {error && (
+      <div className="login-error">
+        {error}
+      </div>
+    )}
+
+    <button
+      type="button"
+      onClick={handlePasswordSubmit}
+    >
+      {t("login.login")}
+    </button>
+
+    {failedAttempts >= 2 && (
+      <button
+        type="button"
+        className="forgot-password-link"
+      >
+        Mot de passe oublié ?
+      </button>
+    )}
+
+  </div>
+)}
+
+{step === "otp" && (
+  <div className="slide-in">
+
+<div className="otp-info">
+
+  <div className="otp-title">
+  {t("login.otpTitle")}
+</div>
+
+  <div className="otp-subtitle">
+    {t("login.enterOtp")}
+  </div>
+
+</div>
+
+    <input
+      type="text"
+      value={otpCode}
+      maxLength={6}
+      placeholder={t("login.otpPlaceholder")}
+      onChange={(e) =>
+        setOtpCode(
+          e.target.value
+        )
+      }
+    />
+
+    <button
+      type="button"
+    >
+      {t("login.verify")}
+    </button>
+
+  </div>
+)}
 
       </div>
     </div>

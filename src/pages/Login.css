@@ -139,7 +139,8 @@
 }
 
 .shake {
-  animation: shake .45s ease;
+  animation-name: shake;
+  animation-duration: .45s;
 }
 
 @keyframes shake {
@@ -179,4 +180,193 @@
 
 .create-account-link:hover {
   text-decoration: underline;
+}
+
+.login-card {
+ 
+}
+
+@keyframes cardAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-error {
+  color: #ef4444;
+
+  text-align: center;
+
+  margin-top: -10px;
+
+  font-size: 14px;
+}
+
+.slide-out {
+  animation:
+    slideOut .45s ease forwards;
+}
+
+@keyframes slideOut {
+
+  from {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+  to {
+
+    opacity: 0;
+
+    transform:
+      translateY(-80px);
+  }
+
+}
+
+.slide-in {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  width: 100%;
+
+  animation:
+    slideIn .65s ease;
+}
+
+@keyframes slideIn {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(80px);
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+.forgot-password-link {
+
+  background: transparent !important;
+
+  border: none;
+
+  color: rgba(
+      255,
+      255,
+      255,
+      .55
+  );
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  margin-top: -8px;
+
+  transition: all .2s ease;
+}
+
+.forgot-password-link:hover {
+
+  color: #93c5fd;
+
+  text-decoration: underline;
+}
+
+.login-info {
+  color: #4ade80;
+
+  text-align: center;
+
+  font-size: 14px;
+}
+
+.login-subtitle {
+
+  max-width: 280px;
+
+  margin: 0 auto 20px auto;
+
+  text-align: center;
+
+  color: rgba(
+    255,
+    255,
+    255,
+    .75
+  );
+
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  font-weight: 500;
+
+  letter-spacing: .2px;
+}
+
+.otp-info {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 4px;
+
+  margin-bottom: 8px;
+
+  text-align: center;
+}
+
+.otp-title {
+
+  color: white;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.otp-subtitle {
+
+  width: 100%;
+
+  max-width: 280px;
+
+  margin: 0 auto;
+
+  text-align: center;
+
+  color: rgba(255,255,255,.65);
+
+  font-size: 13px;
+
+  line-height: 1.4;
+
+  font-weight: 500;
 }

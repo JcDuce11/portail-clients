@@ -106,13 +106,17 @@
     "forgotPassword": "Mot de passe oublié ?",
     "invalidEmail": "Votre identifiant n'existe pas.",
     "createAccount": "Créer un compte",
-    "invalidPassword": "Mot de passe incorrect.",
+    "invalidPassword": "Mot de passe incorrect. Il vous reste {{count}} tentative(s).",
     "remainingAttempts": "Il vous reste {{count}} tentatives.",
     "accountLocked": "Votre compte est bloqué.",
     "otpInvalid": "Code d'authentification invalide.",
     "welcomeBack": "Bon retour",
     "enterPassword": "Saisissez votre mot de passe",
-    "enterOtp": "Saisissez votre code d'authentification"
+    "enterOtp": "Un code de sécurité a été généré par votre application.",
+    "enterOtpProvider": "Microsoft Authenticator, Google Authenticator ou Authy.",
+    "otpPlaceholder": "Code de sécurité",
+    "otpTitle": "Vérification de sécurité",
+    "resetEmailSent": "Email de réinitialisation envoyé."
   },
 
   "roles": {
