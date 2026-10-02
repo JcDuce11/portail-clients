@@ -150,24 +150,58 @@ await db.execute(
   [user.id]
 );
 
-  return {
-    success: true,
-    user: {
-      id: user.id,
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      role: user.role_name,
-      company_id: user.company_id,
-      language: user.language,
-      theme: user.theme,
-      primary_site_id: user.primary_site_id,
-      status: user.status,
-      email_verified: user.email_verified,
-      two_factor_enabled: user.two_factor_enabled,
-      require_two_factor: user.require_two_factor,
-    },
-  };
+const otpRequired =
+  user.require_two_factor ||
+  user.two_factor_enabled;
+
+ return {
+
+  success: true,
+
+  otpRequired,
+
+  user: {
+
+    id: user.id,
+
+    email: user.email,
+
+    firstname:
+      user.firstname,
+
+    lastname:
+      user.lastname,
+
+    role:
+      user.role_name,
+
+    company_id:
+      user.company_id,
+
+    language:
+      user.language,
+
+    theme:
+      user.theme,
+
+    primary_site_id:
+      user.primary_site_id,
+
+    status:
+      user.status,
+
+    email_verified:
+      user.email_verified,
+
+    two_factor_enabled:
+      user.two_factor_enabled,
+
+    require_two_factor:
+      user.require_two_factor
+
+  }
+
+};
 
 }
 

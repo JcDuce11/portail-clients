@@ -9,6 +9,7 @@ const {
 } = require("./services/sitesService");
 const express = require("express");
 const cors = require("cors");
+const { getSettings } = require("./services/settingsService");
  
 const {
   login,
@@ -739,6 +740,30 @@ app.get(
       res.status(500).json({
         success: false,
         erreur: error.message,
+      });
+
+    }
+
+  }
+);
+
+app.get(
+  "/settings",
+  async (req, res) => {
+
+    try {
+
+      const settings =
+        await getSettings();
+
+      res.json(settings);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        error: error.message
       });
 
     }
