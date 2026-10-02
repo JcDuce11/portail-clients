@@ -42,7 +42,114 @@ const app = express();
  
 app.use(cors());
 app.use(express.json());
- 
+
+app.post("/auth/check-email", async (req, res) => {
+
+  try {
+
+    const { email } = req.body;
+
+    const user =
+      await findUserByEmail(email);
+
+    if (!user) {
+
+      return res.json({
+        exists: false
+      });
+
+    }
+
+    return res.json({
+
+      exists: true,
+
+      user: {
+
+        id: user.id,
+
+        email: user.email,
+
+        firstname: user.firstname,
+
+        lastname: user.lastname,
+
+        role: user.role_name,
+
+        status: user.status,
+
+        company_id:
+          user.company_id,
+
+        primary_site_id:
+          user.primary_site_id,
+
+        email_verified:
+          user.email_verified,
+
+        require_two_factor:
+          user.require_two_factor,
+
+        two_factor_enabled:
+          user.two_factor_enabled
+
+      }
+
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      error: error.message
+    });
+
+  }
+
+});
+
+app.get("/auth/check-email", (req, res) => {
+
+  res.json({
+    success: true,
+    message: "Route Auth OK"
+  });
+
+});
+
+ app.post("/auth/login", async (req, res) => {
+
+  try {
+
+    const {
+      email,
+      password,
+    } = req.body;
+
+    const result =
+      await login(
+        email,
+        password
+      );
+
+    return res.json(result);
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+
+  }
+
+});
+
+
 app.get("/companies", async (req, res) => {
 try {
 const companies =
