@@ -1,4 +1,5 @@
-import Login from "./pages/Login";
+import Login from "./pages/login";
+import Configuration from "./pages/Configuration";
 import Dashboard from "./pages/Dashboard";
 
 import {
@@ -9,14 +10,24 @@ import {
 function AppContent() {
 
   const {
-    isAuthenticated,
-  } = useAuth();
+  isAuthenticated,
+  currentPage
+} = useAuth();
 
-  if (
-    isAuthenticated
-  ) {
+  if (!isAuthenticated) {
+  return <Login />;
+}
+
+switch (currentPage) {
+
+  case "configuration":
+    return <Configuration />;
+
+  case "dashboard":
+  default:
     return <Dashboard />;
-  }
+
+}
 
   return <Login />;
 }

@@ -35,62 +35,161 @@ export default function Login() {
   triggerShake();
 };
 
-const handleEmailSubmit = () => {
+const handleEmailSubmit = async () => {
 
-  setError("");
+  try {
 
-  if (
-    email.toLowerCase() ===
-    "alexandre@test.fr"
-  ) {
-    setTransitioning(true);
+    const response =
+      await fetch(
+        "http://localhost:3000/auth/check-email",
+        {
+          method: "POST",
 
-setTimeout(() => {
-  setStep("password");
-  setTransitioning(false);
-}, 450);
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
 
-    return;
-  }
+          body: JSON.stringify({
+            email,
+          }),
+        }
+      );
 
-  setError(
-    t("login.invalidEmail")
-  );
+    const data =
+      await response.json();
 
-  triggerShake();
-};
+    if (!data.exists) {
 
-const handlePasswordSubmit = () => {
+      setError(
+        t("login.unknownUser")
+      );
 
-  const maxAttempts = 4;
+      triggerShake();
 
-  // SIMULATION TEMPORAIRE
+      return;
+    }
 
-  if (password === "Password123!") {
-
-  setError("");
-  setFailedAttempts(0);
-
-  const otpEnabled = true;
-
-  if (otpEnabled) {
+    setError("");
 
     setTransitioning(true);
 
     setTimeout(() => {
-      setStep("otp");
+
+      setStep(
+        "password"
+      );
+
       setTransitioning(false);
+
     }, 450);
 
-  } else {
+  } catch (error) {
 
-    console.log(
-      "Dashboard"
+    console.error(error);
+
+    setError(
+      t("login.serverError")
     );
 
   }
 
+};
+
+const handlePasswordSubmit = async () => {
+
+  const maxAttempts = 4;
+
+  try {
+
+  const response =
+    await fetch(
+      "http://localhost:3000/auth/login",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }
+    );
+
+  const data =
+    await response.json();
+
+  if (!data.success) {
+
+    const newAttempts =
+      failedAttempts + 1;
+
+    setFailedAttempts(
+      newAttempts
+    );
+
+    const remainingAttempts =
+      Math.max(
+        0,
+        maxAttempts -
+          newAttempts
+      );
+
+    setError(
+      data.message
+    );
+
+    triggerShake();
+
+    return;
+  }
+
+  setError("");
+
+  setFailedAttempts(0);
+
+  const user =
+    data.user;
+
+  const otpRequired =
+  data.otpRequired;
+
+  if (otpRequired) {
+
+    setTransitioning(true);
+
+    setTimeout(() => {
+
+      setStep("otp");
+
+      setTransitioning(
+        false
+      );
+
+    }, 450);
+
+  } else {
+
+    login(user);
+
+    window.location.reload();
+
+  }
+
   return;
+
+} catch (error) {
+
+  console.error(error);
+
+  setError(
+    t("login.serverError")
+  );
+
 }
 
   const newAttempts =

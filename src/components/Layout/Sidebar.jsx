@@ -1,5 +1,8 @@
 import { useTranslation } from "react-i18next";
 
+import { useAuth }
+from "../../context/AuthContext";
+
 import { useState } from "react";
 
 import {
@@ -44,19 +47,10 @@ export default function Sidebar() {
   const { t } =
     useTranslation();
 
- // TODO AUTH
-// À supprimer lors de la mise en place du login MariaDB
-
-const user =
-  JSON.parse(
-    localStorage.getItem("user")
-  ) || {
-    id: 1,
-    firstname: "Alexandre",
-    lastname: "FOURMY",
-    role: "SUPER_ADMIN",
-    email: "admin@test.local"
-  };
+ const {
+  user,
+  setCurrentPage
+} = useAuth();
 
 console.log("SIDEBAR RENDER");
 console.log("USER =", user);
@@ -108,9 +102,12 @@ console.log("USER =", user);
       {sidebarModules[user.role]?.map(
         (item) => (
           <button
-            key={item.key}
-            type="button"
-          >
+key={item.key}
+type="button"
+onClick={() =>
+setCurrentPage(item.key)
+}
+>
             <span>
               {item.icon}
             </span>

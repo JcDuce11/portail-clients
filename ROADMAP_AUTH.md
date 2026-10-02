@@ -1,362 +1,1035 @@
-# Authentification
+# ROADMAP_AUTH.md
 
-## Base existante
+# Authentification, Sécurité et Gestion des Utilisateurs
 
-### users
+## Vision
 
-- email
-- password_hash
-- firstname
-- lastname
-- role_id
-- company_id
-- active
-- force_password_change
-- last_login
-- language
-- theme
+Construire un système d'authentification robuste, sécurisé et entièrement administrable permettant :
 
-### roles
-
-- SUPER_ADMIN
-- ADMIN
-- TECHNICIEN
-- COMMERCIAL
-- CLIENT
+- l'authentification multi-rôles
+- l'authentification multi-sociétés
+- l'authentification multi-sites
+- l'auto-inscription contrôlée
+- la validation administrative
+- la gestion du MFA (OTP)
+- la réinitialisation sécurisée des mots de passe
+- la gestion SMTP et Microsoft Graph
+- la traçabilité complète des utilisateurs
 
 ---
 
-## Ecran de connexion
+# Architecture Métier
 
-- Email
-- Mot de passe
-- Se souvenir de moi
-- Mot de passe oublié
+## Société
 
----
+Chaque utilisateur doit appartenir à :
 
-## API
-
-POST /auth/login
-
-GET /auth/me
-
-POST /auth/logout
+```txt
+1 société obligatoire
+```
 
 ---
 
-## Sécurité
+## Site principal
 
-bcrypt
+Chaque utilisateur doit appartenir à :
 
-JWT
+```txt
+1 site principal obligatoire
+```
 
-Expiration configurable
+Le site principal devient :
 
----
+```txt
+Dashboard par défaut
 
-## Premier login
+Site par défaut pour les tickets
 
-force_password_change = 1
+Site par défaut pour les interventions
 
-↓
+Site par défaut pour la documentation
 
-Modification obligatoire du mot de passe
-
----
-
-## Politique de mot de passe
-
-Configurable par SUPER_ADMIN
-
-- longueur minimale
-- majuscule
-- minuscule
-- chiffre
-- caractère spécial
+Site par défaut pour les actifs
+```
 
 ---
 
-## Menus dynamiques
+## Sites secondaires
 
-Les menus sont générés suivant :
+Chaque utilisateur peut appartenir à :
 
-role_id
-
-+
-
-permissions
-
-+
-
-modules actifs
-# Authentification V5 - Double authentification (2FA)
-
-## Objectif
-
-Ajouter une authentification à double facteur basée sur TOTP.
-
-Compatible avec :
-
-- Microsoft Authenticator
-- Google Authenticator
-- Authy
-- FreeOTP
-- Aegis
-
----
-
-## Base de données
-
-Ajouter dans users :
-
-two_factor_enabled
-
-two_factor_secret
-
-two_factor_backup_codes
+```txt
+0 à N sites secondaires
+```
 
 Exemple :
 
-ALTER TABLE users
-ADD COLUMN two_factor_enabled TINYINT(1) DEFAULT 0;
+```txt
+DUPONT
 
-ALTER TABLE users
-ADD COLUMN two_factor_secret VARCHAR(255) NULL;
+Site principal :
+Paris
+
+Sites secondaires :
+Lyon
+Marseille
+Toulouse
+```
 
 ---
 
-## Activation
+# Gestion Multi-sites
 
+## Connexion
+
+Après authentification :
+
+```txt
+Email
+↓
+Mot de passe
+↓
+OTP
+↓
+Dashboard du site principal
+```
+
+---
+
+## Sélecteur de site
+
+Le bandeau supérieur contient :
+
+```txt
+Paris ▼
+```
+
+L'utilisateur peut sélectionner :
+
+```txt
+Paris
+Lyon
+Marseille
+Toulouse
+```
+
+---
+
+## Changement de site
+
+Lors du changement :
+
+```txt
+Dashboard rechargé
+
+Statistiques rechargées
+
+Modules rechargés
+
+Permissions recalculées
+
+Tickets filtrés
+```
+
+---
+
+## Règle d'accès
+
+Les accès dépendent de :
+
+```txt
 Utilisateur
 
++
+Rôle
+
++
+Site actif
+
++
+Services activés
+```
+
+---
+
+# Workflow de Connexion
+
+## Identifiant Inconnu
+
+### Tentative 1
+
+Affichage :
+
+```txt
+Identifiant inconnu
+```
+
+Animation :
+
+```txt
+Shake
+```
+
+---
+
+### Tentative 2
+
+Affichage :
+
+```txt
+Identifiant inconnu
+
+Pas encore d'identifiant ?
+C'est par ici.
+```
+
+Action :
+
+```txt
+Créer mon compte
+```
+
+---
+
+# Workflow d'Inscription
+
+## Étape 1 - Informations Personnelles
+
+L'utilisateur renseigne :
+
+```txt
+Nom
+
+Prénom
+
+Téléphone portable
+
+Téléphone fixe
+
+Adresse e-mail
+
+Mot de passe
+
+Confirmation du mot de passe
+```
+
+---
+
+## Étape 2 - Informations Professionnelles
+
+L'utilisateur renseigne :
+
+```txt
+Nom société
+
+Nom du site
+
+Adresse du site
+
+Code postal
+
+Ville
+
+Pays
+```
+
+---
+
+# Recherche Automatique
+
+Le système tente d'identifier :
+
+```txt
+Société
+```
+
+et :
+
+```txt
+Site
+```
+
+à partir :
+
+```txt
+Domaine de l'adresse e-mail
+```
+
+ou :
+
+```txt
+Nom société
+
+Adresse
+
+Ville
+
+Code postal
+```
+
+---
+
+# Cas 1 - Société et Site Trouvés
+
+Le système affiche :
+
+```txt
+Nous avons trouvé :
+
+Société :
+XXX
+
+Site :
+XXX
+
+Est-ce correct ?
+```
+
+Choix :
+
+```txt
+Oui
+
+Non
+```
+
+---
+
+# Cas 2 - Société Trouvée mais Site Introuvable
+
+Le système affiche :
+
+```txt
+Nous avons trouvé votre société.
+
+Aucun site correspondant n'a été trouvé.
+```
+
+Choix :
+
+```txt
+Sélectionner un site existant
+
+Créer un nouveau site
+```
+
+---
+
+# Création d'un Nouveau Site
+
+L'utilisateur renseigne :
+
+```txt
+Nom du site
+
+Adresse
+
+Code postal
+
+Ville
+
+Pays
+```
+
+Une demande est envoyée :
+
+```txt
+Référent
+
+ADMIN
+
+SUPER_ADMIN
+```
+
+pour validation.
+
+---
+
+# Cas 3 - Domaine Générique
+
+Exemples :
+
+```txt
+gmail.com
+
+hotmail.com
+
+outlook.com
+
+free.fr
+
+orange.fr
+```
+
+Le domaine n'est pas exploitable.
+
+Le système utilise :
+
+```txt
+Nom société
+
+Adresse
+
+Ville
+
+Code postal
+```
+
+pour identifier l'entreprise.
+
+---
+
+# Validation de l'Adresse E-mail
+
+Après création du compte :
+
+```txt
+Envoi d'un email de validation
+```
+
+Durée du lien :
+
+```txt
+24 heures
+```
+
+---
+
+## Important
+
+La validation de l'adresse e-mail est recommandée mais n'est pas obligatoire.
+
+Un :
+
+```txt
+ADMIN
+
+ou
+
+SUPER_ADMIN
+```
+
+peut activer un utilisateur même si l'adresse e-mail n'est pas validée.
+
+---
+
+# Conséquences d'une Adresse E-mail Non Validée
+
+L'utilisateur peut être :
+
+```txt
+ACTIVE
+```
+
+mais ne recevra pas :
+
+```txt
+Notifications
+
+Relances
+
+Emails Tickets
+
+Emails Interventions
+
+Emails Automatiques
+
+Réinitialisation automatique du mot de passe
+```
+
+---
+
+# Règle Métier Obligatoire
+
+Pour être activé :
+
+```txt
+Société obligatoire
+
+ET
+
+Site principal obligatoire
+```
+
+---
+
+# Interdiction Absolue
+
+Même un :
+
+```txt
+SUPER_ADMIN
+```
+
+ne peut pas activer un utilisateur si :
+
+```txt
+Aucune société
+```
+
+ou :
+
+```txt
+Aucun site principal
+```
+
+n'est défini.
+
+---
+
+# Validation Administrative
+
+Peut être effectuée par :
+
+```txt
+ADMIN
+
+SUPER_ADMIN
+```
+
+---
+
+# Gestion Manuelle
+
+Un ADMIN ou un SUPER_ADMIN peut :
+
+```txt
+Associer une société
+
+Associer un site principal
+
+Associer des sites secondaires
+
+Créer une société
+
+Créer un site
+
+Valider un utilisateur
+
+Refuser un utilisateur
+
+Débloquer un utilisateur
+```
+
+---
+
+# Statuts Utilisateurs
+
+## PENDING_EMAIL
+
+```txt
+Adresse e-mail non validée
+```
+
+---
+
+## PENDING_APPROVAL
+
+```txt
+Validation administrative en attente
+```
+
+---
+
+## PENDING_ASSIGNMENT
+
+```txt
+Société ou site principal manquant
+```
+
+---
+
+## ACTIVE
+
+```txt
+Compte actif
+```
+
+---
+
+## LOCKED
+
+```txt
+Compte bloqué
+```
+
+---
+
+## REJECTED
+
+```txt
+Demande refusée
+```
+
+---
+
+## DELETED
+
+```txt
+Suppression logique
+```
+
+---
+
+# Suppression
+
+Les utilisateurs ne sont jamais supprimés physiquement.
+
+Le statut utilisé est :
+
+```txt
+DELETED
+```
+
+afin de conserver :
+
+```txt
+Historique
+
+Tickets
+
+Interventions
+
+Documents
+
+Logs
+
+Traçabilité
+```
+
+---
+
+# Permissions
+
+## ADMIN
+
+Peut :
+
+```txt
+Valider un utilisateur
+
+Refuser un utilisateur
+
+Supprimer une demande
+
+Supprimer un utilisateur
+
+Associer une société
+
+Associer un site
+
+Débloquer un compte
+```
+
+Ne peut pas :
+
+```txt
+Modifier SMTP
+
+Modifier Microsoft Graph
+
+Modifier la configuration système
+```
+
+---
+
+## SUPER_ADMIN
+
+Peut :
+
+```txt
+Valider un utilisateur
+
+Refuser un utilisateur
+
+Supprimer une demande
+
+Supprimer un utilisateur
+
+Créer une société
+
+Créer un site
+
+Associer les utilisateurs
+
+Débloquer les comptes
+
+Modifier toute la configuration
+```
+
+---
+
+## REFERENT
+
+Peut :
+
+```txt
+Valider un utilisateur
+
+Refuser un utilisateur
+
+Valider un nouveau site
+
+Refuser un nouveau site
+```
+
+Ne peut pas :
+
+```txt
+Modifier la configuration système
+
+Modifier SMTP
+
+Modifier Microsoft Graph
+
+Modifier les paramètres de sécurité globaux
+```
+
+---
+
+# Authentification Multi-Facteur (OTP)
+
+## Activation Utilisateur
+
+Disponible via :
+
+```txt
+Mon Profil
 ↓
-
-Mon profil
-
-↓
-
 Sécurité
+↓
+Activer OTP
+```
+
+---
+
+## Forçage OTP Utilisateur
+
+Le SUPER_ADMIN peut imposer :
+
+```txt
+Forcer la double authentification
+```
+
+sur un utilisateur.
+
+---
+
+## Forçage OTP Société
+
+Le SUPER_ADMIN peut imposer :
+
+```txt
+Double authentification obligatoire
+```
+
+sur toute une société.
+
+---
+
+# Priorité OTP
+
+Le MFA est requis si :
+
+```txt
+OTP imposé à l'utilisateur
+
+OU
+
+OTP imposé à la société
+
+OU
+
+OTP activé volontairement
+```
+
+---
+
+# Désactivation OTP
+
+Impossible si l'OTP est imposé :
+
+```txt
+Par un administrateur
+
+Ou
+
+Par la société
+```
+
+---
+
+# Applications Compatibles
+
+Utilisation du standard :
+
+```txt
+TOTP RFC6238
+```
+
+Compatible :
+
+```txt
+Microsoft Authenticator
+
+Google Authenticator
+
+Authy
+
+LockSelf
+
+Bitwarden
+
+Aegis
+
+1Password
+
+Keeper
+```
+
+---
+
+# Activation OTP
+
+Workflow :
+
+```txt
+QR Code
 
 ↓
 
-Activer la double authentification
+Scan
 
 ↓
 
-Génération QR Code
-
-↓
-
-Scan avec l'application OTP
-
-↓
-
-Saisie du code
+Code à 6 chiffres
 
 ↓
 
 Validation
 
+↓
+
+OTP activé
+```
+
 ---
 
-## Connexion
+# Configuration SUPER_ADMIN
 
-Email
+Menu :
+
+```txt
+Configuration
+```
+
+Accessible uniquement au :
+
+```txt
+SUPER_ADMIN
+```
+
+---
+
+# Modules de Configuration
+
+```txt
+Authentification
+
+SMTP
+
+Microsoft 365 Graph
+
+Sécurité
+
+Personnalisation
+```
+
+---
+
+# Configuration Authentification
+
+Paramètres :
+
+```txt
+Nombre maximum de tentatives
+
+Durée de verrouillage
+
+Règles OTP
+
+Expiration des sessions
+
+Validation automatique
+
+Validation manuelle
+```
+
+---
+
+# Configuration SMTP
+
+Paramètres :
+
+```txt
+Serveur SMTP
+
+Port
+
+SSL/TLS
+
+Compte
 
 Mot de passe
 
-↓
+Nom expéditeur
 
-Validation mot de passe
+Adresse expéditeur
 
-↓
-
-Code OTP
-
-↓
-
-Accès portail
+Test de connexion
+```
 
 ---
 
-## Gestion
+# Configuration Microsoft 365 Graph
 
-SUPER_ADMIN
+Paramètres :
 
-Peut :
+```txt
+Tenant ID
 
-- Réinitialiser le 2FA
-- Désactiver le 2FA d'un utilisateur
+Client ID
 
-Utilisateur
+Client Secret
 
-Peut :
+Adresse expéditeur
 
-- Activer le 2FA
-- Désactiver le 2FA
-- Régénérer les codes de secours
-
----
-
-## Codes de secours
-
-Générer 10 codes uniques.
-
-Exemple :
-
-AB45-XZ91
-QW28-TY74
-...
-
-Usage unique.
+Test de connexion
+```
 
 ---
 
-## Niveaux de sécurité
+# Structure MariaDB Cible
 
-Phase 1
+## users
 
-2FA facultatif.
+Nouvelles colonnes prévues :
 
----
+```txt
+primary_site_id
 
-Phase 2
+status
 
-2FA obligatoire pour :
+email_verified
 
-- SUPER_ADMIN
+email_verification_token
 
----
+email_verification_expires
 
-Phase 3
+failed_login_attempts
 
-2FA obligatoire pour :
+locked_until
 
-- SUPER_ADMIN
-- ADMIN
+two_factor_enabled
 
----
+require_two_factor
 
-Phase 4
+two_factor_secret
 
-2FA obligatoire configurable
-par le SUPER_ADMIN.
+password_reset_token
 
-# Interface de connexion nouvelle génération
-
-## Design
-
-- [ ] Fond personnalisable depuis la configuration Super Admin
-- [ ] Support image d'arrière-plan
-- [ ] Support logo personnalisable
-- [ ] Animation fluide entre les étapes
-- [ ] Responsive mobile / tablette
-- [ ] Compatible i18n
-
-## Authentification
-
-### Vérification e-mail
-
-- [ ] Saisie e-mail
-- [ ] Vérification existence utilisateur MariaDB
-- [ ] Animation erreur utilisateur inconnu
-- [ ] Lien création de compte
-
-### Vérification mot de passe
-
-- [ ] Validation du mot de passe
-- [ ] Gestion des erreurs
-- [ ] Affichage du nombre de tentatives restantes
-- [ ] Blocage automatique après 5 échecs
-
-### OTP
-
-- [ ] Option OTP configurable
-- [ ] Intégration Google Authenticator
-- [ ] Vérification TOTP
-- [ ] Écran OTP animé
-
-### Session
-
-- [ ] JWT
-- [ ] Refresh Token
-- [ ] Déconnexion sécurisée
-- [ ] Protection des routes React
-
-## Authentification progressive
-
-Objectif :
-
-Remplacer l'écran de connexion classique par une authentification
-étape par étape avec animations.
-
-Workflow :
-
-EMAIL
-↓
-PASSWORD
-↓
-OTP (si activé)
-↓
-DASHBOARD
+password_reset_expires
+```
 
 ---
 
-### Écran Email
+## companies
 
-- [ ] Vérification immédiate de l'existence du compte
-- [ ] Animation de transition vers le mot de passe
-- [ ] Affichage d'erreur utilisateur inconnu
-- [ ] Proposition de création de compte
+Nouvelles colonnes prévues :
 
-Message :
-
-"Votre identifiant n'existe pas."
-
-Lien :
-
-"Créer un compte"
+```txt
+require_two_factor
+```
 
 ---
 
-### Écran Mot de passe
+## user_sites
 
-- [ ] Validation du mot de passe
-- [ ] Animation d'erreur shake
-- [ ] Affichage du nombre de tentatives restantes
-- [ ] Blocage automatique configurable
+Nouvelle table :
 
-Message :
+```txt
+user_id
 
-"Mot de passe incorrect"
+site_id
+```
 
-"Il vous reste 4 tentatives."
+Permet la gestion :
 
----
+```txt
+Site principal
 
-### Écran OTP
++
 
-- [ ] Affichage uniquement si 2FA activé
-- [ ] Vérification TOTP
-- [ ] Animation d'erreur
-
----
-
-### Animations
-
-- [ ] Slide Up à chaque étape validée
-- [ ] Fade In du panneau suivant
-- [ ] Shake sur erreur
-- [ ] Transitions fluides
+Sites secondaires
+```
 
 ---
 
-### Personnalisation
+## app_settings
 
-Configuration Super Admin
+Nouvelle table de configuration globale :
 
-- [ ] Logo affiché sur la page de connexion
-- [ ] Fond d'écran personnalisable
-- [ ] Couleurs de connexion personnalisables
-- [ ] Message d'accueil personnalisable
+```txt
+Authentification
+
+SMTP
+
+Microsoft Graph
+
+OTP
+
+Notifications
+
+Branding
+
+Sécurité
+```
+
+---
+
+# Ordre de Développement
+
+```txt
+1. Création table app_settings
+
+2. Création table user_sites
+
+3. Ajout primary_site_id
+
+4. Ajout statut utilisateur
+
+5. Ajout validation email
+
+6. Ajout blocage compte
+
+7. Ajout OTP
+
+8. Création rôle REFERENT
+
+9. Configuration Authentification
+
+10. Configuration SMTP
+
+11. Configuration Microsoft 365 Graph
+
+12. Inscription utilisateur
+
+13. Validation utilisateur
+
+14. Réinitialisation mot de passe
+
+15. OTP réel
+
+16. JWT
+
+17. Authentification MariaDB complète

@@ -15,6 +15,9 @@ export function AuthProvider({
   const [user, setUser] =
     useState(null);
 
+  const [currentPage, setCurrentPage] =
+  useState("dashboard");
+
   useEffect(() => {
 
     const storedUser =
@@ -53,16 +56,20 @@ export function AuthProvider({
     setUser(null);
   };
 
+  const isAuthenticated =
+  !!user;
+
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        isAuthenticated:
-          !!user,
-      }}
-    >
+  value={{
+    user,
+    login,
+    logout,
+    isAuthenticated,
+    currentPage,
+    setCurrentPage
+  }}
+>
       {children}
     </AuthContext.Provider>
   );

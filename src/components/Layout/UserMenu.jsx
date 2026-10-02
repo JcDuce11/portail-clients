@@ -114,9 +114,6 @@ return (
 
               <hr />
 
-              <button>
-  ⚙️ {t("userMenu.configuration")}
-</button>
             </>
 
           )}

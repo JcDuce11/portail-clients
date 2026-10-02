@@ -51,7 +51,9 @@
 
 "common": {
   "action": "Action",
-  "restore": "Restaurer"
+  "restore": "Restaurer",
+  "enabled": "Activé",
+  "disabled": "Désactivé"
 
   },
 
@@ -117,7 +119,9 @@
     "otpPlaceholder": "Code de sécurité",
     "otpTitle": "Vérification de sécurité",
     "resetEmailSent": "Email de réinitialisation envoyé.",
-    "invalidOtp": "Le code de sécurité est invalide."
+    "invalidOtp": "Le code de sécurité est invalide.",
+    "unknownUser": "Identifiant inconnu.",
+    "serverError": "Erreur serveur."
   },
 
   "roles": {
@@ -131,6 +135,49 @@
   "dashboard": {
   "welcome": "Bienvenue",
   "inProgress": "Dashboard en construction"
-}
+}, 
+
+  "configuration": {
+
+    "title": "Configuration",
+
+    "tabs": {
+      "auth": "Authentification",
+      "smtp": "SMTP",
+      "graph": "Microsoft 365",
+      "security": "Sécurité",
+      "branding": "Personnalisation"
+    },
+
+    "auth": {
+      "title": "Authentification",
+      "description": "Paramètres de connexion, sessions, OTP et validation des comptes.",
+      "maxLoginAttempts": "Nombre maximum de tentatives",
+      "lockDuration": "Durée de verrouillage",
+      "sessionDuration": "Durée de session",
+      "emailValidation": "Validation email obligatoire",
+      "otpEnabled": "OTP activé"
+    },
+
+    "smtp": {
+      "title": "SMTP",
+      "description": "Configuration du serveur SMTP utilisé pour les notifications et les emails applicatifs."
+    },
+
+    "graph": {
+      "title": "Microsoft 365",
+      "description": "Configuration Microsoft Graph pour les emails, calendriers et intégrations Microsoft 365."
+    },
+
+    "security": {
+      "title": "Sécurité",
+      "description": "Paramètres globaux de sécurité du portail."
+    },
+
+    "branding": {
+      "title": "Personnalisation",
+      "description": "Configuration du logo, des couleurs et de l'identité visuelle du portail."
+    }
+  }
 
 }
