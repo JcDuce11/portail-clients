@@ -9,7 +9,7 @@ const {
 } = require("./services/sitesService");
 const express = require("express");
 const cors = require("cors");
-const { getSettings } = require("./services/settingsService");
+const { getSettings, updateSettings } = require( "./services/settingsService" );
  
 const {
   login,
@@ -770,6 +770,35 @@ app.get(
 
   }
 );
+
+app.put(
+  "/settings",
+  async (req, res) => {
+
+    try {
+
+      await updateSettings(
+        req.body
+      );
+
+      res.json({
+        success: true
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+
+    }
+
+  }
+);
+
 
 app.listen(3000, () => {
  

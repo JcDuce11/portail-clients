@@ -130,31 +130,28 @@ letter-spacing: 1px;
 }
 
 .sidebar {
-  position: sticky;
-  top: 0;
+    position: sticky;
+    top: 0;
 
-  position: relative;
+    width: 280px;
 
-  height: 100vh;
+    flex-shrink: 0;
 
-  width: 280px;
+    display: flex;
+    flex-direction: column;
 
-  flex-shrink: 0;
+    min-height: 100vh;
 
-  display: flex;
-  flex-direction: column;
+    color: white;
 
-  color: white;
-
-  background: linear-gradient(
-    180deg,
-    #0f172a 0%,
-    #111827 50%,
-    #0b1220 100%
-  );
-
-  transition: all 0.3s ease;
+    background: linear-gradient(
+        180deg,
+        #0f172a 0%,
+        #111827 50%,
+        #0b1220 100%
+    );
 }
+
 .sidebar.collapsed {
   width: 90px;
 }
@@ -188,13 +185,14 @@ letter-spacing: 1px;
 }
 
 .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
-  display: flex;
+    flex: 1;
+    overflow-y: auto;
 
-  flex-direction: column;
-
-  gap: 12px;
-
+    padding-bottom: 20px;
 }
 
 .sidebar nav button:hover {

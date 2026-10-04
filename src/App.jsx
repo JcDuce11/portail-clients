@@ -9,27 +9,13 @@ import {
 
 function AppContent() {
 
-  const {
-  isAuthenticated,
-  currentPage
-} = useAuth();
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-  return <Login />;
-}
+    return <Login />;
+  }
 
-switch (currentPage) {
-
-  case "configuration":
-    return <Configuration />;
-
-  case "dashboard":
-  default:
-    return <Dashboard />;
-
-}
-
-  return <Login />;
+  return <Dashboard />;
 }
 
 function App() {

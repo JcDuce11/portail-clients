@@ -7,10 +7,12 @@ import AdminDashboard from "../dashboards/AdminDashboard";
 import TechnicianDashboard from "../dashboards/TechnicianDashboard";
 import CommercialDashboard from "../dashboards/CommercialDashboard";
 import ClientDashboard from "../dashboards/ClientDashboard";
+import Configuration from "./Configuration";
 
 export default function Dashboard() {
 
-  const { user } = useAuth();
+  
+  const { user,currentPage } = useAuth();
   const { t } = useTranslation();
 
   const renderDashboard = () => {
@@ -38,18 +40,50 @@ export default function Dashboard() {
 
   };
 
+  const renderContent = () => {
+
+    switch(currentPage) {
+
+        case "configuration":
+
+            return (
+                <Configuration />
+            );
+
+        case "dashboard":
+
+        default:
+
+            return (
+
+                <>
+                    <h1>
+                        Bienvenue Alexandre 👋
+                    </h1>
+
+                    <h2>
+                        Dashboard Super Administrateur
+                    </h2>
+
+                    <p>
+                        KPIs à venir...
+                    </p>
+                </>
+
+            );
+    }
+};
+
+console.log(
+  "CURRENT PAGE =",
+  currentPage
+);
+
   return (
 
     <AppLayout>
 
-      <h1>
-        {t("dashboard.welcome")}{" "}
-        {user?.firstname ||
-          user?.email}
-        👋
-      </h1>
-
-      {renderDashboard()}
+      {renderContent()}
 
     </AppLayout>
 

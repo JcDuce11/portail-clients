@@ -138,6 +138,8 @@
   "configuration": {
 
     "title": "Configuration",
+    "save": "Save",
+    "saved": "Settings saved.",
 
     "tabs": {
       "auth": "Authentication",

@@ -140,6 +140,8 @@
   "configuration": {
 
     "title": "Configuration",
+    "save": "Enregistrer",
+    "saved": "Paramètres enregistrés.",
 
     "tabs": {
       "auth": "Authentification",

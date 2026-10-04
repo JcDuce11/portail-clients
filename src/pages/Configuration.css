@@ -1,0 +1,218 @@
+.configuration-page {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 25px;
+
+    padding: 30px;
+}
+
+.configuration-page h1 {
+
+    margin: 0;
+
+    font-size: 42px;
+
+    font-weight: 800;
+
+    color: #111827;
+}
+
+.configuration-content {
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    padding: 35px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.05);
+}
+
+.configuration-tabs {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-bottom: 30px;
+}
+
+.configuration-tabs button {
+
+    border: none;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all .2s ease;
+}
+
+.configuration-tabs button:hover {
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+    transform: translateY(-1px);
+}
+
+.configuration-content section h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 10px;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.configuration-content section p {
+
+    color: #6b7280;
+
+    margin-bottom: 30px;
+
+    line-height: 1.6;
+}
+
+.configuration-section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 24px;
+
+    max-width: 700px;
+}
+
+.configuration-section > div {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.configuration-section strong {
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: #111827;
+}
+
+.configuration-section input[type="number"] {
+
+    width: 140px;
+
+    height: 44px;
+
+    padding: 0 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    font-size: 15px;
+
+    transition: all .2s ease;
+}
+
+.configuration-section input[type="number"]:focus {
+
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 4px rgba(37,99,235,.15);
+}
+
+.configuration-section input[type="checkbox"] {
+
+    width: 22px;
+
+    height: 22px;
+
+    cursor: pointer;
+}
+
+.configuration-save {
+
+    margin-top: 20px;
+
+    align-self: flex-start;
+
+    border: none;
+
+    border-radius: 14px;
+
+    padding: 14px 26px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #3b82f6
+        );
+
+    color: white;
+
+    font-weight: 700;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: all .25s ease;
+}
+
+.configuration-save:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(
+            37,
+            99,
+            235,
+            .30
+        );
+}
+
+.configuration-save:active {
+
+    transform: translateY(0);
+}

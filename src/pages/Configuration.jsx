@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
+import "./Configuration.css";
 
 export default function Configuration() {
 
@@ -10,6 +11,15 @@ export default function Configuration() {
 
   const [settings, setSettings] =
   useState([]);
+
+const [form, setForm] =
+  useState({
+    max_login_attempts: "",
+    lock_duration_minutes: "",
+    session_duration_hours: "",
+    email_validation_required: false,
+    otp_enabled: false
+  });
 
 const settingsMap =
   Object.fromEntries(
@@ -27,19 +37,46 @@ useEffect(() => {
       try {
 
         const response =
-          await fetch(
-            "http://localhost:3000/settings"
-          );
+  await fetch(
+    "http://localhost:3000/settings"
+  );
 
-        const data =
-          await response.json();
+const data =
+  await response.json();
 
-        console.log(
-          "SETTINGS",
-          data
-        );
+console.log(
+  "SETTINGS",
+  data
+);
 
-        setSettings(data);
+setSettings(data);
+
+        const map =
+  Object.fromEntries(
+    data.map(item => [
+      item.setting_key,
+      item.setting_value
+    ])
+  );
+
+setForm({
+
+  max_login_attempts:
+    map.max_login_attempts || "",
+
+  lock_duration_minutes:
+    map.lock_duration_minutes || "",
+
+  session_duration_hours:
+    map.session_duration_hours || "",
+
+  email_validation_required:
+    map.email_validation_required === "1",
+
+  otp_enabled:
+    map.otp_enabled === "1"
+
+});
 
       } catch (error) {
 
@@ -52,6 +89,68 @@ useEffect(() => {
   loadSettings();
 
 }, []);
+
+const saveSettings = async () => {
+
+  try {
+
+    const response =
+      await fetch(
+        "http://localhost:3000/settings",
+        {
+          method: "PUT",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+
+            max_login_attempts:
+              form.max_login_attempts,
+
+            lock_duration_minutes:
+              form.lock_duration_minutes,
+
+            session_duration_hours:
+              form.session_duration_hours,
+
+            email_validation_required:
+              form.email_validation_required
+                ? "1"
+                : "0",
+
+            otp_enabled:
+              form.otp_enabled
+                ? "1"
+                : "0"
+
+          })
+
+        }
+      );
+
+    const data =
+    await response.json();
+
+    if (data.success) {
+
+      alert(
+        t(
+          "configuration.saved"
+        )
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
 
   return (
 
@@ -124,12 +223,17 @@ useEffect(() => {
         )}
       </strong>
 
-      <div>
-        {
-          settingsMap.max_login_attempts
-        }
-      </div>
-
+      <input
+  type="number"
+  value={form.max_login_attempts}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      max_login_attempts:
+        e.target.value
+    })
+  }
+/>
     </div>
 
     <br />
@@ -142,11 +246,17 @@ useEffect(() => {
         )}
       </strong>
 
-      <div>
-        {
-          settingsMap.lock_duration_minutes
-        } min
-      </div>
+      <input
+  type="number"
+  value={form.lock_duration_minutes}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      lock_duration_minutes:
+        e.target.value
+    })
+  }
+/>
 
     </div>
 
@@ -160,12 +270,17 @@ useEffect(() => {
         )}
       </strong>
 
-      <div>
-        {
-          settingsMap
-            .session_duration_hours
-        } h
-      </div>
+      <input
+  type="number"
+  value={form.session_duration_hours}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      session_duration_hours:
+        e.target.value
+    })
+  }
+/>
 
     </div>
 
@@ -179,18 +294,19 @@ useEffect(() => {
         )}
       </strong>
 
-      <div>
-
-        {
-          settingsMap.email_validation_required ===
-          "1"
-
-            ? t("common.enabled")
-
-            : t("common.disabled")
-        }
-
-      </div>
+      <input
+  type="checkbox"
+  checked={
+    form.email_validation_required
+  }
+  onChange={(e) =>
+    setForm({
+      ...form,
+      email_validation_required:
+        e.target.checked
+    })
+  }
+/>
 
     </div>
 
@@ -204,22 +320,31 @@ useEffect(() => {
         )}
       </strong>
 
-      <div>
-
-        {
-          settingsMap.otp_enabled ===
-          "1"
-
-            ? t("common.enabled")
-
-            : t("common.disabled")
-        }
-
-      </div>
+      <input
+  type="checkbox"
+  checked={form.otp_enabled}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      otp_enabled:
+        e.target.checked
+    })
+  }
+/>
 
     </div>
 
   </div>
+
+<br />
+
+<button
+  type="button"
+  className="configuration-save"
+  onClick={saveSettings}
+>
+  {t("configuration.save")}
+</button>
 
 </section>
 
