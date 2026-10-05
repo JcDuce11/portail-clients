@@ -10,7 +10,7 @@ const {
 const express = require("express");
 const cors = require("cors");
 const { getSettings, updateSettings } = require( "./services/settingsService" );
- 
+const { sendTestEmail } = require( "./services/emailService" );
 const {
   login,
   findUserByEmail,
@@ -799,6 +799,36 @@ app.put(
   }
 );
 
+app.post(
+  "/smtp/test",
+  async (req, res) => {
+
+    try {
+
+      const { email } =
+        req.body;
+
+      await sendTestEmail(
+        email
+      );
+
+      res.json({
+        success: true
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+  success: false,
+  errorCode: error.message
+});
+
+    }
+
+  }
+);
 
 app.listen(3000, () => {
  

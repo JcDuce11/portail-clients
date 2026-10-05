@@ -53,7 +53,10 @@
   "action": "Action",
   "restore": "Restore",
   "enabled": "Enabled",
-  "disabled": "Disabled"
+  "disabled": "Disabled",
+  "yes": "Yes",
+  "no": "No",
+  "continue": "Continue"
   },
 
 "menu": {
@@ -122,6 +125,38 @@
 
   },
 
+  "register": {
+
+  "title": "Create account",
+  "description": "Fill in the information below to request access to the portal.",
+  "firstname": "First name",
+  "lastname": "Last name",
+  "mobile": "Mobile phone",
+  "phone": "Phone",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "company": "Company",
+  "site": "Site",
+  "address": "Address",
+  "postalCode": "Postal code",
+  "city": "City",
+  "country": "Country",
+  "submit": "Create account",
+  "continue": "Continue",
+  "back": "Back",
+  "verify": "Verify information",
+  "resultFoundTitle": "Company and site found",
+  "resultFoundDescription": "We found the following information.",
+  "siteMissingTitle": "Site not found",
+  "siteMissingDescription": "Your company was identified but no matching site could be found.",
+  "selectExistingSite": "Select an existing site",
+  "createNewSite": "Create a new site",
+  "genericDomainTitle": "Generic email detected",
+  "genericDomainDescription": "The domain of your email address does not allow automatic company identification."
+
+},
+
   "roles": {
     "super_admin": "Super Administrator",
     "admin": "Administrator",
@@ -140,6 +175,7 @@
     "title": "Configuration",
     "save": "Save",
     "saved": "Settings saved.",
+    "saveError": "Error while saving settings.",
 
     "tabs": {
       "auth": "Authentication",
@@ -161,7 +197,25 @@
 
     "smtp": {
       "title": "SMTP",
-      "description": "SMTP server configuration used for notifications and application emails."
+      "description": "SMTP server configuration used for notifications and application emails.",
+      "host": "SMTP Host",
+      "port": "Port",
+      "ssl": "SSL/TLS",
+      "user": "Username",
+      "password": "Password",
+      "senderEmail": "Sender email",
+      "senderName": "Sender name",
+      "testEmail": "Test email address",
+      "test": "Test connection",
+      "testSuccess": "Test email sent.",
+      "testError": "SMTP test failed.",
+    
+      "errors": {
+        "ssl": "The SMTP server is not compatible with the selected SSL/TLS configuration. Verify the port and SSL mode.",
+        "auth": "The SMTP username or password is invalid.",
+        "rateLimit": "The SMTP server is responding correctly but is currently limiting email sending.",
+        "unknown": "An unknown SMTP error occurred."
+        }
     },
 
     "graph": {
@@ -174,10 +228,21 @@
       "description": "Global portal security settings."
     },
 
+  "emails": {
+
+  "verification": {
+    "subject": "Email verification",
+    "title": "Welcome",
+    "content": "Click the button below to verify your email address.",
+    "button": "Verify my email address"
+    }
+},
+
     "branding": {
       "title": "Branding",
       "description": "Portal logo, colors and visual identity configuration."
     }
+
   }
 
   }

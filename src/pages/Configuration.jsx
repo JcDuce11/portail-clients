@@ -18,8 +18,28 @@ const [form, setForm] =
     lock_duration_minutes: "",
     session_duration_hours: "",
     email_validation_required: false,
-    otp_enabled: false
+    otp_enabled: false,
+    smtp_host: "",
+    smtp_port: "",
+    smtp_ssl: false,
+    smtp_user: "",
+    smtp_password: "",
+    smtp_sender_email: "",
+    smtp_sender_name: "",
+    smtp_test_email: ""
   });
+
+const [saveMessage, setSaveMessage] =
+  useState("");
+
+const [smtpMessage, setSmtpMessage] =
+  useState("");
+
+const [smtpError, setSmtpError] =
+  useState(false);
+
+const [saveError, setSaveError] =
+  useState(false);
 
 const settingsMap =
   Object.fromEntries(
@@ -74,7 +94,30 @@ setForm({
     map.email_validation_required === "1",
 
   otp_enabled:
-    map.otp_enabled === "1"
+    map.otp_enabled === "1",
+
+  smtp_host:
+    map.smtp_host || "",
+
+  smtp_port:
+    map.smtp_port || "",
+
+  smtp_ssl:
+    map.smtp_ssl === "1",
+
+  smtp_user:
+    map.smtp_user || "",
+
+  smtp_password:
+    map.smtp_password || "",
+
+  smtp_sender_email:
+    map.smtp_sender_email || "",
+
+  smtp_sender_name:
+    map.smtp_sender_name || "",
+
+  smtp_test_email: ""
 
 });
 
@@ -107,26 +150,50 @@ const saveSettings = async () => {
 
           body: JSON.stringify({
 
-            max_login_attempts:
-              form.max_login_attempts,
+  max_login_attempts:
+    form.max_login_attempts,
 
-            lock_duration_minutes:
-              form.lock_duration_minutes,
+  lock_duration_minutes:
+    form.lock_duration_minutes,
 
-            session_duration_hours:
-              form.session_duration_hours,
+  session_duration_hours:
+    form.session_duration_hours,
 
-            email_validation_required:
-              form.email_validation_required
-                ? "1"
-                : "0",
+  email_validation_required:
+    form.email_validation_required
+      ? "1"
+      : "0",
 
-            otp_enabled:
-              form.otp_enabled
-                ? "1"
-                : "0"
+  otp_enabled:
+    form.otp_enabled
+      ? "1"
+      : "0",
 
-          })
+  smtp_host:
+    form.smtp_host,
+
+  smtp_port:
+    form.smtp_port,
+
+  smtp_ssl:
+    form.smtp_ssl
+      ? "1"
+      : "0",
+
+  smtp_user:
+    form.smtp_user,
+
+  smtp_password:
+    form.smtp_password,
+
+  smtp_sender_email:
+    form.smtp_sender_email,
+
+  smtp_sender_name:
+    form.smtp_sender_name
+
+})
+
 
         }
       );
@@ -136,19 +203,140 @@ const saveSettings = async () => {
 
     if (data.success) {
 
-      alert(
-        t(
-          "configuration.saved"
-        )
-      );
+  setSaveError(false);
 
-    }
+  setSaveMessage(
+    t("configuration.saved")
+  );
+
+  setTimeout(() => {
+
+    setSaveMessage("");
+
+  }, 3000);
+
+}
+
 
   } catch (error) {
 
     console.error(error);
 
+setSaveError(true);
+
+setSaveMessage(
+  t("configuration.saveError")
+);
+
+setTimeout(() => {
+
+  setSaveMessage("");
+
+}, 5000);
+
   }
+
+};
+
+const testSmtp =
+  async () => {
+
+    try {
+
+      const response =
+        await fetch(
+          "http://localhost:3000/smtp/test",
+          {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              email:
+                form.smtp_test_email
+            })
+
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (data.success) {
+
+        setSmtpError(false);
+
+        setSmtpMessage(
+          t(
+            "configuration.smtp.testSuccess"
+          )
+        );
+
+      } else {
+
+        setSmtpError(true);
+
+        const smtpErrors = {
+
+  SMTP_SSL_ERROR:
+    t(
+      "configuration.smtp.errors.ssl"
+    ),
+
+  SMTP_AUTH_ERROR:
+    t(
+      "configuration.smtp.errors.auth"
+    ),
+
+  SMTP_RATE_LIMIT:
+    t(
+    "configuration.smtp.errors.rateLimit"
+    ),
+
+  SMTP_UNKNOWN_ERROR:
+    t(
+      "configuration.smtp.errors.unknown"
+    )
+
+};
+
+setSmtpMessage(
+
+  smtpErrors[
+    data.errorCode
+  ] ||
+
+  t(
+    "configuration.smtp.errors.unknown"
+  )
+
+);
+
+      }
+
+      setTimeout(() => {
+
+        setSmtpMessage("");
+
+      }, 5000);
+
+    } catch (error) {
+
+      console.error(error);
+
+      setSmtpError(true);
+
+      setSmtpMessage(
+        t(
+          "configuration.smtp.testError"
+        )
+      );
+
+    }
 
 };
 
@@ -338,13 +526,31 @@ const saveSettings = async () => {
 
 <br />
 
-<button
-  type="button"
-  className="configuration-save"
-  onClick={saveSettings}
->
-  {t("configuration.save")}
-</button>
+<div className="configuration-actions">
+
+  <button
+    type="button"
+    className="configuration-save"
+    onClick={saveSettings}
+  >
+    {t("configuration.save")}
+  </button>
+
+  {saveMessage && (
+
+    <div
+      className={
+        saveError
+          ? "configuration-feedback error"
+          : "configuration-feedback success"
+      }
+    >
+      {saveMessage}
+    </div>
+
+  )}
+
+</div>
 
 </section>
 
@@ -354,15 +560,229 @@ const saveSettings = async () => {
 
           <section>
 
-            <h2>
-              {t("configuration.smtp.title")}
-            </h2>
+  <h2>
+    {t("configuration.smtp.title")}
+  </h2>
 
-            <p>
-              {t("configuration.smtp.description")}
-            </p>
+  <p>
+    {t("configuration.smtp.description")}
+  </p>
 
-          </section>
+  <div className="configuration-section">
+
+    <div>
+
+      <strong>
+        {t("configuration.smtp.host")}
+      </strong>
+
+      <input
+        type="text"
+        value={form.smtp_host}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            smtp_host:
+              e.target.value
+          })
+        }
+      />
+
+    </div>
+
+    <div>
+
+      <strong>
+        {t("configuration.smtp.port")}
+      </strong>
+
+      <input
+        type="number"
+        value={form.smtp_port}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            smtp_port:
+              e.target.value
+          })
+        }
+      />
+
+    </div>
+
+    <div>
+
+      <strong>
+        {t("configuration.smtp.ssl")}
+      </strong>
+
+      <input
+        type="checkbox"
+        checked={form.smtp_ssl}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            smtp_ssl:
+              e.target.checked
+          })
+        }
+      />
+
+    </div>
+
+    <div>
+
+      <strong>
+        {t("configuration.smtp.user")}
+      </strong>
+
+      <input
+        type="text"
+        value={form.smtp_user}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            smtp_user:
+              e.target.value
+          })
+        }
+      />
+
+    </div>
+
+    <div>
+
+      <strong>
+        {t("configuration.smtp.password")}
+      </strong>
+
+      <input
+        type="password"
+        value={form.smtp_password}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            smtp_password:
+              e.target.value
+          })
+        }
+      />
+
+    </div>
+
+    <div>
+
+      <strong>
+        {t("configuration.smtp.senderName")}
+      </strong>
+
+      <input
+        type="text"
+        value={form.smtp_sender_name}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            smtp_sender_name:
+              e.target.value
+          })
+        }
+      />
+
+    </div>
+
+    <div>
+
+      <strong>
+        {t("configuration.smtp.senderEmail")}
+      </strong>
+
+      <input
+        type="email"
+        value={form.smtp_sender_email}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            smtp_sender_email:
+              e.target.value
+          })
+        }
+      />
+
+    </div>
+
+    <div>
+
+      <strong>
+        {t("configuration.smtp.testEmail")}
+      </strong>
+
+      <input
+        type="email"
+        value={form.smtp_test_email}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            smtp_test_email:
+              e.target.value
+          })
+        }
+      />
+
+    </div>
+
+    <br />
+
+<div className="configuration-actions">
+
+<button
+  type="button"
+  className="configuration-save"
+  onClick={testSmtp}
+>
+  {t("configuration.smtp.test")}
+</button>
+
+{smtpMessage && (
+
+  <div
+    className={
+      smtpError
+        ? "configuration-feedback error"
+        : "configuration-feedback success"
+    }
+  >
+    {smtpMessage}
+  </div>
+
+)}
+
+  <button
+    type="button"
+    className="configuration-save"
+    onClick={saveSettings}
+  >
+    {t("configuration.save")}
+  </button>
+
+  {saveMessage && (
+
+    <div
+      className={
+        saveError
+          ? "configuration-feedback error"
+          : "configuration-feedback success"
+      }
+    >
+      {saveMessage}
+    </div>
+
+  )}
+
+</div>
+
+  </div>
+
+</section>
 
         )}
 

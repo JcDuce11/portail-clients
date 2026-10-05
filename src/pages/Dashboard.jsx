@@ -8,6 +8,7 @@ import TechnicianDashboard from "../dashboards/TechnicianDashboard";
 import CommercialDashboard from "../dashboards/CommercialDashboard";
 import ClientDashboard from "../dashboards/ClientDashboard";
 import Configuration from "./Configuration";
+import Register from "./Register";
 
 export default function Dashboard() {
 
@@ -71,7 +72,11 @@ export default function Dashboard() {
                 </>
 
             );
-    }
+    
+            case "register":
+            return <Register />;
+    
+          }
 };
 
 console.log(

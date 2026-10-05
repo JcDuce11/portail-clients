@@ -53,7 +53,11 @@
   "action": "Action",
   "restore": "Restaurer",
   "enabled": "Activé",
-  "disabled": "Désactivé"
+  "disabled": "Désactivé",
+  "yes": "Oui",
+  "no": "Non",
+  "continue": "Continuer"
+
 
   },
 
@@ -122,7 +126,40 @@
     "invalidOtp": "Le code de sécurité est invalide.",
     "unknownUser": "Identifiant inconnu.",
     "serverError": "Erreur serveur."
+
   },
+
+  "register": {
+
+  "title": "Création de compte",
+  "description": "Renseignez les informations ci-dessous pour demander un accès au portail.",
+  "firstname": "Prénom",
+  "lastname": "Nom",
+  "mobile": "Téléphone portable",
+  "phone": "Téléphone fixe",
+  "email": "Adresse e-mail",
+  "password": "Mot de passe",
+  "confirmPassword": "Confirmation du mot de passe",
+  "company": "Société",
+  "site": "Site",
+  "address": "Adresse",
+  "postalCode": "Code postal",
+  "city": "Ville",
+  "country": "Pays",
+  "submit": "Créer mon compte",
+  "continue": "Continuer",
+  "back": "Retour",
+  "verify": "Vérifier les informations",
+  "resultFoundTitle": "Société et site trouvés",
+  "resultFoundDescription": "Nous avons trouvé les informations suivantes.",
+  "siteMissingTitle": "Site introuvable",
+  "siteMissingDescription": "Votre société a été trouvée mais aucun site correspondant n'a été identifié.",
+  "selectExistingSite": "Sélectionner un site existant",
+  "createNewSite": "Créer un nouveau site",
+  "genericDomainTitle": "Adresse générique détectée",
+  "genericDomainDescription": "Le domaine de votre adresse email ne permet pas d'identifier automatiquement votre société."
+
+},
 
   "roles": {
     "super_admin": "Super Administrateur",
@@ -142,6 +179,7 @@
     "title": "Configuration",
     "save": "Enregistrer",
     "saved": "Paramètres enregistrés.",
+    "saveError": "Erreur lors de l'enregistrement.",
 
     "tabs": {
       "auth": "Authentification",
@@ -163,7 +201,26 @@
 
     "smtp": {
       "title": "SMTP",
-      "description": "Configuration du serveur SMTP utilisé pour les notifications et les emails applicatifs."
+      "description": "Configuration du serveur SMTP utilisé pour les notifications et les emails applicatifs.",
+      "host": "Serveur SMTP",
+      "port": "Port",
+      "ssl": "SSL/TLS",
+      "user": "Nom d'utilisateur",
+      "password": "Mot de passe",
+      "senderEmail": "Adresse expéditeur",
+      "senderName": "Nom expéditeur",
+      "testEmail": "Adresse email de test",
+      "test": "Tester la connexion",
+      "testSuccess": "Email de test envoyé.",
+      "testError": "Erreur lors du test SMTP.",
+    
+      
+      "errors": {
+        "ssl": "Le serveur SMTP n'est pas compatible avec la configuration SSL/TLS sélectionnée. Vérifiez le port et le mode SSL.",
+        "auth": "Le nom d'utilisateur ou le mot de passe SMTP est incorrect.",
+        "rateLimit": "Le serveur SMTP répond correctement mais limite actuellement le nombre d'emails envoyés.",
+        "unknown": "Une erreur SMTP inconnue est survenue."
+      }
     },
 
     "graph": {
@@ -176,10 +233,23 @@
       "description": "Paramètres globaux de sécurité du portail."
     },
 
+  "emails": {
+
+    "verification": {
+      "subject": "Validation de votre adresse email",
+      "title": "Bienvenue",
+      "content": "Cliquez sur le bouton ci-dessous pour valider votre adresse email.",
+      "button": "Valider mon adresse email"
+      }
+
+    },
+
+
     "branding": {
       "title": "Personnalisation",
       "description": "Configuration du logo, des couleurs et de l'identité visuelle du portail."
     }
+
   }
 
 }

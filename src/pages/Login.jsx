@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./Login.css";
 import { useAuth } from "../context/AuthContext";
+import Register from "./Register";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -13,7 +14,8 @@ export default function Login() {
   const [shake, setShake] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [otpCode, setOtpCode] = useState("");
-  const { login } = useAuth();
+  const { login, setCurrentPage } = useAuth();
+  const [unknownUserAttempts, setUnknownUserAttempts] = useState(0);
   const handleOtpSubmit = () => {
 
   if (otpCode === "123456") {
@@ -63,6 +65,10 @@ const handleEmailSubmit = async () => {
 
       setError(
         t("login.unknownUser")
+      );
+
+      setUnknownUserAttempts(
+        previous => previous + 1
       );
 
       triggerShake();
@@ -277,6 +283,20 @@ const [transitioning, setTransitioning] =
 </div>
 )}
 
+{
+  unknownUserAttempts >= 2 && (
+    <button
+      type="button"
+      className="forgot-password-link"
+      onClick={() =>
+        setStep("register")
+      }
+    >
+      {t("login.createAccount")}
+    </button>
+  )
+}
+
 <button
   type="button"
   onClick={handleEmailSubmit}
@@ -312,13 +332,18 @@ const [transitioning, setTransitioning] =
     </button>
 
     {failedAttempts >= 2 && (
-      <button
-        type="button"
-        className="forgot-password-link"
-      >
-        Mot de passe oublié ?
-      </button>
-    )}
+
+  <button
+    type="button"
+    className="forgot-password-link"
+    onClick={handleForgotPassword}
+  >
+
+    {t("login.forgotPassword")}
+
+  </button>
+
+)}
 
   </div>
 )}
@@ -366,7 +391,13 @@ const [transitioning, setTransitioning] =
   </div>
 )}
 
+ {step === "register" && (
+
+  <Register />
+
+)}
       </div>
     </div>
   );
+
 }

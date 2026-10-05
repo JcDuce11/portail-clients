@@ -1033,3 +1033,170 @@ Sécurité
 16. JWT
 
 17. Authentification MariaDB complète
+
+
+# Analyse Automatique Société / Site
+
+## Principe
+
+Le portail ne doit jamais créer immédiatement un utilisateur lors de l'inscription.
+
+Avant toute création de compte, le système doit effectuer une analyse automatique permettant d'identifier :
+
+- la société
+- le site
+- le référent potentiel
+- le workflow de validation à appliquer
+
+---
+
+# Workflow d'Inscription
+
+## Étape 1 - Informations Personnelles
+
+L'utilisateur renseigne :
+
+```txt
+Prénom
+
+Nom
+
+Téléphone portable
+
+Téléphone fixe
+
+Adresse e-mail
+
+Mot de passe
+
+Confirmation du mot de passe
+```
+
+Puis :
+
+```txt
+Continuer
+```
+
+---
+
+## Étape 2 - Informations Professionnelles
+
+L'utilisateur renseigne :
+
+```txt
+Nom de la société
+
+Nom du site
+
+Adresse
+
+Code postal
+
+Ville
+
+Pays
+```
+
+Puis :
+
+```txt
+Vérifier les informations
+```
+
+---
+
+# Étape 3 - Analyse Automatique
+
+Le système ne crée pas encore l'utilisateur.
+
+Le portail lance une recherche automatique.
+
+---
+
+## Analyse du domaine de l'adresse e-mail
+
+Exemple :
+
+```txt
+alexandre@dupont.fr
+```
+
+↓
+
+Extraction :
+
+```txt
+dupont.fr
+```
+
+↓
+
+Recherche :
+
+```txt
+Société
+
+Site
+```
+
+---
+
+# Cas 1 - Société et Site trouvés
+
+Le portail affiche :
+
+```txt
+Nous avons trouvé :
+
+Société :
+DUPONT
+
+Site :
+PARIS
+
+Est-ce correct ?
+```
+
+Choix :
+
+```txt
+Oui
+
+Non
+```
+
+---
+
+## Si Oui
+
+Le workflow continue.
+
+Aucune création immédiate.
+
+Le système prépare :
+
+```txt
+PENDING_EMAIL
+
+email_verification_token
+
+email_verification_expires
+```
+
+---
+
+## Si Non
+
+Le portail permet une correction manuelle.
+
+---
+
+# Cas 2 - Société trouvée mais Site introuvable
+
+Le portail affiche :
+
+```txt
+Nous avons trouvé votre société.
+
+Aucun site correspondant n'a 
