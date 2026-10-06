@@ -24,6 +24,14 @@ console.log(
 );
 
 const {
+  analyzeRegistration,
+  searchCompanyByAddress,
+  analyzeEmailDomain
+} = require(
+  "./services/registerService"
+);
+
+const {
   getAllCompanies,
   getArchivedCompanies,
   createCompany,
@@ -34,7 +42,7 @@ const {
   getAllServices,
   saveCompanyServices,
 } = require("./services/companiesService");
- 
+
 const {
 getAllUsers,
 } = require("./services/usersService");
@@ -824,6 +832,104 @@ app.post(
   success: false,
   errorCode: error.message
 });
+
+    }
+
+  }
+);
+
+app.post(
+  "/auth/analyze-registration",
+  async (req, res) => {
+
+    try {
+
+      const result =
+        await analyzeRegistration(
+          req.body
+        );
+
+      res.json(result);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error:
+          error.message
+      });
+
+    }
+
+  }
+);
+
+app.post(
+  "/auth/search-company",
+  async (req, res) => {
+
+    try {
+
+      const result =
+        await searchCompanyByAddress(
+
+  req.body.company,
+
+  req.body.site,
+
+  req.body.city,
+
+  req.body.postalCode
+
+);
+
+      res.json(result);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+
+        success: false,
+
+        error:
+          error.message
+
+      });
+
+    }
+
+  }
+);
+
+app.post(
+  "/auth/analyze-email",
+  async (req, res) => {
+
+    try {
+
+      const result =
+        await analyzeEmailDomain(
+          req.body.email
+        );
+
+      res.json(result);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+
+        success: false,
+
+        error:
+          error.message
+
+      });
 
     }
 

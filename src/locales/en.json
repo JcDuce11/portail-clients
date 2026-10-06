@@ -153,7 +153,23 @@
   "selectExistingSite": "Select an existing site",
   "createNewSite": "Create a new site",
   "genericDomainTitle": "Generic email detected",
-  "genericDomainDescription": "The domain of your email address does not allow automatic company identification."
+  "genericDomainDescription": "The domain of your email address does not allow automatic company identification.",
+  "noMatchTitle": "No company found",
+  "noMatchDescription": "No company matching the provided information could be found.",
+  "companySiteFoundTitle": "Company and site found",
+  "companySiteMissingTitle": "Site not found",
+  "useSelectedSite": "Use this site",
+  "newSiteName": "New site name",
+  "submitRequest": "Submit request",
+  "searchCompany": "Search my company",
+  "requestReady": "The request is ready to be submitted for validation.",
+  "requestReadyTitle": "Request ready",
+  "requestReadyDescription": "Your request is ready to be submitted for validation.",
+  "sendRequest": "Submit request",
+  "companyDetectedTitle": "Company detected",
+  "selectSite": "Select your site",
+  "domainNotFoundTitle": "Company not identified",
+  "domainNotFoundDescription": "The domain of your email address does not match any known company. Please provide your company information."
 
 },
 

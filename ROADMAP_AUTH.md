@@ -217,109 +217,55 @@ Confirmation du mot de passe
 
 ## Étape 2 - Informations Professionnelles
 
-L'utilisateur renseigne :
-
-```txt
-Nom société
-
-Nom du site
-
-Adresse du site
-
-Code postal
-
-Ville
-
-Pays
-```
+L'étape 2 dépend du résultat de l'analyse de l'adresse e-mail effectuée après l'étape 1.
 
 ---
 
-# Recherche Automatique
+### Cas 1 - Société identifiée automatiquement
 
-Le système tente d'identifier :
+Exemple :
 
-```txt
-Société
-```
+dupont@dupont.fr
 
-et :
+↓
 
-```txt
-Site
-```
-
-à partir :
-
-```txt
-Domaine de l'adresse e-mail
-```
-
-ou :
-
-```txt
-Nom société
-
-Adresse
-
-Ville
-
-Code postal
-```
-
----
-
-# Cas 1 - Société et Site Trouvés
-
-Le système affiche :
-
-```txt
-Nous avons trouvé :
+Le portail identifie automatiquement :
 
 Société :
-XXX
+DUPONT
 
-Site :
-XXX
+Le portail affiche :
 
-Est-ce correct ?
-```
+Sélectionnez votre site :
 
-Choix :
+▼ Siège Social
+▼ Agence Lyon
+▼ Entrepôt Lille
 
-```txt
-Oui
+[ Utiliser ce site ]
 
-Non
-```
+[ Mon site n'existe pas ]
 
----
-
-# Cas 2 - Société Trouvée mais Site Introuvable
-
-Le système affiche :
-
-```txt
-Nous avons trouvé votre société.
-
-Aucun site correspondant n'a été trouvé.
-```
-
-Choix :
-
-```txt
-Sélectionner un site existant
-
-Créer un nouveau site
-```
+Le champ société n'est jamais affiché à l'utilisateur.
 
 ---
 
-# Création d'un Nouveau Site
+### Cas 2 - Domaine générique
 
-L'utilisateur renseigne :
+Exemples :
 
-```txt
+gmail.com
+hotmail.com
+outlook.com
+free.fr
+orange.fr
+
+Le portail affiche :
+
+Adresse e-mail générique détectée.
+
+Nom société
+
 Nom du site
 
 Adresse
@@ -329,55 +275,62 @@ Code postal
 Ville
 
 Pays
-```
 
-Une demande est envoyée :
+[ Rechercher ma société ]
 
-```txt
-Référent
+---
+
+### Cas 3 - Domaine inconnu
+
+Le domaine de l'adresse e-mail ne correspond à aucune société connue.
+
+Le portail affiche :
+
+Société non identifiée.
+
+Nom société
+
+Nom du site
+
+Adresse
+
+Code postal
+
+Ville
+
+Pays
+
+[ Rechercher ma société ]
+
+## Cas 2B - Mon site n'existe pas
+
+Lorsque l'utilisateur sélectionne :
+
+Mon site n'existe pas
+
+Le portail affiche :
+
+Nom du nouveau site
+
+Adresse
+
+Code postal
+
+Ville
+
+Pays
+
+[ Envoyer la demande ]
+
+Aucune création de site n'est effectuée automatiquement.
+
+Une demande est créée et devra être validée par :
+
+REFERENT
 
 ADMIN
 
 SUPER_ADMIN
-```
-
-pour validation.
-
----
-
-# Cas 3 - Domaine Générique
-
-Exemples :
-
-```txt
-gmail.com
-
-hotmail.com
-
-outlook.com
-
-free.fr
-
-orange.fr
-```
-
-Le domaine n'est pas exploitable.
-
-Le système utilise :
-
-```txt
-Nom société
-
-Adresse
-
-Ville
-
-Code postal
-```
-
-pour identifier l'entreprise.
-
----
 
 # Validation de l'Adresse E-mail
 
@@ -1021,6 +974,16 @@ Sécurité
 10. Configuration SMTP
 
 11. Configuration Microsoft 365 Graph
+   
+    11A. Analyse du domaine de l'adresse e-mail
+
+    11B. Sélection du site
+
+    11C. Création de demande de nouveau site
+
+    11D. Recherche société pour domaine générique
+
+    11E. Gestion du cas société introuvable
 
 12. Inscription utilisateur
 
@@ -1039,14 +1002,16 @@ Sécurité
 
 ## Principe
 
-Le portail ne doit jamais créer immédiatement un utilisateur lors de l'inscription.
+Le portail ne crée jamais immédiatement un utilisateur lors de l'inscription.
 
-Avant toute création de compte, le système doit effectuer une analyse automatique permettant d'identifier :
+Avant toute création de compte, le système doit :
 
-- la société
-- le site
-- le référent potentiel
-- le workflow de validation à appliquer
+- identifier la société
+- identifier le site
+- déterminer le workflow de validation
+- déterminer les interlocuteurs concernés
+
+Aucun utilisateur ne doit être créé tant que cette phase n'est pas terminée.
 
 ---
 
@@ -1072,7 +1037,7 @@ Mot de passe
 Confirmation du mot de passe
 ```
 
-Puis :
+Action :
 
 ```txt
 Continuer
@@ -1082,10 +1047,48 @@ Continuer
 
 ## Étape 2 - Informations Professionnelles
 
-L'utilisateur renseigne :
+### Cas standard
+
+Si la société est identifiée automatiquement grâce au domaine de l'adresse e-mail :
 
 ```txt
-Nom de la société
+Nom du site
+
+Adresse
+
+Code postal
+
+Ville
+
+Pays
+```
+
+Le champ société n'est pas affiché.
+
+---
+
+### Cas domaine générique ou société introuvable
+
+Exemples :
+
+```txt
+gmail.com
+
+hotmail.com
+
+outlook.com
+
+free.fr
+
+orange.fr
+```
+
+Le domaine ne peut pas être utilisé.
+
+Le portail affiche alors :
+
+```txt
+Nom société
 
 Nom du site
 
@@ -1098,7 +1101,7 @@ Ville
 Pays
 ```
 
-Puis :
+Action :
 
 ```txt
 Vérifier les informations
@@ -1108,15 +1111,11 @@ Vérifier les informations
 
 # Étape 3 - Analyse Automatique
 
-Le système ne crée pas encore l'utilisateur.
+Le portail effectue une recherche.
 
-Le portail lance une recherche automatique.
+## Analyse primaire
 
----
-
-## Analyse du domaine de l'adresse e-mail
-
-Exemple :
+Extraction du domaine :
 
 ```txt
 alexandre@dupont.fr
@@ -1124,30 +1123,24 @@ alexandre@dupont.fr
 
 ↓
 
-Extraction :
-
 ```txt
 dupont.fr
 ```
 
 ↓
 
-Recherche :
-
-```txt
-Société
-
-Site
-```
+Recherche société.
 
 ---
 
 # Cas 1 - Société et Site trouvés
 
-Le portail affiche :
+Affichage :
 
 ```txt
-Nous avons trouvé :
+✅ Société trouvée
+
+✅ Site trouvé
 
 Société :
 DUPONT
@@ -1158,7 +1151,7 @@ PARIS
 Est-ce correct ?
 ```
 
-Choix :
+Actions :
 
 ```txt
 Oui
@@ -1172,31 +1165,346 @@ Non
 
 Le workflow continue.
 
-Aucune création immédiate.
+Aucun utilisateur n'est encore créé.
 
-Le système prépare :
+---
+
+## Si Non
+
+Retour à l'étape précédente.
+
+---
+
+# Cas 2 - Société trouvée mais Site introuvable
+
+Affichage :
 
 ```txt
-PENDING_EMAIL
+✅ Société trouvée
+
+❌ Site introuvable
+```
+
+Puis :
+
+```txt
+Sites existants :
+
+• Siège Social
+
+• Agence Lyon
+
+• ...
+```
+
+Actions :
+
+```txt
+Choisir un site existant
+
+Créer un nouveau site
+```
+
+---
+
+## Cas 2A - Site existant
+
+L'utilisateur choisit un site.
+
+Le workflow continue.
+
+---
+
+## Cas 2B - Création d'un nouveau site
+
+Formulaire supplémentaire :
+
+```txt
+Nom du nouveau site
+
+Adresse
+
+Code postal
+
+Ville
+
+Pays
+```
+
+Une demande de création est envoyée.
+
+---
+
+# Cas 3 - Domaine Générique
+
+Le portail ne peut pas identifier automatiquement la société.
+
+L'utilisateur doit renseigner :
+
+Nom société
+
+Nom du site
+
+Adresse
+
+Code postal
+
+Ville
+
+Pays
+
+Puis :
+
+[ Rechercher ma société ]
+
+---
+
+## Société trouvée
+
+Le portail affiche :
+
+✅ Société détectée
+
+Puis la liste des sites existants :
+
+▼ Siège Social
+▼ Agence Lyon
+▼ ...
+
+[ Utiliser ce site ]
+
+[ Mon site n'existe pas ]
+
+Le workflow devient alors identique au Cas 1.
+
+
+---
+
+# Cas 4 - Société introuvable
+
+Aucune société n'a été trouvée.
+
+Le portail affiche :
+
+❌ Aucune société trouvée.
+
+Votre demande sera transmise à un administrateur pour analyse.
+
+Actions :
+
+[ Envoyer ma demande ]
+
+[ Retour ]
+
+La demande est ensuite transmise à :
+
+REFERENT
+
+ADMIN
+
+SUPER_ADMIN
+---
+
+# Création de la demande
+
+Lorsque le workflow est validé :
+
+Création :
+
+```txt
+status = PENDING_EMAIL
+
+email_verified = 0
 
 email_verification_token
 
 email_verification_expires
 ```
 
----
-
-## Si Non
-
-Le portail permet une correction manuelle.
-
----
-
-# Cas 2 - Société trouvée mais Site introuvable
-
-Le portail affiche :
+Durée :
 
 ```txt
-Nous avons trouvé votre société.
+24 heures
+```
 
-Aucun site correspondant n'a 
+---
+
+# Validation de l'adresse e-mail
+
+Un email est envoyé.
+
+L'utilisateur clique sur :
+
+```txt
+Valider mon adresse e-mail
+```
+
+---
+
+## Validation réussie
+
+```txt
+email_verified = 1
+
+status = PENDING_APPROVAL
+```
+
+---
+
+# Validation Administrative
+
+Une notification est envoyée à :
+
+```txt
+REFERENT
+
+ADMIN
+
+SUPER_ADMIN
+```
+
+---
+
+## Traitement
+
+Le premier valideur ayant répondu :
+
+```txt
+Accepter
+
+ou
+
+Refuser
+```
+
+devient le valideur officiel.
+
+Tous les autres liens deviennent invalides.
+
+Message :
+
+```txt
+Demande déjà traitée.
+```
+
+---
+
+# Activation du compte
+
+Condition obligatoire :
+
+```txt
+company_id renseigné
+
+ET
+
+primary_site_id renseigné
+```
+
+---
+
+# Interdiction Absolue
+
+Même un :
+
+```txt
+SUPER_ADMIN
+```
+
+ne peut pas activer un utilisateur si :
+
+```txt
+company_id = NULL
+
+ou
+
+primary_site_id = NULL
+```
+
+---
+
+# Adresse e-mail non validée
+
+Un :
+
+```txt
+ADMIN
+
+ou
+
+SUPER_ADMIN
+```
+
+peut activer un utilisateur même si :
+
+```txt
+email_verified = 0
+```
+
+---
+
+## Restrictions appliquées
+
+L'utilisateur peut :
+
+```txt
+Se connecter
+```
+
+Mais ne peut pas :
+
+```txt
+Réinitialiser son mot de passe
+
+Activer l'OTP
+
+Recevoir les notifications
+
+Recevoir les emails Tickets
+
+Recevoir les emails Interventions
+
+Recevoir les emails automatiques
+```
+
+---
+
+## Message à la connexion
+
+Affichage permanent :
+
+```txt
+Votre adresse e-mail n'est pas validée.
+
+Certaines fonctionnalités sont désactivées tant que votre adresse e-mail n'a pas été validée.
+```
+
+---
+
+# Règle métier fondamentale
+
+```txt
+Aucun utilisateur orphelin.
+```
+
+Obligatoire :
+
+```txt
+company_id
+
+ET
+
+primary_site_id
+```
+
+Cette règle s'applique :
+
+```txt
+Frontend
+
+Backend
+
+MariaDB
+
+Validation administrative
+```

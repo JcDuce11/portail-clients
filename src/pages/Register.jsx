@@ -9,8 +9,21 @@ export default function Register() {
   const [step, setStep] =
     useState(1);
 
+  const [companyDetected,
+  setCompanyDetected] =
+    useState(null);
+
+  const [requestReady, setRequestReady] =
+  useState(false);
+
+  const [selectedSiteId, setSelectedSiteId] =
+  useState("");
+
+    const [createNewSite, setCreateNewSite] =
+  useState(false);
+
     const [analysisResult, setAnalysisResult] =
-  useState("companySiteFound");
+  useState(null);
 
   const [form, setForm] =
     useState({
@@ -36,6 +49,24 @@ export default function Register() {
 
     });
 
+  const [genericSearch, setGenericSearch] =
+  useState({
+
+    company: "",
+
+    site: "",
+
+    address: "",
+
+    postalCode: "",
+
+    city: "",
+
+    country: ""
+
+  });
+
+
   const updateField =
     (field, value) => {
 
@@ -45,6 +76,172 @@ export default function Register() {
       });
 
     };
+
+    const analyzeRegistration =
+  async () => {
+
+    try {
+
+      const response =
+        await fetch(
+          "http://localhost:3000/auth/analyze-registration",
+          {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+
+              email:
+                form.email,
+
+              company:
+                form.company,
+
+              site:
+                form.site,
+
+              postalCode:
+                form.postalCode,
+
+              city:
+                form.city
+
+            })
+
+          }
+        );
+
+      const data =
+        await response.json();
+
+        console.log(
+  "ANALYSIS RESULT",
+  data
+);
+
+      setAnalysisResult(data);
+
+      setStep(3);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+};
+
+const analyzeGenericCompany =
+  async () => {
+
+    try {
+
+      const response =
+        await fetch(
+          "http://localhost:3000/auth/search-company",
+          {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+
+              company:
+                genericSearch.company,
+
+              site:
+                genericSearch.site,
+
+              postalCode:
+                genericSearch.postalCode,
+
+              city:
+                genericSearch.city
+
+            })
+
+          }
+        );
+
+      const data =
+        await response.json();
+
+      console.log(
+        "GENERIC SEARCH RESULT",
+        data
+      );
+
+      setAnalysisResult(data);
+      setStep(3);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+};
+
+const analyzeEmail =
+  async () => {
+
+    try {
+
+      const response =
+        await fetch(
+          "http://localhost:3000/auth/analyze-email",
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+              JSON.stringify({
+
+                email:
+                  form.email
+
+              })
+
+          }
+        );
+
+      const data =
+        await response.json();
+
+console.log(
+  "EMAIL ANALYSIS",
+  data
+);
+
+      setCompanyDetected(
+        data
+      );
+
+      setStep(2);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+};
 
   return (
 
@@ -152,9 +349,7 @@ export default function Register() {
 
           <button
             type="button"
-            onClick={() =>
-              setStep(2)
-            }
+            onClick={analyzeEmail}
           >
             {t("register.continue")}
           </button>
@@ -165,113 +360,425 @@ export default function Register() {
 
       {step === 2 && (
 
-        <div className="register-form">
+  <div className="register-form">
 
-          <input
-            type="text"
-            placeholder={t("register.company")}
-            value={form.company}
-            onChange={(e) =>
-              updateField(
-                "company",
-                e.target.value
-              )
-            }
-          />
+    {companyDetected?.result ===
+      "COMPANY_FOUND" && (
 
-          <input
-            type="text"
-            placeholder={t("register.site")}
-            value={form.site}
-            onChange={(e) =>
-              updateField(
-                "site",
-                e.target.value
-              )
-            }
-          />
+      <>
 
-          <input
-            type="text"
-            placeholder={t("register.address")}
-            value={form.address}
-            onChange={(e) =>
-              updateField(
-                "address",
-                e.target.value
-              )
-            }
-          />
+        <h2>
+          {t(
+            "register.companyDetectedTitle"
+          )}
+        </h2>
 
-          <input
-            type="text"
-            placeholder={t("register.postalCode")}
-            value={form.postalCode}
-            onChange={(e) =>
-              updateField(
-                "postalCode",
-                e.target.value
-              )
-            }
-          />
+        <p>
+          {companyDetected.company.name}
+        </p>
 
-          <input
-            type="text"
-            placeholder={t("register.city")}
-            value={form.city}
-            onChange={(e) =>
-              updateField(
-                "city",
-                e.target.value
-              )
-            }
-          />
+        <label>
+          {t(
+            "register.selectSite"
+          )}
+        </label>
 
-          <input
-            type="text"
-            placeholder={t("register.country")}
-            value={form.country}
-            onChange={(e) =>
-              updateField(
-                "country",
-                e.target.value
-              )
-            }
-          />
+        <select
+          value={selectedSiteId}
+          onChange={(e) =>
+            setSelectedSiteId(
+              e.target.value
+            )
+          }
+        >
 
-          <div
-            className="register-actions"
-          >
+          <option value="">
+            {t(
+              "register.selectSite"
+            )}
+          </option>
+
+          {companyDetected.sites.map(
+            (site) => (
+
+              <option
+                key={site.id}
+                value={site.id}
+              >
+
+                {site.site_name}
+
+              </option>
+
+            )
+          )}
+
+        </select>
+
+        <button
+  type="button"
+  onClick={() => {
+
+    setAnalysisResult({
+
+      result:
+        "COMPANY_SITE_FOUND",
+
+      company:
+        companyDetected.company.name,
+
+      site:
+        companyDetected.sites.find(
+          site =>
+            String(site.id) ===
+            String(selectedSiteId)
+        )?.site_name
+
+    });
+
+<div style={{
+  color: "red",
+  fontWeight: "bold"
+}}>
+  RESULT = {companyDetected?.result}
+</div>
+
+    setStep(3);
+
+  }}
+>
+  {t(
+    "register.useSelectedSite"
+  )}
+</button>
+
+        <button
+          type="button"
+          onClick={() =>
+            setCreateNewSite(true)
+          }
+        >
+          {t(
+            "register.createNewSite"
+          )}
+        </button>
+
+        {createNewSite && (
+
+          <div className="register-form">
+
+            <input
+              type="text"
+              placeholder={
+                t(
+                  "register.newSiteName"
+                )
+              }
+            />
+
+            <input
+              type="text"
+              placeholder={
+                t(
+                  "register.address"
+                )
+              }
+            />
+
+            <input
+              type="text"
+              placeholder={
+                t(
+                  "register.postalCode"
+                )
+              }
+            />
+
+            <input
+              type="text"
+              placeholder={
+                t(
+                  "register.city"
+                )
+              }
+            />
+
+            <input
+              type="text"
+              placeholder={
+                t(
+                  "register.country"
+                )
+              }
+            />
 
             <button
               type="button"
-              onClick={() =>
-                setStep(1)
-              }
             >
-              {t("register.back")}
+              {t(
+                "register.submitRequest"
+              )}
             </button>
-
-           <button
-  type="button"
-  onClick={() =>
-    setStep(3)
-  }
->
-  {t("register.verify")}
-</button>
 
           </div>
 
-        </div>
+        )}
 
+      </>
+
+    )}
+
+    {(companyDetected?.result ===
+      "GENERIC_DOMAIN" ) && (
+
+      <>
+
+        <input
+          type="text"
+          placeholder={
+            t("register.company")
+          }
+          value={genericSearch.company}
+          onChange={(e) =>
+            setGenericSearch({
+              ...genericSearch,
+              company:
+                e.target.value
+            })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder={
+            t("register.site")
+          }
+          value={genericSearch.site}
+          onChange={(e) =>
+            setGenericSearch({
+              ...genericSearch,
+              site:
+                e.target.value
+            })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder={
+            t("register.address")
+          }
+          value={genericSearch.address}
+          onChange={(e) =>
+            setGenericSearch({
+              ...genericSearch,
+              address:
+                e.target.value
+            })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder={
+            t(
+              "register.postalCode"
+            )
+          }
+          value={
+            genericSearch.postalCode
+          }
+          onChange={(e) =>
+            setGenericSearch({
+              ...genericSearch,
+              postalCode:
+                e.target.value
+            })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder={
+            t("register.city")
+          }
+          value={genericSearch.city}
+          onChange={(e) =>
+            setGenericSearch({
+              ...genericSearch,
+              city:
+                e.target.value
+            })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder={
+            t("register.country")
+          }
+          value={genericSearch.country}
+          onChange={(e) =>
+            setGenericSearch({
+              ...genericSearch,
+              country:
+                e.target.value
+            })
+          }
+        />
+
+        <button
+          type="button"
+          onClick={
+            analyzeGenericCompany
+          }
+        >
+          {t(
+            "register.searchCompany"
+          )}
+        </button>
+
+      </>
+
+    )}
+
+   {companyDetected?.result ===
+  "DOMAIN_NOT_FOUND" && (
+
+  <>
+
+    <h2>
+      {t(
+        "register.domainNotFoundTitle"
       )}
+    </h2>
+
+    <p>
+      {t(
+        "register.domainNotFoundDescription"
+      )}
+    </p>
+
+    <input
+      type="text"
+      placeholder={
+        t("register.company")
+      }
+      value={genericSearch.company}
+      onChange={(e) =>
+        setGenericSearch({
+          ...genericSearch,
+          company:
+            e.target.value
+        })
+      }
+    />
+
+    <input
+      type="text"
+      placeholder={
+        t("register.site")
+      }
+      value={genericSearch.site}
+      onChange={(e) =>
+        setGenericSearch({
+          ...genericSearch,
+          site:
+            e.target.value
+        })
+      }
+    />
+
+    <input
+      type="text"
+      placeholder={
+        t("register.address")
+      }
+      value={genericSearch.address}
+      onChange={(e) =>
+        setGenericSearch({
+          ...genericSearch,
+          address:
+            e.target.value
+        })
+      }
+    />
+
+    <input
+      type="text"
+      placeholder={
+        t("register.postalCode")
+      }
+      value={
+        genericSearch.postalCode
+      }
+      onChange={(e) =>
+        setGenericSearch({
+          ...genericSearch,
+          postalCode:
+            e.target.value
+        })
+      }
+    />
+
+    <input
+      type="text"
+      placeholder={
+        t("register.city")
+      }
+      value={
+        genericSearch.city
+      }
+      onChange={(e) =>
+        setGenericSearch({
+          ...genericSearch,
+          city:
+            e.target.value
+        })
+      }
+    />
+
+    <input
+      type="text"
+      placeholder={
+        t("register.country")
+      }
+      value={
+        genericSearch.country
+      }
+      onChange={(e) =>
+        setGenericSearch({
+          ...genericSearch,
+          country:
+            e.target.value
+        })
+      }
+    />
+
+    <button
+      type="button"
+      onClick={
+        analyzeGenericCompany
+      }
+    >
+      {t(
+        "register.searchCompany"
+      )}
+    </button>
+
+  </>
+
+)} 
+
+  </div>
+
+)}
 
       {step === 3 && (
 
   <div className="register-form">
 
-    {analysisResult === "companySiteFound" && (
+    {analysisResult?.result === "COMPANY_SITE_FOUND" && (
 
       <>
 
@@ -284,70 +791,398 @@ export default function Register() {
         </p>
 
         <div>
-          {t("register.company")} :
-          DUPONT
-        </div>
+  {t("register.company")} :
+  {analysisResult?.company}
+</div>
 
-        <div>
-          {t("register.site")} :
-          PARIS
-        </div>
+<div>
+  {t("register.site")} :
+  {analysisResult?.site}
+</div>
+        <button
+  type="button"
+  onClick={() => {
+    console.log("USER CONFIRMED COMPANY/SITE");
+  }}
+>
+  {t("common.yes")}
+</button>
 
-        <button type="button">
-          {t("common.yes")}
-        </button>
-
-        <button type="button">
-          {t("common.no")}
-        </button>
+<button
+  type="button"
+  onClick={() => {
+    setStep(2);
+  }}
+>
+  {t("common.no")}
+</button>
 
       </>
 
     )}
 
-    {analysisResult === "companyFoundSiteMissing" && (
+    {analysisResult?.result === "COMPANY_FOUND_SITE_MISSING" && (
+
+  <>
+
+    <h2>
+      {t(
+        "register.siteMissingTitle"
+      )}
+    </h2>
+
+    <p>
+      {t(
+        "register.siteMissingDescription"
+      )}
+    </p>
+
+    <div>
+
+      <strong>
+        {t("register.company")} :
+      </strong>
+
+      {" "}
+      {analysisResult.company}
+
+    </div>
+
+    <br />
+
+    <label>
+
+      {t(
+        "register.selectExistingSite"
+      )}
+
+    </label>
+
+    <select>
+
+      {analysisResult?.sites?.map(
+        (site) => (
+
+          <option
+            key={site.id}
+            value={site.id}
+          >
+
+            {site.site_name}
+
+          </option>
+
+        )
+      )}
+
+    </select>
+
+    <br />
+
+    <button
+      type="button"
+    >
+
+      {t(
+        "register.useSelectedSite"
+      )}
+
+    </button>
+
+    <br />
+
+    <button
+  type="button"
+  onClick={() =>
+    setCreateNewSite(true)
+  }
+>
+  {t("register.createNewSite")}
+</button>
+
+{createNewSite && (
+
+  <div className="register-form">
+
+    <input
+      type="text"
+      placeholder={t("register.newSiteName")}
+    />
+
+    <input
+      type="text"
+      placeholder={t("register.address")}
+    />
+
+    <input
+      type="text"
+      placeholder={t("register.postalCode")}
+    />
+
+    <input
+      type="text"
+      placeholder={t("register.city")}
+    />
+
+    <input
+      type="text"
+      placeholder={t("register.country")}
+    />
+
+    <button
+  type="button"
+  onClick={() =>
+    setAnalysisResult({
+      result:
+        "NEW_SITE_REQUEST_READY"
+    })
+  }
+>
+  {t("register.submitRequest")}
+</button>
+
+{requestReady && (
+
+  <div className="register-success">
+
+    {t(
+      "register.requestReady"
+    )}
+
+  </div>
+
+)}
+
+  </div>
+
+)}
+
+  </>
+
+)}
+
+    {analysisResult?.result === "GENERIC_DOMAIN" && (
 
       <>
 
-        <h2>
-          {t("register.siteMissingTitle")}
-        </h2>
+  <h2>
+    {t(
+      "register.genericDomainTitle"
+    )}
+  </h2>
 
-        <p>
-          {t("register.siteMissingDescription")}
-        </p>
+  <p>
+    {t(
+      "register.genericDomainDescription"
+    )}
+  </p>
 
-        <button type="button">
-          {t("register.selectExistingSite")}
-        </button>
+  <input
+    type="text"
+    placeholder={
+      t("register.company")
+    }
+    value={
+      genericSearch.company
+    }
+    onChange={(e) =>
+      setGenericSearch({
+        ...genericSearch,
+        company:
+          e.target.value
+      })
+    }
+  />
 
-        <button type="button">
-          {t("register.createNewSite")}
-        </button>
+  <input
+    type="text"
+    placeholder={
+      t("register.site")
+    }
+    value={
+      genericSearch.site
+    }
+    onChange={(e) =>
+      setGenericSearch({
+        ...genericSearch,
+        site:
+          e.target.value
+      })
+    }
+  />
 
-      </>
+  <input
+    type="text"
+    placeholder={
+      t("register.address")
+    }
+    value={
+      genericSearch.address
+    }
+    onChange={(e) =>
+      setGenericSearch({
+        ...genericSearch,
+        address:
+          e.target.value
+      })
+    }
+  />
+
+  <input
+    type="text"
+    placeholder={
+      t("register.postalCode")
+    }
+    value={
+      genericSearch.postalCode
+    }
+    onChange={(e) =>
+      setGenericSearch({
+        ...genericSearch,
+        postalCode:
+          e.target.value
+      })
+    }
+  />
+
+  <input
+    type="text"
+    placeholder={
+      t("register.city")
+    }
+    value={
+      genericSearch.city
+    }
+    onChange={(e) =>
+      setGenericSearch({
+        ...genericSearch,
+        city:
+          e.target.value
+      })
+    }
+  />
+
+  <input
+    type="text"
+    placeholder={
+      t("register.country")
+    }
+    value={
+      genericSearch.country
+    }
+    onChange={(e) =>
+      setGenericSearch({
+        ...genericSearch,
+        country:
+          e.target.value
+      })
+    }
+  />
+
+  <button
+  type="button"
+  onClick={
+    analyzeGenericCompany
+  }
+>
+  {t(
+    "register.searchCompany"
+  )}
+</button>
+
+</>
 
     )}
 
-    {analysisResult === "genericDomain" && (
+    {analysisResult?.result === "NO_MATCH" && (
 
-      <>
+  <>
+  <h2>
+    {t("register.noMatchTitle")}
+  </h2>
 
-        <h2>
-          {t("register.genericDomainTitle")}
-        </h2>
+  <p>
+    {t("register.noMatchDescription")}
+  </p>
 
-        <p>
-          {t("register.genericDomainDescription")}
-        </p>
+  <button
+    type="button"
+    onClick={() =>
+      setAnalysisResult({
+        result: "REQUEST_READY"
+      })
+    }
+  >
+    {t("register.sendRequest")}
+  </button>
 
-        <button type="button">
-          {t("common.continue")}
-        </button>
+  <button
+    type="button"
+    onClick={() =>
+      setStep(2)
+    }
+  >
+    {t("register.back")}
+  </button>
+</>
 
-      </>
+)}
 
-    )}
+{analysisResult?.result === "NEW_SITE_REQUEST_READY" && (
+
+  <>
+
+    <h2>
+      {t(
+        "register.requestReadyTitle"
+      )}
+    </h2>
+
+    <p>
+      {t(
+        "register.requestReadyDescription"
+      )}
+    </p>
+
+    <button
+      type="button"
+    >
+      {t(
+        "register.sendRequest"
+      )}
+    </button>
+
+  </>
+
+)}
+
+{analysisResult?.result ===
+ "REQUEST_READY" && (
+
+  <>
+    <h2>
+      {t(
+        "register.requestReadyTitle"
+      )}
+    </h2>
+
+    <p>
+      {t(
+        "register.requestReadyDescription"
+      )}
+    </p>
+
+    <button
+      type="button"
+    >
+      {t(
+        "register.sendRequest"
+      )}
+    </button>
+
+  </>
+
+)}
 
   </div>
 

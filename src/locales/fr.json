@@ -157,7 +157,23 @@
   "selectExistingSite": "Sélectionner un site existant",
   "createNewSite": "Créer un nouveau site",
   "genericDomainTitle": "Adresse générique détectée",
-  "genericDomainDescription": "Le domaine de votre adresse email ne permet pas d'identifier automatiquement votre société."
+  "genericDomainDescription": "Le domaine de votre adresse email ne permet pas d'identifier automatiquement votre société.",
+  "noMatchTitle": "Aucune société trouvée",
+  "noMatchDescription": "Nous n'avons pas trouvé de société correspondant aux informations fournies.",
+  "companySiteFoundTitle": "Société et site trouvés",
+  "companySiteMissingTitle": "Site introuvable",
+  "useSelectedSite": "Utiliser ce site",
+  "newSiteName": "Nom du nouveau site",
+  "submitRequest": "Enregistrer la demande",
+  "searchCompany": "Rechercher ma société",
+  "requestReady": "La demande est prête à être envoyée pour validation.",
+  "requestReadyTitle": "Demande prête",
+  "requestReadyDescription": "Votre demande est prête à être transmise pour validation.",
+  "sendRequest": "Envoyer la demande",
+  "companyDetectedTitle": "Société détectée",
+  "selectSite": "Sélectionnez",
+  "domainNotFoundTitle": "Société non identifiée",
+  "domainNotFoundDescription": "Le domaine de votre adresse e-mail ne correspond à aucune société connue. Veuillez renseigner votre société."
 
 },
 
