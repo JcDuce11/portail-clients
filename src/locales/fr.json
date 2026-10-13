@@ -173,7 +173,8 @@
   "companyDetectedTitle": "Société détectée",
   "selectSite": "Sélectionnez",
   "domainNotFoundTitle": "Société non identifiée",
-  "domainNotFoundDescription": "Le domaine de votre adresse e-mail ne correspond à aucune société connue. Veuillez renseigner votre société."
+  "domainNotFoundDescription": "Le domaine de votre adresse e-mail ne correspond à aucune société connue. Veuillez renseigner votre société.",
+  "requestSentDescription": "Votre demande a été enregistrée. Un e-mail de validation va vous être envoyé."
 
 },
 
@@ -249,23 +250,20 @@
       "description": "Paramètres globaux de sécurité du portail."
     },
 
-  "emails": {
-
-    "verification": {
-      "subject": "Validation de votre adresse email",
-      "title": "Bienvenue",
-      "content": "Cliquez sur le bouton ci-dessous pour valider votre adresse email.",
-      "button": "Valider mon adresse email"
-      }
-
-    },
-
-
     "branding": {
       "title": "Personnalisation",
       "description": "Configuration du logo, des couleurs et de l'identité visuelle du portail."
     }
 
+  },
+  
+  "emails": {
+  "verification": {
+    "subject": "Validation de votre adresse e-mail",
+    "title": "Bienvenue",
+    "content": "Cliquez sur le bouton ci-dessous pour valider votre adresse e-mail.",
+    "button": "Valider mon adresse e-mail"
   }
+}
 
 }

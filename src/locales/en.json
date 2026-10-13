@@ -169,7 +169,8 @@
   "companyDetectedTitle": "Company detected",
   "selectSite": "Select your site",
   "domainNotFoundTitle": "Company not identified",
-  "domainNotFoundDescription": "The domain of your email address does not match any known company. Please provide your company information."
+  "domainNotFoundDescription": "The domain of your email address does not match any known company. Please provide your company information.",
+  "requestSentDescription": "Your request has been registered. A verification email will be sent."
 
 },
 
@@ -243,22 +244,21 @@
       "title": "Security",
       "description": "Global portal security settings."
     },
-
-  "emails": {
-
-  "verification": {
-    "subject": "Email verification",
-    "title": "Welcome",
-    "content": "Click the button below to verify your email address.",
-    "button": "Verify my email address"
-    }
-},
-
+    
     "branding": {
       "title": "Branding",
       "description": "Portal logo, colors and visual identity configuration."
     }
 
+  },
+
+  "emails": {
+  "verification": {
+    "subject": "Email verification",
+    "title": "Welcome",
+    "content": "Click the button below to verify your email address.",
+    "button": "Verify my email address"
   }
+}
 
   }

@@ -22,7 +22,11 @@ console.log(
   "LOGIN FUNCTION:",
   typeof login
 );
-
+const {
+  createRegistrationRequest
+} = require(
+  "./services/registrationRequestService"
+);
 const {
   analyzeRegistration,
   searchCompanyByAddress,
@@ -935,6 +939,47 @@ app.post(
 
   }
 );
+
+app.post(
+  "/auth/register",
+  async (req, res) => {
+
+    console.log("REGISTER ROUTE CALLED");
+
+    try {
+
+      console.log("BODY:");
+      console.log(req.body);
+
+      const result =
+        await createRegistrationRequest(
+          req.body
+        );
+
+      console.log("REQUEST CREATED");
+      console.log(result);
+
+      res.json({
+        success: true,
+        requestId: result.requestId,
+        validationToken: result.validationToken
+      });
+
+    } catch (error) {
+
+      console.error("REGISTER ERROR");
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+
+    }
+
+  }
+);
+
 
 app.listen(3000, () => {
  

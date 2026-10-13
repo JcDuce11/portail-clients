@@ -9,6 +9,8 @@ export default function Register() {
   const [step, setStep] =
     useState(1);
 
+  const [requestSent, setRequestSent] = useState(false);
+
   const [companyDetected,
   setCompanyDetected] =
     useState(null);
@@ -243,6 +245,131 @@ console.log(
 
 };
 
+const submitRegistrationRequest =
+  async (
+    requestType,
+    companyId = null,
+    siteId = null
+  ) => {
+
+console.log(
+  "SUBMIT REGISTRATION REQUEST"
+);
+
+console.log(
+  requestType,
+  companyId,
+  siteId
+);
+
+    try {
+
+      console.log(
+  "BEFORE FETCH"
+);
+      const response =
+        await fetch(
+          "http://localhost:3000/auth/register",
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+              JSON.stringify({
+
+                firstname:
+                  form.firstname,
+
+                lastname:
+                  form.lastname,
+
+                mobile:
+                  form.mobile,
+
+                phone:
+                  form.phone,
+
+                email:
+                  form.email,
+
+                password:
+                  form.password,
+
+                company_name:
+                  form.company,
+
+                site_name:
+                  form.site,
+
+                address:
+                  form.address,
+
+                postal_code:
+                  form.postalCode,
+
+                city:
+                  form.city,
+
+                country:
+                  form.country,
+                
+                language:
+                  navigator.language
+                  ?.startsWith("en")
+                  ? "en"
+                  : "fr",
+                
+                company_id:
+                  companyId,
+
+                site_id:
+                  siteId,
+
+                request_type:
+                  requestType
+
+              })
+
+          }
+        );
+        
+        console.log(
+        "AFTER FETCH",
+        response.status
+        );
+      console.log(
+  "BEFORE JSON"
+);
+
+      const data =
+        await response.json();
+
+console.log(
+  "REGISTER RESPONSE",
+  data
+);
+
+      if (data.success) {
+
+        setRequestSent(true);
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+};
+
   return (
 
     <div className="register-page">
@@ -250,7 +377,7 @@ console.log(
       <div className="login-logo">
         LOGO
       </div>
-
+      
       <h1>
         {t("register.title")}
       </h1>
@@ -419,33 +546,35 @@ console.log(
   type="button"
   onClick={() => {
 
-    setAnalysisResult({
+  setAnalysisResult({
 
-      result:
-        "COMPANY_SITE_FOUND",
+    result:
+      "REQUEST_READY",
 
-      company:
-        companyDetected.company.name,
+    requestType:
+      "COMPANY_SITE_FOUND",
 
-      site:
-        companyDetected.sites.find(
-          site =>
-            String(site.id) ===
-            String(selectedSiteId)
-        )?.site_name
+    company:
+      companyDetected.company.name,
 
-    });
+    site:
+      companyDetected.sites.find(
+        site =>
+          String(site.id) ===
+          String(selectedSiteId)
+      )?.site_name,
 
-<div style={{
-  color: "red",
-  fontWeight: "bold"
-}}>
-  RESULT = {companyDetected?.result}
-</div>
+    company_id:
+      companyDetected.company.id,
 
-    setStep(3);
+    site_id:
+      selectedSiteId
 
-  }}
+  });
+
+  setStep(3);
+
+}}
 >
   {t(
     "register.useSelectedSite"
@@ -801,13 +930,29 @@ console.log(
 </div>
         <button
   type="button"
-  onClick={() => {
-    console.log("USER CONFIRMED COMPANY/SITE");
-  }}
+  onClick={() =>
+    submitRegistrationRequest(
+      "COMPANY_SITE_FOUND",
+      analysisResult.company_id,
+      analysisResult.site_id
+    )
+  }
 >
   {t("common.yes")}
 </button>
+{requestSent && (
 
+  <div
+    className="configuration-feedback success"
+  >
+
+    {t(
+      "register.requestSentDescription"
+    )}
+
+  </div>
+
+)}
 <button
   type="button"
   onClick={() => {
@@ -1108,13 +1253,27 @@ console.log(
   <button
     type="button"
     onClick={() =>
-      setAnalysisResult({
-        result: "REQUEST_READY"
-      })
-    }
+  submitRegistrationRequest(
+    "NO_MATCH"
+  )
+}
   >
     {t("register.sendRequest")}
   </button>
+
+{requestSent && (
+
+  <div
+    className="configuration-feedback success"
+  >
+
+    {t(
+      "register.requestSentDescription"
+    )}
+
+  </div>
+
+)}
 
   <button
     type="button"
@@ -1160,27 +1319,68 @@ console.log(
  "REQUEST_READY" && (
 
   <>
-    <h2>
-      {t(
-        "register.requestReadyTitle"
-      )}
-    </h2>
+  <h2>
+    {t(
+      "register.requestReadyTitle"
+    )}
+  </h2>
 
-    <p>
-      {t(
-        "register.requestReadyDescription"
-      )}
-    </p>
+  <p>
+    {t(
+      "register.requestReadyDescription"
+    )}
+  </p>
 
-    <button
-      type="button"
-    >
-      {t(
-        "register.sendRequest"
-      )}
-    </button>
+  <div>
 
-  </>
+    <strong>
+      {t("register.company")}
+    </strong>
+
+    {" "}
+    {analysisResult.company}
+
+  </div>
+
+  <div>
+
+    <strong>
+      {t("register.site")}
+    </strong>
+
+    {" "}
+    {analysisResult.site}
+
+  </div>
+
+  <button
+  type="button"
+  onClick={() =>
+    submitRegistrationRequest(
+      analysisResult.requestType,
+      analysisResult.company_id,
+      analysisResult.site_id
+    )
+  }
+>
+  {t("register.sendRequest")}
+</button>
+
+{requestSent && (
+
+  <div
+    className="configuration-feedback success"
+  >
+
+    {t(
+      "register.requestSentDescription"
+    )}
+
+  </div>
+
+)}
+
+</>
 
 )}
 

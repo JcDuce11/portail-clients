@@ -238,105 +238,108 @@ setTimeout(() => {
 
 };
 
-const testSmtp =
-  async () => {
+const testSmtp = async () => {
 
-    try {
+  console.log("TEST SMTP CLICKED");
 
-      const response =
-        await fetch(
-          "http://localhost:3000/smtp/test",
-          {
+  try {
 
-            method: "POST",
+    console.log("FORM SMTP", form);
 
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
+    console.log("BEFORE SMTP FETCH");
 
-            body: JSON.stringify({
-              email:
-                form.smtp_test_email
-            })
+    const response =
+      await fetch(
+        "http://localhost:3000/smtp/test",
+        {
+          method: "POST",
 
-          }
-        );
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
 
-      const data =
-        await response.json();
+          body: JSON.stringify({
+            email:
+              form.smtp_test_email
+          })
 
-      if (data.success) {
+        }
+      );
 
-        setSmtpError(false);
+    console.log(
+      "AFTER SMTP FETCH",
+      response.status
+    );
 
-        setSmtpMessage(
-          t(
-            "configuration.smtp.testSuccess"
-          )
-        );
+    const data =
+      await response.json();
 
-      } else {
+    console.log(
+      "SMTP RESPONSE",
+      data
+    );
 
-        setSmtpError(true);
+    if (data.success) {
 
-        const smtpErrors = {
-
-  SMTP_SSL_ERROR:
-    t(
-      "configuration.smtp.errors.ssl"
-    ),
-
-  SMTP_AUTH_ERROR:
-    t(
-      "configuration.smtp.errors.auth"
-    ),
-
-  SMTP_RATE_LIMIT:
-    t(
-    "configuration.smtp.errors.rateLimit"
-    ),
-
-  SMTP_UNKNOWN_ERROR:
-    t(
-      "configuration.smtp.errors.unknown"
-    )
-
-};
-
-setSmtpMessage(
-
-  smtpErrors[
-    data.errorCode
-  ] ||
-
-  t(
-    "configuration.smtp.errors.unknown"
-  )
-
-);
-
-      }
-
-      setTimeout(() => {
-
-        setSmtpMessage("");
-
-      }, 5000);
-
-    } catch (error) {
-
-      console.error(error);
-
-      setSmtpError(true);
+      setSmtpError(false);
 
       setSmtpMessage(
         t(
-          "configuration.smtp.testError"
+          "configuration.smtp.testSuccess"
         )
       );
 
+    } else {
+
+      setSmtpError(true);
+
+      const smtpErrors = {
+
+        SMTP_SSL_ERROR:
+          t(
+            "configuration.smtp.errors.ssl"
+          ),
+
+        SMTP_AUTH_ERROR:
+          t(
+            "configuration.smtp.errors.auth"
+          ),
+
+        SMTP_RATE_LIMIT:
+          t(
+            "configuration.smtp.errors.rateLimit"
+          ),
+
+        SMTP_UNKNOWN_ERROR:
+          t(
+            "configuration.smtp.errors.unknown"
+          )
+
+      };
+
+      setSmtpMessage(
+
+        smtpErrors[
+          data.errorCode
+        ] ||
+
+        t(
+          "configuration.smtp.errors.unknown"
+        )
+
+      );
+
     }
+
+  } catch (error) {
+
+    console.error(
+      "TEST SMTP ERROR",
+      error
+    );
+
+  }
 
 };
 
