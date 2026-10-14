@@ -278,6 +278,37 @@
     "alreadyUsedDescription": "Cette demande a déjà été traitée.",
     "loading": "Validation en cours..."
 
-}
+},
 
+  "users": {
+    "title": "Gestion des utilisateurs",
+    "pending": "En attente",
+    "active": "Actifs",
+    "disabled": "Désactivés",
+    "invite": "Inviter un utilisateur",
+
+    "pendingUsers": "Utilisateurs en attente",
+    "activeUsers": "Utilisateurs actifs",
+    "disabledUsers": "Utilisateurs désactivés",
+
+    "noPendingUsers": "Aucun utilisateur en attente.",
+    "noActiveUsers": "Aucun utilisateur actif.",
+    "noDisabledUsers": "Aucun utilisateur désactivé.",
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "email": "Email",
+    "company": "Société",
+    "site": "Site",
+    "status": "Statut",
+    "actions": "Actions",
+
+    "approve": "Valider",
+    "reject": "Refuser",
+    "edit": "Modifier",
+    "disable": "Désactiver",
+    "reactivate": "Réactiver",
+    "delete": "Supprimer",
+    "requestDeletion": "Demander la suppression",
+    "view": "Consulter"
+  }
 }

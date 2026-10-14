@@ -1,71 +1,124 @@
-import { useEffect, useState } from "react";
- 
+import { useTranslation } from "react-i18next";
+import "./Users.css";
+import {
+  Clock3,
+  CheckCircle2,
+  UserX,
+  UserPlus,
+} from "lucide-react";
+
+
 function Users() {
-const [users, setUsers] = useState([]);
- 
-useEffect(() => {
-loadUsers();
-}, []);
- 
-async function loadUsers() {
-try {
-const response = await fetch(
-"http://localhost:3000/users"
-);
- 
-const data = await response.json();
- 
-setUsers(data);
-} catch (error) {
-console.error(error);
-}
-}
- 
-return (
-<div style={{ padding: "20px" }}>
-<h1>Utilisateurs</h1>
- 
-<table
-border="1"
-cellPadding="10"
-style={{
-width: "100%",
-borderCollapse: "collapse",
-}}
->
-<thead>
-<tr>
-<th>ID</th>
-<th>Prénom</th>
-<th>Nom</th>
-<th>Email</th>
-<th>Rôle</th>
-<th>Société</th>
-</tr>
-</thead>
- 
-<tbody>
-{users.map((user) => (
-<tr key={user.id}>
-<td>{user.id}</td>
-<td>{user.firstname}</td>
-<td>{user.lastname}</td>
-<td>{user.email}</td>
-<td>{user.role}</td>
-<td>
-{user.company || "-"}
-</td>
-</tr>
-))}
-</tbody>
-</table>
- 
-<p>
-Nombre d'utilisateurs :{" "}
-{users.length}
-</p>
+  const { t } = useTranslation();
+
+  return (
+    <div className="users-page">
+      <div className="users-header">
+  <h1>{t("users.title")}</h1>
+
+  <button
+    className="users-add-button"
+    onClick={() =>
+      console.log("Invite user")
+    }
+  >
+    <UserPlus size={18} />
+    {t("users.invite")}
+  </button>
 </div>
-);
+
+      <div className="users-stats">
+
+  <div className="users-stat-card">
+    <Clock3
+      size={24}
+      className="users-stat-icon pending"
+    />
+
+    <div className="users-stat-card-title">
+      {t("users.pending")}
+    </div>
+
+    <div className="users-stat-card-value">
+      0
+    </div>
+  </div>
+
+  <div className="users-stat-card">
+    <CheckCircle2
+      size={24}
+      className="users-stat-icon active"
+    />
+
+    <div className="users-stat-card-title">
+      {t("users.active")}
+    </div>
+
+    <div className="users-stat-card-value">
+      0
+    </div>
+  </div>
+
+  <div className="users-stat-card">
+    <UserX
+      size={24}
+      className="users-stat-icon disabled"
+    />
+
+    <div className="users-stat-card-title">
+      {t("users.disabled")}
+    </div>
+
+    <div className="users-stat-card-value">
+      0
+    </div>
+  </div>
+
+</div>
+
+      <div className="users-section">
+        <h2>
+  {t("users.pendingUsers")}
+
+  <span className="users-badge">
+    0
+  </span>
+</h2>
+
+        <p className="users-empty">
+          {t("users.noPendingUsers")}
+        </p>
+      </div>
+
+      <div className="users-section">
+        <h2>
+  {t("users.activeUsers")}
+
+  <span className="users-badge">
+    0
+  </span>
+</h2>
+
+        <p className="users-empty">
+          {t("users.noActiveUsers")}
+        </p>
+      </div>
+
+      <div className="users-section">
+        <h2>
+  {t("users.disabledUsers")}
+
+  <span className="users-badge">
+    0
+  </span>
+</h2>
+
+        <p className="users-empty">
+          {t("users.noDisabledUsers")}
+        </p>
+      </div>
+    </div>
+  );
 }
- 
+
 export default Users;

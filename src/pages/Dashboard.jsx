@@ -9,6 +9,7 @@ import CommercialDashboard from "../dashboards/CommercialDashboard";
 import ClientDashboard from "../dashboards/ClientDashboard";
 import Configuration from "./Configuration";
 import Register from "./Register";
+import Users from "./Users";
 
 export default function Dashboard() {
 
@@ -50,7 +51,8 @@ export default function Dashboard() {
             return (
                 <Configuration />
             );
-
+        case "users":
+              return <Users />;
         case "dashboard":
 
         default:
