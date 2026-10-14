@@ -23,10 +23,12 @@ console.log(
   typeof login
 );
 const {
-  createRegistrationRequest
+  createRegistrationRequest,
+  verifyEmailToken
 } = require(
   "./services/registrationRequestService"
 );
+
 const {
   analyzeRegistration,
   searchCompanyByAddress,
@@ -980,6 +982,36 @@ app.post(
   }
 );
 
+app.get(
+  "/auth/verify-email",
+  async (req, res) => {
+
+    try {
+
+      const result =
+        await verifyEmailToken(
+          req.query.token
+        );
+
+      res.json(result);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+
+        success: false,
+
+        error:
+          error.message
+
+      });
+
+    }
+
+  }
+);
 
 app.listen(3000, () => {
  

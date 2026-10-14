@@ -259,6 +259,19 @@
     "content": "Click the button below to verify your email address.",
     "button": "Verify my email address"
   }
+},
+
+"verifyEmail": {
+    "successTitle": "Email verified",
+    "successDescription": "Your email address has been verified. Your request is now awaiting administrative approval.",
+    "invalidTitle": "Invalid link",
+    "invalidDescription": "The verification link is invalid.",
+    "expiredTitle": "Expired link",
+    "expiredDescription": "The verification link has expired.",
+    "alreadyUsedTitle": "Email already verified",
+    "alreadyUsedDescription": "This request has already been processed.",
+    "loading": "Verification in progress..."
+
 }
 
   }

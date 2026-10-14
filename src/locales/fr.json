@@ -264,6 +264,20 @@
     "content": "Cliquez sur le bouton ci-dessous pour valider votre adresse e-mail.",
     "button": "Valider mon adresse e-mail"
   }
+
+},
+
+  "verifyEmail": {
+    "successTitle": "Adresse e-mail validée",
+    "successDescription": "Votre adresse e-mail a été validée. Votre demande est maintenant en attente de validation administrative.",
+    "invalidTitle": "Lien invalide",
+    "invalidDescription": "Le lien de validation est invalide.",
+    "expiredTitle": "Lien expiré",
+    "expiredDescription": "Le lien de validation a expiré.",
+    "alreadyUsedTitle": "Adresse e-mail déjà validée",
+    "alreadyUsedDescription": "Cette demande a déjà été traitée.",
+    "loading": "Validation en cours..."
+
 }
 
 }

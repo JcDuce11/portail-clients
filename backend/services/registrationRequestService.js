@@ -169,6 +169,82 @@ console.log(
 
 }
 
+async function verifyEmailToken(
+  token
+) {
+
+  const [rows] =
+    await db.execute(
+      `
+      SELECT *
+      FROM registration_requests
+      WHERE validation_token = ?
+      `,
+      [token]
+    );
+
+  if (
+    rows.length === 0
+  ) {
+
+    return {
+      success: false,
+      errorCode:
+        "TOKEN_INVALID"
+    };
+
+  }
+
+  const request =
+    rows[0];
+
+  if (
+    request.email_verified === 1
+  ) {
+
+    return {
+      success: false,
+      errorCode:
+        "TOKEN_ALREADY_USED"
+    };
+
+  }
+
+  if (
+    request.validation_expires &&
+    new Date(
+      request.validation_expires
+    ) < new Date()
+  ) {
+
+    return {
+      success: false,
+      errorCode:
+        "TOKEN_EXPIRED"
+    };
+
+  }
+
+  await db.execute(
+    `
+    UPDATE registration_requests
+    SET
+      email_verified = 1,
+      status = 'PENDING_APPROVAL',
+      validation_token = NULL,
+      validation_expires = NULL
+    WHERE id = ?
+    `,
+    [request.id]
+  );
+
+  return {
+    success: true
+  };
+
+}
+
 module.exports = {
-  createRegistrationRequest
+  createRegistrationRequest,
+  verifyEmailToken
 };
