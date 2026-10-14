@@ -109,7 +109,12 @@ Principes fondamentaux :
 
 - Architecture modulaire.
 - Les nouveaux modules ne doivent jamais casser le cœur du logiciel.
+- Les identifiants utilisateurs ne sont jamais réutilisés.
 - Les identifiants sociétés ne sont jamais réutilisés.
+- Les identifiants sites ne sont jamais réutilisés.
+- Toute suppression définitive est journalisée.
+- Aucun utilisateur ne peut être orphelin d'une société et d'un site principal.
+- L'archivage d'une société archive automatiquement ses sites et désactive automatiquement ses utilisateurs.
 - Archivage préféré à la suppression.
 - Historique conservé.
 - Traçabilité complète.
@@ -532,62 +537,38 @@ Ces modules déterminent :
 
 # Gestion des rôles
 
-## SUPER_ADMIN
+Le portail repose sur deux niveaux de rôles :
 
-Accès total.
+## Rôles métier
 
-Peut :
+Les rôles métier définissent l'utilisation quotidienne de la plateforme.
 
-- Créer
-- Modifier
-- Archiver
-- Restaurer
-- Supprimer définitivement
-
-Accès complet à toutes les sociétés.
-
----
-
-## ADMIN
-
-Gestion opérationnelle.
+### CLIENT
 
 Peut :
 
-- Gérer les sociétés
-- Gérer les utilisateurs
+- Consulter ses sites
+- Ouvrir des tickets
+- Consulter ses tickets
+- Consulter la documentation
+- Consulter ses interventions
+- Consulter ses devis
+- Accepter ou refuser ses devis
+- Accepter ou refuser ses interventions
+
+### TECHNICIEN
+
+Peut :
+
 - Gérer les tickets
 - Gérer les interventions
-- Gérer les devis
-
-Ne peut pas supprimer définitivement.
-
----
-
-## TECHNICIEN
-
-Gestion technique.
-
-Peut :
-
-- Gérer les tickets
-- Créer les interventions
 - Alimenter la documentation
-- Modifier les informations techniques
 - Escalader les tickets
 - Modifier les statuts
+- Ajouter des commentaires
+- Consulter les informations techniques
 
-Ne peut pas :
-
-- Modifier les offres souscrites
-- Modifier les contrats
-- Supprimer des devis
-
----
-
-## COMMERCIAL
-
-Accès en lecture.
+### COMMERCIAL
 
 Peut :
 
@@ -596,28 +577,397 @@ Peut :
 - Consulter les interventions
 - Consulter la documentation
 - Déposer des devis PDF
-
-Ne peut pas :
-
-- Modifier les infrastructures
-- Modifier les contrats techniques
-- Modifier les offres souscrites
+- Suivre les validations clients
 
 ---
 
-## CLIENT
+## Rôles de gouvernance
 
-Accès limité à sa société uniquement.
+Les rôles de gouvernance définissent qui administre la plateforme.
+
+### REFERENT
+
+Le référent représente une société cliente.
+
+Conditions :
+
+- Obligatoirement associé à une société
+- Obligatoirement associé à un compte CLIENT
+
+Combinaison autorisée :
+
+CLIENT + REFERENT
+
+Combinaisons interdites :
+
+TECHNICIEN + REFERENT
+COMMERCIAL + REFERENT
 
 Peut :
 
-- Consulter ses offres
-- Ouvrir des tickets
-- Consulter sa documentation
-- Valider ses devis
-- Valider ses interventions
+- Consulter les utilisateurs de sa société
+- Modifier les utilisateurs de sa société
+- Inviter des utilisateurs dans sa société
+- Valider les demandes utilisateurs de sa société
+- Refuser les demandes utilisateurs de sa société
+- Valider les demandes de création de site
+- Refuser les demandes de création de site
+- Réactiver les utilisateurs désactivés de sa société
+- Demander la suppression d'un utilisateur
+
+Ne peut pas :
+
+- Nommer un référent
+- Créer un ADMIN
+- Créer un SUPER_ADMIN
+- Supprimer définitivement un utilisateur
+- Modifier la configuration globale
+
+### ADMIN
+
+Rôle interne à la plateforme.
+
+Un ADMIN n'appartient à aucune société cliente.
+
+Peut :
+
+- Voir tous les utilisateurs
+- Voir toutes les sociétés
+- Voir tous les sites
+- Créer des sociétés
+- Modifier des sociétés
+- Archiver des sociétés
+- Restaurer des sociétés
+- Créer des sites
+- Modifier des sites
+- Archiver des sites
+- Restaurer des sites
+- Gérer tous les utilisateurs
+- Nommer des REFERENTS
+- Supprimer définitivement des utilisateurs
+
+Ne peut pas :
+
+- Supprimer définitivement une société
+- Modifier SMTP
+- Modifier Microsoft Graph
+- Modifier la sécurité globale
+- Modifier la configuration globale
+
+### SUPER_ADMIN
+
+Le SUPER_ADMIN est le gestionnaire principal de la plateforme.
+
+Il possède tous les droits.
+
+Peut :
+
+- Tout voir
+- Tout modifier
+- Tout archiver
+- Tout restaurer
+- Tout supprimer
+- Gérer SMTP
+- Gérer Microsoft Graph
+- Gérer l'authentification
+- Gérer la sécurité
+- Gérer les paramètres globaux
+- Nommer ou révoquer des ADMIN
+- Nommer ou révoquer des SUPER_ADMIN
+
+Toutes les suppressions définitives sont journalisées.
 
 ---
+
+# Module Utilisateurs
+
+## Objectif
+
+Mettre en place une gestion complète des utilisateurs :
+
+- Multi-rôles
+- Multi-sociétés
+- Multi-sites
+- Validation administrative
+- Invitations
+- Gestion des référents
+- Suppression contrôlée
+- Traçabilité complète
+
+---
+
+## Architecture des rôles
+
+Chaque utilisateur possède :
+
+- Un rôle métier
+- Un éventuel rôle de gouvernance
+
+Exemples :
+
+CLIENT + REFERENT
+TECHNICIEN + ADMIN
+COMMERCIAL + ADMIN
+TECHNICIEN + SUPER_ADMIN
+
+---
+
+## États des utilisateurs
+
+PENDING_EMAIL
+
+Adresse e-mail non validée.
+
+PENDING_APPROVAL
+
+Validation administrative en attente.
+
+ACTIVE
+
+Utilisateur actif.
+
+DISABLED
+
+Utilisateur désactivé.
+
+PENDING_DELETION
+
+Suppression demandée et en attente de validation.
+
+DELETED
+
+Utilisateur supprimé définitivement.
+
+---
+
+## Cycle de vie
+
+PENDING_EMAIL
+↓
+PENDING_APPROVAL
+↓
+ACTIVE
+↓
+DISABLED
+↓
+PENDING_DELETION
+↓
+DELETED
+
+Transition interdite :
+
+ACTIVE
+↓
+DELETED
+
+---
+
+## Gestion des utilisateurs actifs
+
+### SUPER_ADMIN
+
+- Accès à tous les utilisateurs
+
+### ADMIN
+
+- Accès à tous les utilisateurs
+
+### REFERENT
+
+- Accès uniquement aux utilisateurs de sa société
+
+Actions disponibles :
+
+- Consulter
+- Modifier
+- Désactiver
+
+---
+
+## Gestion des utilisateurs désactivés
+
+### SUPER_ADMIN
+
+- Consulter
+- Réactiver
+- Supprimer définitivement
+
+### ADMIN
+
+- Consulter
+- Réactiver
+- Supprimer définitivement
+
+### REFERENT
+
+- Consulter
+- Réactiver
+- Demander la suppression
+
+---
+
+## Demande de suppression
+
+Workflow :
+
+DISABLED
+↓
+Demande de suppression
+↓
+Commentaire obligatoire
+↓
+PENDING_DELETION
+↓
+Validation ADMIN ou SUPER_ADMIN
+↓
+DELETED
+
+---
+
+## Suppression définitive
+
+Une suppression définitive :
+
+- Est irréversible
+- Ne peut pas être restaurée
+- Génère obligatoirement un log
+
+Informations enregistrées :
+
+- Date
+- Heure
+- Utilisateur supprimé
+- Auteur de la suppression
+- Rôle de l'auteur
+- Motif
+
+---
+
+## Invitations
+
+Peuvent inviter :
+
+- REFERENT
+- ADMIN
+- SUPER_ADMIN
+
+Workflow :
+
+Invitation
+↓
+Envoi e-mail
+↓
+Création du mot de passe
+↓
+Validation automatique de l'adresse e-mail
+↓
+Compte actif
+
+Une invitation n'entre pas dans le workflow PENDING_APPROVAL.
+
+---
+
+## Gestion des adresses e-mail
+
+Une modification d'adresse e-mail par :
+
+- L'utilisateur
+- Le REFERENT
+- L'ADMIN
+- Le SUPER_ADMIN
+
+déclenche automatiquement :
+
+email_verified = false
+
+et
+
+l'envoi d'un nouvel e-mail de validation.
+
+---
+
+## Protection contre les erreurs d'adresse e-mail
+
+Lors d'un changement d'adresse :
+
+- L'ancienne adresse reste utilisable temporairement
+- La nouvelle adresse doit être validée
+
+La bascule définitive est effectuée après validation de la nouvelle adresse.
+
+---
+
+## Demande de promotion REFERENT
+
+Un CLIENT peut demander à devenir REFERENT.
+
+Workflow :
+
+CLIENT
+↓
+Demande REFERENT
+↓
+Commentaire obligatoire
+↓
+PENDING_REFERENT_APPROVAL
+↓
+Validation ADMIN ou SUPER_ADMIN
+↓
+Acceptation ou refus
+
+En cas d'acceptation :
+
+CLIENT + REFERENT
+
+Un log est obligatoirement créé.
+
+---
+
+## Gestion des sociétés
+
+Archivage d'une société :
+
+SOCIETE
+↓
+ARCHIVED
+
+Déclenche automatiquement :
+
+- Archivage de tous les sites
+- Désactivation de tous les utilisateurs associés
+
+Aucun utilisateur ne doit devenir orphelin.
+
+---
+
+## Références
+
+Les identifiants suivants ne sont jamais réutilisés :
+
+- user_id
+- company_id
+- site_id
+
+Cette règle reste valable même après suppression définitive.
+
+---
+
+## Journalisation obligatoire
+
+Les opérations suivantes génèrent obligatoirement un log :
+
+- Suppression utilisateur
+- Nomination REFERENT
+- Révocation REFERENT
+- Nomination ADMIN
+- Révocation ADMIN
+- Nomination SUPER_ADMIN
+- Révocation SUPER_ADMIN
+- Suppression société
+- Suppression site
+- Changement d'adresse e-mail
+- Validation de demande REFERENT
+- Refus de demande REFERENT
 
 # Module Sociétés
 
@@ -711,30 +1061,6 @@ Modules obligatoires :
 - Documentation
 - Interventions
 - Devis
-
----
-
-# Module Utilisateurs
-
-## V2 à développer
-
-Champs :
-
-- Nom
-- Prénom
-- Email
-- Mot de passe
-- Société associée
-- Rôle
-- Actif / Inactif
-
-Relation :
-
-Utilisateur
-
-↓
-
-Société
 
 ---
 
@@ -1202,6 +1528,18 @@ Le cœur du logiciel ne doit jamais être modifié pour ajouter un nouveau modul
 
 # Authentification
 
+## Compte racine
+
+Lors de l'installation de la plateforme :
+
+- Un compte SUPER_ADMIN initial est créé.
+- Un mot de passe temporaire est généré.
+- Le changement du mot de passe est obligatoire à la première connexion.
+- Une adresse e-mail valide doit obligatoirement être renseignée.
+- L'activation OTP est fortement recommandée.
+
+Ce compte permet ensuite de créer les autres ADMIN et SUPER_ADMIN.
+
 ## Login V2
 
 - [ ] Fond personnalisé administrable
@@ -1280,3 +1618,57 @@ Le cœur du logiciel ne doit jamais être modifié pour ajouter un nouveau modul
 - Support MFA
 - Fond personnalisable
 - Tableau de bord dynamique selon le rôle
+
+## Validation nouveau site
+
+Si la société existe :
+
+- REFERENT
+- ADMIN
+- SUPER_ADMIN
+
+peuvent valider.
+
+Si la société n'existe pas :
+
+- ADMIN
+- SUPER_ADMIN
+
+peuvent valider.
+
+# Administration des utilisateurs
+
+## Utilisateurs en attente
+
+Visible pour :
+
+- REFERENT
+- ADMIN
+- SUPER_ADMIN
+
+Actions :
+
+- Consulter
+- Valider
+- Refuser
+
+## Utilisateurs actifs
+
+Visible selon les permissions.
+
+Actions :
+
+- Consulter
+- Modifier
+- Désactiver
+
+## Utilisateurs désactivés
+
+Visible selon les permissions.
+
+Actions :
+
+- Réactiver
+- Demander suppression
+- Supprimer définitivement
+
