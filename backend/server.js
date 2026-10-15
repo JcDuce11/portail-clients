@@ -50,9 +50,11 @@ const {
 } = require("./services/companiesService");
 
 const {
-getAllUsers,
+  getAllUsers,
+  disableUser,
+  reactivateUser,
 } = require("./services/usersService");
- 
+
 const app = express();
  
 app.use(cors());
@@ -281,7 +283,59 @@ catch (error) {
 });
  
 app.get("/users", async (req, res) => {
- 
+
+   app.put(
+  "/users/:id/disable",
+  async (req, res) => {
+    try {
+
+      await disableUser(
+        req.params.id
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+
+    }
+  }
+);
+
+app.put(
+  "/users/:id/reactivate",
+  async (req, res) => {
+    try {
+
+      await reactivateUser(
+        req.params.id
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+
+    }
+  }
+);
+
 try {
  
 const users =

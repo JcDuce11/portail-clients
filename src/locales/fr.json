@@ -301,7 +301,9 @@
     "site": "Site",
     "status": "Statut",
     "actions": "Actions",
-
+    "details": "Détail utilisateur",
+    "close": "Fermer",
+    "role": "Rôle",
     "approve": "Valider",
     "reject": "Refuser",
     "edit": "Modifier",
@@ -309,6 +311,37 @@
     "reactivate": "Réactiver",
     "delete": "Supprimer",
     "requestDeletion": "Demander la suppression",
-    "view": "Consulter"
-  }
+    "view": "Consulter",
+    "emailVerified": "Email validé",
+    "otp": "OTP",
+    "yes": "Oui",
+    "no": "Non",
+    "enabled": "Activé",
+    "disabledLabel": "Désactivé",
+    "language": "Langue",
+    "theme": "Thème",
+    "disableConfirm": "Désactiver {{firstname}} {{lastname}} ?",
+    "disableRequested": "Désactivation demandée",
+    "disableTitle": "Désactiver un utilisateur",
+    "cancel": "Annuler",
+    "disableWarning": "Cet utilisateur ne pourra plus se connecter au portail.",
+    "deleteTitle": "Suppression définitive",
+    "deleteWarning": "Cette opération est irréversible.",
+    "deleteWarning2": "L'utilisateur ne pourra plus être restauré.",
+    "deleteConfirm": "Supprimer définitivement {{firstname}} {{lastname}} ?",
+    "deleteForever": "Supprimer définitivement",
+    "deleteReason": "Motif de suppression"
+
+  },
+
+  "table": {
+  "firstname": "Prénom",
+  "lastname": "Nom",
+  "email": "Email",
+  "role": "Rôle",
+  "company": "Société",
+  "status": "Statut",
+  "actions": "Actions"
+}
+
 }

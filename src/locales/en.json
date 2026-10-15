@@ -297,7 +297,9 @@
     "site": "Site",
     "status": "Status",
     "actions": "Actions",
-
+    "details": "User details",
+    "close": "Close",
+    "role": "Role",
     "approve": "Approve",
     "reject": "Reject",
     "edit": "Edit",
@@ -305,6 +307,37 @@
     "reactivate": "Reactivate",
     "delete": "Delete",
     "requestDeletion": "Request deletion",
-    "view": "View"
-  }
+    "view": "View",
+    "emailVerified": "Email verified",
+    "otp": "OTP",
+    "yes": "Yes",
+    "no": "No",
+    "enabled": "Enabled",
+    "disabledLabel": "Disabled",
+    "language": "Language",
+    "theme": "Theme",
+    "disableConfirm": "Disable {{firstname}} {{lastname}}?",
+    "disableRequested": "Disable requested",
+    "disableTitle": "Disable user",
+    "cancel": "Cancel",
+    "disableWarning": "This user will no longer be able to access the portal.",
+    "deleteTitle": "Permanent deletion",
+    "deleteWarning": "This action is irreversible.",
+    "deleteWarning2": "The user cannot be restored.",
+    "deleteConfirm": "Permanently delete {{firstname}} {{lastname}}?",
+    "deleteForever": "Delete permanently",
+    "deleteReason": "Deletion reason"
+
+  }, 
+
+  "table": {
+  "firstname": "First Name",
+  "lastname": "Last Name",
+  "email": "Email",
+  "role": "Role",
+  "company": "Company",
+  "status": "Status",
+  "actions": "Actions"
+}
+
 }
