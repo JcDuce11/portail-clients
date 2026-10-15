@@ -6,10 +6,48 @@ import {
   UserX,
   UserPlus,
 } from "lucide-react";
-
+import { useEffect, useState } from "react";
 
 function Users() {
   const { t } = useTranslation();
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
+  async function loadUsers() {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/users"
+      );
+
+      const data = await response.json();
+
+      setUsers(data);
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const pendingUsers = users.filter(
+    (user) =>
+      user.status ===
+      "PENDING_APPROVAL"
+  );
+
+  const activeUsers = users.filter(
+    (user) =>
+      user.status === "ACTIVE"
+  );
+
+  const disabledUsers = users.filter(
+    (user) =>
+      user.status === "DISABLED"
+  );
 
   return (
     <div className="users-page">
@@ -40,8 +78,8 @@ function Users() {
     </div>
 
     <div className="users-stat-card-value">
-      0
-    </div>
+  {pendingUsers.length}
+</div>
   </div>
 
   <div className="users-stat-card">
@@ -55,8 +93,8 @@ function Users() {
     </div>
 
     <div className="users-stat-card-value">
-      0
-    </div>
+  {activeUsers.length}
+</div>
   </div>
 
   <div className="users-stat-card">
@@ -70,8 +108,8 @@ function Users() {
     </div>
 
     <div className="users-stat-card-value">
-      0
-    </div>
+  {disabledUsers.length}
+</div>
   </div>
 
 </div>
@@ -81,8 +119,8 @@ function Users() {
   {t("users.pendingUsers")}
 
   <span className="users-badge">
-    0
-  </span>
+  {pendingUsers.length}
+</span>
 </h2>
 
         <p className="users-empty">
@@ -91,25 +129,52 @@ function Users() {
       </div>
 
       <div className="users-section">
-        <h2>
-  {t("users.activeUsers")}
+  <h2>
+    {t("users.activeUsers")}
 
-  <span className="users-badge">
-    0
-  </span>
-</h2>
+    <span className="users-badge">
+      {activeUsers.length}
+    </span>
+  </h2>
 
-        <p className="users-empty">
-          {t("users.noActiveUsers")}
-        </p>
-      </div>
+  {activeUsers.length === 0 ? (
+    <p className="users-empty">
+      {t("users.noActiveUsers")}
+    </p>
+  ) : (
+    <table className="users-table">
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Société</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
 
+      <tbody>
+        {activeUsers.map((user) => (
+          <tr key={user.id}>
+            <td>{user.firstname}</td>
+            <td>{user.lastname}</td>
+            <td>{user.email}</td>
+            <td>{user.role}</td>
+            <td>{user.company}</td>
+            <td>{user.status}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</div>
       <div className="users-section">
         <h2>
   {t("users.disabledUsers")}
 
   <span className="users-badge">
-    0
+    {disabledUsers.length}
   </span>
 </h2>
 

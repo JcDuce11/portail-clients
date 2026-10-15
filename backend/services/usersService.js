@@ -7,6 +7,7 @@ u.id,
 u.firstname,
 u.lastname,
 u.email,
+u.status,
 r.name AS role,
 c.name AS company
 FROM users u

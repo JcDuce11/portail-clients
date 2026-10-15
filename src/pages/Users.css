@@ -155,3 +155,23 @@
   color: #dc2626;
 }
 
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.users-table th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.users-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.users-table tr:hover {
+  background-color: #f9fafb;
+}
