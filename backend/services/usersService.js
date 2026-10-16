@@ -33,6 +33,31 @@ async function getAllUsers() {
   return rows;
 }
 
+async function approveUser(userId) {
+  await db.execute(
+    `
+    UPDATE users
+    SET status = 'ACTIVE'
+    WHERE id = ?
+    `,
+    [userId]
+  );
+}
+
+async function rejectUser(userId, reason) {
+  await db.execute(
+    `
+    UPDATE users
+    SET
+      status = 'REJECTED',
+      rejection_reason = ?,
+      rejected_at = NOW()
+    WHERE id = ?
+    `,
+    [reason, userId]
+  );
+}
+
 async function disableUser(userId) {
   await db.execute(
     `
@@ -59,4 +84,6 @@ module.exports = {
   getAllUsers,
   disableUser,
   reactivateUser,
+  approveUser,
+  rejectUser,
 };

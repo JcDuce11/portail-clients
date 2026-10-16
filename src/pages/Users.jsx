@@ -8,13 +8,15 @@ import {
   Eye,
   Pencil,
   Ban,
-  Trash2
+  Trash2,
+  XCircle
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 function Users() {
   const { t } = useTranslation();
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] =
   useState(null);
@@ -22,7 +24,6 @@ function Users() {
   useState(false);
   const [showDisableModal, setShowDisableModal] =
   useState(false);
-  const { user: currentUser } = useAuth();
   const [userToDisable, setUserToDisable] =
   useState(null);
   const [showDeleteModal, setShowDeleteModal] =
@@ -31,7 +32,17 @@ function Users() {
   useState(null);
   const [deleteReason, setDeleteReason] =
   useState("");
-
+  const [showApproveModal, setShowApproveModal] =
+  useState(false);
+  const [userToApprove, setUserToApprove] =
+  useState(null);
+  const [showRejectModal, setShowRejectModal] =
+  useState(false);
+  const [userToReject, setUserToReject] =
+  useState(null);
+  const [rejectReason, setRejectReason] =
+  useState("");
+  
   useEffect(() => {
     loadUsers();
   }, []);
@@ -66,6 +77,31 @@ function Users() {
     (user) =>
       user.status === "DISABLED"
   );
+
+
+
+  const rejectedUsers = users.filter(
+  (user) =>
+    user.status === "REJECTED"
+);
+
+  const activeSuperAdmins =
+  activeUsers.filter(
+    (user) =>
+      user.role === "SUPER_ADMIN"
+  );
+
+const isSelf = (user) =>
+  user.email === currentUser.email;
+
+const adminCannotManageSuperAdmin = (user) =>
+  currentUser.role === "ADMIN" &&
+  user.role === "SUPER_ADMIN";
+
+  const isLastActiveSuperAdmin = (user) =>
+  user.role === "SUPER_ADMIN" &&
+  user.status === "ACTIVE" &&
+  activeSuperAdmins.length === 1;
 
   return (
     <div className="users-page">
@@ -129,7 +165,20 @@ function Users() {
   {disabledUsers.length}
 </div>
   </div>
+<div className="users-stat-card">
+  <XCircle
+    size={24}
+    className="users-stat-icon disabled"
+  />
 
+  <div className="users-stat-card-title">
+    {t("users.rejected")}
+  </div>
+
+  <div className="users-stat-card-value">
+    {rejectedUsers.length}
+  </div>
+</div>
 </div>
 
       <div className="users-section">
@@ -141,9 +190,101 @@ function Users() {
 </span>
 </h2>
 
-        <p className="users-empty">
-          {t("users.noPendingUsers")}
-        </p>
+        {pendingUsers.length === 0 ? (
+
+  <p className="users-empty">
+    {t("users.noPendingUsers")}
+  </p>
+
+) : (
+
+  <table className="users-table">
+
+    <thead>
+      <tr>
+        <th>{t("table.firstname")}</th>
+        <th>{t("table.lastname")}</th>
+        <th>{t("table.email")}</th>
+        <th>{t("table.role")}</th>
+        <th>{t("table.company")}</th>
+        <th>{t("table.status")}</th>
+        <th>{t("table.actions")}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {pendingUsers.map((user) => (
+
+        <tr key={user.id}>
+
+          <td>{user.firstname}</td>
+          <td>{user.lastname}</td>
+          <td>{user.email}</td>
+          <td>{user.role}</td>
+          <td>{user.company}</td>
+
+          <td>
+            <span
+  className={`status-badge status-${user.status.toLowerCase()}`}
+>
+  {user.status === "PENDING_APPROVAL"
+    ? t("users.statusPendingApproval")
+    : user.status === "ACTIVE"
+    ? t("users.statusActive")
+    : user.status === "DISABLED"
+    ? t("users.statusDisabled")
+    : user.status === "REJECTED"
+    ? t("users.statusRejected")
+    : user.status === "DELETED"
+    ? t("users.statusDeleted")
+    : user.status}
+</span>
+          </td>
+
+          <td>
+
+            <button
+              className="users-action-button"
+            >
+              <Eye size={16} />
+            </button>
+
+            <button
+  className="users-action-button success"
+  onClick={() => {
+    setUserToApprove(user);
+    setShowApproveModal(true);
+  }}
+>
+  <CheckCircle2 size={16} />
+</button>
+
+            <button
+  className="users-action-button danger"
+  onClick={() => {
+
+    setUserToReject(user);
+
+    setShowRejectModal(true);
+
+  }}
+>
+  <XCircle size={16} />
+</button>
+
+
+          </td>
+
+        </tr>
+
+      ))}
+
+    </tbody>
+
+  </table>
+
+)}
       </div>
 
       <div className="users-section">
@@ -217,13 +358,17 @@ setShowUserModal(true);
 
   <button
   className={`users-action-button danger ${
-    user.email === currentUser.email
-      ? "disabled-action"
-      : ""
-  }`}
+  isSelf(user) ||
+  adminCannotManageSuperAdmin(user) ||
+  isLastActiveSuperAdmin(user)
+    ? "disabled-action"
+    : ""
+}`}
   disabled={
-    user.email === currentUser.email
-  }
+  isSelf(user) ||
+  adminCannotManageSuperAdmin(user) ||
+ isLastActiveSuperAdmin(user)
+}
   onClick={() => {
     setUserToDisable(user);
     setShowDisableModal(true);
@@ -301,33 +446,45 @@ setShowUserModal(true);
     <Eye size={16} />
   </button>
   
+ <button
+  className="users-action-button success"
+  onClick={async () => {
+
+    try {
+
+      await fetch(
+        `http://localhost:3000/users/${user.id}/reactivate`,
+        {
+          method: "PUT",
+        }
+      );
+
+      await loadUsers();
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }}
+>
+  <CheckCircle2 size={16} />
+</button>
+
   <button
-    className="users-action-button"
-    onClick={async () => {
-
-      try {
-
-        await fetch(
-          `http://localhost:3000/users/${user.id}/reactivate`,
-          {
-            method: "PUT",
-          }
-        );
-
-        await loadUsers();
-
-      } catch (error) {
-
-        console.error(error);
-
-      }
-
-    }}
-  >
-    <CheckCircle2 size={16} />
-  </button>
-  <button
-  className="users-action-button danger"
+  className={`users-action-button danger ${
+  isSelf(user) ||
+  adminCannotManageSuperAdmin(user) ||
+  isLastActiveSuperAdmin(user)
+    ? "disabled-action"
+    : ""
+}`}
+ disabled={
+  isSelf(user) ||
+  adminCannotManageSuperAdmin(user) ||
+  isLastActiveSuperAdmin(user)
+}
   onClick={() => {
 
     setUserToDelete(user);
@@ -340,6 +497,84 @@ setShowUserModal(true);
 </button>
 
 </td>
+          </tr>
+
+        ))}
+
+      </tbody>
+
+    </table>
+
+  )}
+
+</div>
+
+<div className="users-section">
+
+  <h2>
+    {t("users.rejectedUsers")}
+
+    <span className="users-badge">
+      {rejectedUsers.length}
+    </span>
+  </h2>
+
+  {rejectedUsers.length === 0 ? (
+
+    <p className="users-empty">
+      {t("users.noRejectedUsers")}
+    </p>
+
+  ) : (
+
+    <table className="users-table">
+
+      <thead>
+        <tr>
+          <th>{t("table.firstname")}</th>
+          <th>{t("table.lastname")}</th>
+          <th>{t("table.email")}</th>
+          <th>{t("table.role")}</th>
+          <th>{t("table.company")}</th>
+          <th>{t("table.status")}</th>
+          <th>{t("table.actions")}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {rejectedUsers.map((user) => (
+
+          <tr key={user.id}>
+
+            <td>{user.firstname}</td>
+            <td>{user.lastname}</td>
+            <td>{user.email}</td>
+            <td>{user.role}</td>
+            <td>{user.company}</td>
+
+            <td>
+              <span
+                className={`status-badge status-${user.status.toLowerCase()}`}
+              >
+                {t("users.statusRejected")}
+              </span>
+            </td>
+
+            <td>
+
+              <button
+                className="users-action-button"
+                onClick={() => {
+                  setSelectedUser(user);
+                  setShowUserModal(true);
+                }}
+              >
+                <Eye size={16} />
+              </button>
+
+            </td>
+
           </tr>
 
         ))}
@@ -479,9 +714,12 @@ setShowUserModal(true);
 
         <button
           className="users-close-button"
-          onClick={() =>
-            setShowDisableModal(false)
-          }
+          onClick={() => {
+
+  setUserToDisable(null);
+  setShowDisableModal(false);
+
+}}
         >
           {t("users.cancel")}
         </button>
@@ -501,7 +739,8 @@ setShowUserModal(true);
 
     await loadUsers();
 
-    setShowDisableModal(false);
+setUserToDisable(null);
+setShowDisableModal(false);
 
   } catch (error) {
 
@@ -603,6 +842,194 @@ setShowUserModal(true);
 }}
       >
         {t("users.deleteForever")}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+)}
+
+{showApproveModal &&
+ userToApprove && (
+
+<div className="users-modal-overlay">
+
+  <div className="users-modal">
+
+    <h2>
+      {t("users.approveTitle")}
+    </h2>
+
+    <div className="disable-user-box">
+
+      <div className="disable-user-name">
+        {userToApprove.firstname}
+        {" "}
+        {userToApprove.lastname}
+      </div>
+
+      <div className="disable-user-warning">
+        {t("users.approveWarning")}
+      </div>
+
+      <div className="disable-user-warning">
+        {t("users.approveDescription")}
+      </div>
+
+    </div>
+
+    <p>
+      <strong>
+        {t("users.email")} :
+      </strong>{" "}
+      {userToApprove.email}
+    </p>
+
+    <p>
+      <strong>
+        {t("users.company")} :
+      </strong>{" "}
+      {userToApprove.company}
+    </p>
+
+    <div className="users-modal-actions">
+
+      <button
+        className="users-close-button"
+        onClick={() => {
+
+          setUserToApprove(null);
+
+          setShowApproveModal(false);
+
+        }}
+      >
+        {t("users.cancel")}
+      </button>
+
+      <button
+        className="users-approve-button"
+        onClick={async () => {
+
+  try {
+
+    await fetch(
+      `http://localhost:3000/users/${userToApprove.id}/approve`,
+      {
+        method: "PUT",
+      }
+    );
+
+    await loadUsers();
+
+    setUserToApprove(null);
+
+    setShowApproveModal(false);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}}
+      >
+        {t("users.validateUser")}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+)}
+
+{showRejectModal &&
+ userToReject && (
+
+<div className="users-modal-overlay">
+
+  <div className="users-modal">
+
+    <h2 className="users-danger-title">
+      <XCircle size={24} />
+      {t("users.rejectTitle")}
+    </h2>
+
+    <div className="disable-user-box">
+
+      <div className="disable-user-name">
+        {userToReject.firstname}
+        {" "}
+        {userToReject.lastname}
+      </div>
+
+      <div className="disable-user-warning">
+        {t("users.rejectWarning")}
+      </div>
+
+    </div>
+
+    <label className="users-delete-label">
+      {t("users.rejectReason")}
+    </label>
+
+    <textarea
+      className="users-delete-reason"
+      placeholder={t("users.rejectPlaceholder")}
+      value={rejectReason}
+      onChange={(e) =>
+        setRejectReason(e.target.value)
+      }
+    />
+
+    <div className="users-modal-actions">
+
+      <button
+        className="users-close-button"
+        onClick={() => {
+
+          setRejectReason("");
+          setUserToReject(null);
+          setShowRejectModal(false);
+
+        }}
+      >
+        {t("users.cancel")}
+      </button>
+
+      <button
+        className="users-delete-button"
+        disabled={!rejectReason.trim()}
+        onClick={async () => {
+
+          await fetch(
+  `http://localhost:3000/users/${userToReject.id}/reject`,
+  {
+    method: "PUT",
+    headers: {
+      "Content-Type":
+        "application/json",
+    },
+    body: JSON.stringify({
+      reason: rejectReason,
+    }),
+  }
+);
+
+await loadUsers();
+
+          setRejectReason("");
+          setUserToReject(null);
+          setShowRejectModal(false);
+
+        }}
+      >
+        {t("users.rejectUser")}
       </button>
 
     </div>

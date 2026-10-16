@@ -286,11 +286,9 @@
     "active": "Actifs",
     "disabled": "Désactivés",
     "invite": "Inviter un utilisateur",
-
     "pendingUsers": "Utilisateurs en attente",
     "activeUsers": "Utilisateurs actifs",
     "disabledUsers": "Utilisateurs désactivés",
-
     "noPendingUsers": "Aucun utilisateur en attente.",
     "noActiveUsers": "Aucun utilisateur actif.",
     "noDisabledUsers": "Aucun utilisateur désactivé.",
@@ -331,7 +329,24 @@
     "deleteConfirm": "Supprimer définitivement {{firstname}} {{lastname}} ?",
     "deleteForever": "Supprimer définitivement",
     "deleteReason": "Motif de suppression",
-    "deleteReasonPlaceholder": "Exemple : départ de l'entreprise, compte créé par erreur, demande du responsable..."
+    "deleteReasonPlaceholder": "Exemple : départ de l'entreprise, compte créé par erreur, demande du responsable...",
+    "statusPendingApproval": "En attente de validation",
+    "statusActive": "Actif",
+    "statusDisabled": "Désactivé",
+    "statusDeleted": "Supprimé",
+    "statusRejected": "Refusé",
+    "approveTitle": "Validation utilisateur",
+    "approveWarning": "Vérifiez les informations avant validation.",
+    "approveDescription": "Cet utilisateur sera activé après validation.",
+    "validateUser": "Valider l'utilisateur",
+    "rejectTitle": "Refuser un utilisateur",
+    "rejectWarning": "Cette demande sera refusée.",
+    "rejectReason": "Motif du refus",
+    "rejectPlaceholder": "Exemple : informations incomplètes, demande non conforme...",
+    "rejectUser": "Refuser l'utilisateur",
+    "rejected": "Refusés",
+    "rejectedUsers": "Utilisateurs refusés",
+    "noRejectedUsers": "Aucun utilisateur refusé."
 
   },
 

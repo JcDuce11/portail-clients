@@ -53,6 +53,8 @@ const {
   getAllUsers,
   disableUser,
   reactivateUser,
+  approveUser,
+  rejectUser,
 } = require("./services/usersService");
 
 const app = express();
@@ -1064,6 +1066,57 @@ app.get(
 
     }
 
+  }
+);
+
+app.put(
+  "/users/:id/approve",
+  async (req, res) => {
+    try {
+
+      await approveUser(
+        req.params.id
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+      });
+
+    }
+  }
+);
+
+app.put(
+  "/users/:id/reject",
+  async (req, res) => {
+    try {
+
+      await rejectUser(
+        req.params.id,
+        req.body.reason
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+      });
+
+    }
   }
 );
 

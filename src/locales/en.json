@@ -327,7 +327,24 @@
     "deleteConfirm": "Permanently delete {{firstname}} {{lastname}}?",
     "deleteForever": "Delete permanently",
     "deleteReason": "Deletion reason",
-    "deleteReasonPlaceholder": "Example: employee left the company, account created by mistake, manager request..."
+    "deleteReasonPlaceholder": "Example: employee left the company, account created by mistake, manager request...",
+    "statusPendingApproval": "Pending approval",
+    "statusActive": "Active",
+    "statusDisabled": "Disabled",
+    "statusDeleted": "Deleted",
+    "statusRejected": "Rejected",
+    "approveTitle": "User approval",
+    "approveWarning": "Please verify the information before approval.",
+    "approveDescription": "This user will be activated after approval.",
+    "validateUser": "Approve user",
+    "rejectTitle": "Reject user",
+    "rejectWarning": "This request will be rejected.",
+    "rejectReason": "Reason for rejection",
+    "rejectPlaceholder": "Example: incomplete information, invalid request...",
+    "rejectUser": "Reject user",
+    "rejected": "Rejected",
+    "rejectedUsers": "Rejected users",
+    "noRejectedUsers": "No rejected users."
 
   }, 
 
