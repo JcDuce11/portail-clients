@@ -557,11 +557,17 @@ setShowUserModal(true);
 
 <textarea
   className="users-delete-reason"
+  placeholder={t("users.deleteReasonPlaceholder")}
   value={deleteReason}
+  maxLength={500}
   onChange={(e) =>
     setDeleteReason(e.target.value)
   }
 />
+
+<div className="users-char-count">
+  {deleteReason.length}/500
+</div>
 
     <div className="users-modal-actions">
 

@@ -330,7 +330,8 @@
     "deleteWarning2": "L'utilisateur ne pourra plus être restauré.",
     "deleteConfirm": "Supprimer définitivement {{firstname}} {{lastname}} ?",
     "deleteForever": "Supprimer définitivement",
-    "deleteReason": "Motif de suppression"
+    "deleteReason": "Motif de suppression",
+    "deleteReasonPlaceholder": "Exemple : départ de l'entreprise, compte créé par erreur, demande du responsable..."
 
   },
 

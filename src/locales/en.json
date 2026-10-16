@@ -326,7 +326,8 @@
     "deleteWarning2": "The user cannot be restored.",
     "deleteConfirm": "Permanently delete {{firstname}} {{lastname}}?",
     "deleteForever": "Delete permanently",
-    "deleteReason": "Deletion reason"
+    "deleteReason": "Deletion reason",
+    "deleteReasonPlaceholder": "Example: employee left the company, account created by mistake, manager request..."
 
   }, 
 
