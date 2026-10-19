@@ -516,3 +516,317 @@ SUPER_ADMIN
 - [ ] Couleur principale
 - [ ] Couleur secondaire
 - [ ] Message d'accueil
+
+# Gouvernance des utilisateurs
+
+## Principes fondamentaux
+
+### RG-001
+
+Utilisateur orphelin interdit.
+
+Un utilisateur ne peut jamais être :
+
+ACTIVE
+
+sans :
+
+- company_id
+- primary_site_id
+
+---
+
+### RG-002
+
+Il doit toujours rester au moins :
+
+1 SUPER_ADMIN actif
+
+sur la plateforme.
+
+---
+
+### RG-003
+
+Un utilisateur connecté ne peut jamais :
+
+- désactiver son propre compte
+- supprimer son propre compte
+
+---
+
+## Hiérarchie des rôles
+
+SUPER_ADMIN
+│
+├── ADMIN
+│   │
+│   ├── TECHNICIEN
+│   ├── COMMERCIAL
+│   └── REFERENT
+│
+└── CLIENT
+
+---
+
+## CLIENT
+
+Obligatoirement associé à :
+
+- une société
+- un site principal
+
+Peut devenir :
+
+- REFERENT
+
+Ne peut jamais devenir :
+
+- ADMIN
+- SUPER_ADMIN
+
+---
+
+## REFERENT
+
+Conditions :
+
+- doit être CLIENT
+- doit appartenir à une société
+- doit appartenir à un site
+
+Peut :
+
+- inviter des utilisateurs de sa société
+- déplacer des utilisateurs entre les sites de sa société
+- désactiver des utilisateurs de sa société
+- demander la création d'un site
+- désactiver un site de sa société
+
+Ne peut pas :
+
+- supprimer un site
+- créer une société
+- gérer un ADMIN
+- gérer un SUPER_ADMIN
+- être TECHNICIEN
+- être COMMERCIAL
+
+---
+
+## TECHNICIEN
+
+Peut devenir :
+
+- ADMIN
+
+uniquement par un SUPER_ADMIN.
+
+---
+
+## COMMERCIAL
+
+Peut devenir :
+
+- ADMIN
+
+uniquement par un SUPER_ADMIN.
+
+---
+
+## ADMIN
+
+Peut être :
+
+- TECHNICIEN
+- COMMERCIAL
+
+Peut :
+
+- valider les utilisateurs
+- créer une société
+- créer un site
+- gérer les CLIENTS
+- gérer les REFERENTS
+- gérer les TECHNICIENS
+- gérer les COMMERCIAUX
+
+Ne peut pas :
+
+- promouvoir ADMIN
+- promouvoir SUPER_ADMIN
+- désactiver un ADMIN
+- supprimer un ADMIN
+- désactiver un SUPER_ADMIN
+- supprimer un SUPER_ADMIN
+
+---
+
+## SUPER_ADMIN
+
+Création obligatoire.
+
+Un SUPER_ADMIN n'est jamais promu.
+
+Peut :
+
+- créer ADMIN
+- créer SUPER_ADMIN
+- promouvoir TECHNICIEN → ADMIN
+- promouvoir COMMERCIAL → ADMIN
+- nommer REFERENT
+- révoquer REFERENT
+- révoquer ADMIN
+
+Ne peut pas :
+
+- se désactiver
+- se supprimer
+
+---
+
+## Gestion des utilisateurs
+
+### CLIENT
+
+Peut être géré par :
+
+- REFERENT
+- ADMIN
+- SUPER_ADMIN
+
+### REFERENT
+
+Peut être géré par :
+
+- ADMIN
+- SUPER_ADMIN
+
+### TECHNICIEN
+
+Peut être géré par :
+
+- ADMIN
+- SUPER_ADMIN
+
+### COMMERCIAL
+
+Peut être géré par :
+
+- ADMIN
+- SUPER_ADMIN
+
+### ADMIN
+
+Peut être géré uniquement par :
+
+- SUPER_ADMIN
+
+### SUPER_ADMIN
+
+Peut être géré uniquement par :
+
+- un autre SUPER_ADMIN
+
+si au moins un SUPER_ADMIN actif reste présent.
+
+---
+
+## Validation utilisateur
+
+### Cas 1
+
+Société trouvée
++
+Site trouvé
+
+Validation directe.
+
+---
+
+### Cas 2
+
+Société trouvée
++
+Site inexistant
+
+Le valideur doit :
+
+- valider la création du site
+
+ou
+
+- refuser le site et affecter l'utilisateur à un site existant
+
+Validation utilisateur impossible tant qu'un site principal n'est pas défini.
+
+---
+
+### Cas 3
+
+Société inexistante
+
+Le valideur doit :
+
+- rattacher l'utilisateur à une société existante
+
+ou
+
+- créer une nouvelle société
+
+Dans le cas d'une nouvelle société :
+
+- création obligatoire d'un site principal
+
+Validation impossible tant que :
+
+- company_id n'est pas défini
+- primary_site_id n'est pas défini
+
+---
+
+## Cycle de vie utilisateur
+
+PENDING_APPROVAL
+↓
+ACTIVE
+
+ou
+
+PENDING_APPROVAL
+↓
+REJECTED
+
+ou
+
+ACTIVE
+↓
+DISABLED
+↓
+ACTIVE
+
+ou
+
+ACTIVE
+↓
+DISABLED
+↓
+DELETED
+
+---
+
+## Utilisateurs refusés
+
+REJECTED
+
+Conservation :
+
+60 jours
+
+Informations conservées :
+
+- date de refus
+- auteur du refus
+- motif du refus
+
+Suppression automatique après expiration.
