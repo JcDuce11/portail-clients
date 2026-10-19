@@ -254,11 +254,15 @@
   position: fixed;
   inset: 0;
 
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+
+  overflow-y: auto;
+
+  padding: 30px;
 
   z-index: 9999;
 }
@@ -266,7 +270,12 @@
 .users-modal {
   background: white;
 
-  min-width: 500px;
+  width: 1200px;
+  max-width: 95vw;
+
+  max-height: calc(100vh - 60px);
+
+  overflow-y: auto;
 
   border-radius: 16px;
 
@@ -443,4 +452,54 @@
 
 .users-approve-button:hover {
   background: #15803d;
+}
+
+.validation-section {
+  background: #f9fafb;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  padding: 16px;
+
+  margin-bottom: 20px;
+}
+
+.users-approve-button:disabled {
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.validation-section {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.validation-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.users-select {
+  width: 100%;
+
+  padding: 10px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  margin-top: 10px;
 }

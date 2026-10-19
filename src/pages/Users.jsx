@@ -17,6 +17,9 @@ import { useAuth } from "../context/AuthContext";
 function Users() {
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
+  const isReferent = currentUser?.role === "REFERENT";
+  const isAdmin = currentUser?.role === "ADMIN";
+  const isSuperAdmin = currentUser?.role === "SUPER_ADMIN";
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] =
   useState(null);
@@ -36,6 +39,14 @@ function Users() {
   useState(false);
   const [userToApprove, setUserToApprove] =
   useState(null);
+  const [companyAction, setCompanyAction] =
+  useState("");
+  const [selectedCompanyId, setSelectedCompanyId] =
+  useState("");
+  const [selectedSiteId, setSelectedSiteId] =
+  useState("");
+  const [siteValidated, setSiteValidated] =
+  useState(false);
   const [showRejectModal, setShowRejectModal] =
   useState(false);
   const [userToReject, setUserToReject] =
@@ -102,6 +113,63 @@ const adminCannotManageSuperAdmin = (user) =>
   user.role === "SUPER_ADMIN" &&
   user.status === "ACTIVE" &&
   activeSuperAdmins.length === 1;
+
+const canApproveUser = (user) => {
+  return (
+    user.company_id ||
+    selectedCompanyId
+  ) && (
+    user.primary_site_id ||
+    selectedSiteId
+  );
+};
+
+
+const approvalScenario = (user) => {
+
+  if (
+    user.company_id &&
+    user.primary_site_id &&
+    !user.requested_site_name
+  ) {
+    return "COMPANY_AND_SITE_FOUND";
+  }
+
+  if (
+    user.company_id &&
+    user.requested_site_name
+  ) {
+    return "SITE_CREATION_REQUEST";
+  }
+
+  if (
+    user.requested_company_name
+  ) {
+    return "COMPANY_CREATION_REQUEST";
+  }
+
+  return "UNKNOWN";
+};
+
+const approvalScenarioLabel = (user) => {
+
+  switch (approvalScenario(user)) {
+
+    case "COMPANY_AND_SITE_FOUND":
+      return t("users.scenarioCompanySiteFound");
+
+    case "SITE_CREATION_REQUEST":
+      return t("users.scenarioSiteCreation");
+
+    case "COMPANY_CREATION_REQUEST":
+      return t("users.scenarioCompanyCreation");
+
+    default:
+      return t("users.scenarioUnknown");
+
+  }
+
+};
 
   return (
     <div className="users-page">
@@ -649,6 +717,13 @@ setShowUserModal(true);
 
 <p>
   <strong>
+    {t("users.validationScenario")} :
+  </strong>{" "}
+  {approvalScenarioLabel(userToApprove)}
+</p>
+
+<p>
+  <strong>
     {t("users.otp")} :
   </strong>{" "}
   {selectedUser.two_factor_enabled
@@ -881,19 +956,263 @@ setShowDisableModal(false);
 
     </div>
 
+<div className="validation-grid">
+    
+    <div className="validation-section">
+
+  <h3>
+    {t("users.companyInformation")}
+  </h3>
+
+{userToApprove.requested_company_name && (
+
+  <p>
+    <strong>
+      {t("users.requestedCompany")} :
+    </strong>{" "}
+    {userToApprove.requested_company_name}
+  </p>
+)}
+
+{approvalScenario(userToApprove) ===
+  "COMPANY_CREATION_REQUEST" && (
+
+  <div className="validation-section">
+
+    <h3>
+      {t("users.companyProcessing")}
+    </h3>
+
+    <label>
+
+      <input
+        type="radio"
+        name="companyAction"
+        value="existing"
+        checked={
+          companyAction === "existing"
+        }
+        onChange={(e) =>
+          setCompanyAction(
+            e.target.value
+          )
+        }
+      />
+
+      {" "}
+      {t("users.useExistingCompany")}
+
+    </label>
+
+    <br />
+
+    <label>
+
+      <input
+        type="radio"
+        name="companyAction"
+        value="new"
+        checked={
+          companyAction === "new"
+        }
+        onChange={(e) =>
+          setCompanyAction(
+            e.target.value
+          )
+        }
+      />
+
+      {" "}
+      {t("users.createNewCompany")}
+
+    </label>
+
+{companyAction === "existing" && (
+
+  <div className="validation-section">
+
+    <h3>
+      {t("users.chooseExistingCompany")}
+    </h3>
+
+    <select
+      className="users-select"
+      value={selectedCompanyId}
+      onChange={(e) =>
+        setSelectedCompanyId(
+          e.target.value
+        )
+      }
+    >
+      <option value="">
+        {t("users.selectCompany")}
+      </option>
+
+      <option value="1">
+        Société Test
+      </option>
+
+    </select>
+<p
+  style={{
+    marginTop: "15px",
+    marginBottom: "8px",
+    fontWeight: 600,
+  }}
+>
+  {t("users.selectSite")}
+</p>
+
+<select
+  className="users-select"
+  value={selectedSiteId}
+  onChange={(e) =>
+    setSelectedSiteId(
+      e.target.value
+    )
+  }
+>
+  <option value="">
+    {t("users.selectSite")}
+  </option>
+
+  <option value="1">
+    Siège Social
+  </option>
+
+</select>
+
+  </div>
+
+)}
+
+{companyAction === "new" && (
+
+  <div className="validation-section">
+
     <p>
+      {t("users.createCompanyAndSite")}
+    </p>
+
+  </div>
+
+)}
+
+  </div>
+
+)}
+
+  <p>
+    <strong>
+      {t("users.company")} :
+    </strong>{" "}
+    {userToApprove.company || t("users.notFound")}
+  </p>
+
+  <p>
+    <strong>
+      {t("users.site")} :
+    </strong>{" "}
+    {userToApprove.primary_site_id
+      ? userToApprove.primary_site_id
+      : t("users.notAssigned")}
+  </p>
+
+<p>
       <strong>
         {t("users.email")} :
       </strong>{" "}
       {userToApprove.email}
     </p>
 
+<p>
+  <strong>
+    {t("users.emailVerified")} :
+  </strong>{" "}
+  {userToApprove.email_verified
+    ? `✅ ${t("users.yes")}`
+    : `❌ ${t("users.no")}`}
+</p>
+
+{userToApprove.requested_site_name &&
+ companyAction !== "existing" && (
+
+  <div className="validation-section">
+
+    <h3>
+      {t("users.requestedSite")}
+    </h3>
+
     <p>
-      <strong>
-        {t("users.company")} :
-      </strong>{" "}
-      {userToApprove.company}
+      {userToApprove.requested_site_name}
     </p>
+
+<div className="users-modal-actions">
+
+  <button
+    className="users-close-button"
+  >
+    {t("users.rejectSite")}
+  </button>
+
+  <button
+  className="users-approve-button"
+  onClick={() => {
+
+    setSiteValidated(true);
+
+  }}
+>
+  {t("users.approveSite")}
+</button>
+
+{siteValidated && (
+
+  <p>
+
+    {isReferent
+      ? `📨 ${t("users.siteCreationRequestCreated")}`
+      : `✅ ${t("users.siteApproved")}`}
+
+  </p>
+
+)}
+
+
+</div>
+
+  </div>
+
+)}
+
+</div>
+
+<div className="validation-section">
+
+  <h3>
+    {t("users.validationRequirements")}
+  </h3>
+
+  <p>
+  {(userToApprove.company_id ||
+    selectedCompanyId)
+    ? "✅"
+    : "❌"}{" "}
+  {t("users.companyAssigned")}
+</p>
+
+<p>
+  {(userToApprove.primary_site_id ||
+    selectedSiteId)
+    ? "✅"
+    : "❌"}{" "}
+  {t("users.siteAssigned")}
+</p>
+
+  </div>
+  
+  </div>
+
 
     <div className="users-modal-actions">
 
@@ -911,10 +1230,16 @@ setShowDisableModal(false);
       </button>
 
       <button
-        className="users-approve-button"
-        onClick={async () => {
-
-  try {
+  className="users-approve-button"
+  disabled={
+  !canApproveUser(userToApprove) &&
+  !(
+    companyAction === "existing" &&
+    selectedCompanyId &&
+    selectedSiteId
+  )
+}
+  onClick={async () => {
 
     await fetch(
       `http://localhost:3000/users/${userToApprove.id}/approve`,
@@ -926,19 +1251,12 @@ setShowDisableModal(false);
     await loadUsers();
 
     setUserToApprove(null);
-
     setShowApproveModal(false);
 
-  } catch (error) {
-
-    console.error(error);
-
-  }
-
-}}
-      >
-        {t("users.validateUser")}
-      </button>
+  }}
+>
+  {t("users.validateUser")}
+</button>
 
     </div>
 
@@ -986,6 +1304,28 @@ setShowDisableModal(false);
         setRejectReason(e.target.value)
       }
     />
+
+<div className="validation-section">
+
+  <h3>
+    {t("users.validationRequirements")}
+  </h3>
+
+  <p>
+    {userToApprove.company_id
+      ? "✅"
+      : "❌"}{" "}
+    {t("users.companyAssigned")}
+  </p>
+
+  <p>
+    {userToApprove.primary_site_id
+      ? "✅"
+      : "❌"}{" "}
+    {t("users.siteAssigned")}
+  </p>
+
+</div>
 
     <div className="users-modal-actions">
 
