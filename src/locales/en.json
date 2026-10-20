@@ -368,7 +368,18 @@
     "useExistingCompany": "Use an existing company",
     "createNewCompany": "Create a new company",
     "selectCompany": "Select a company",
-    "selectSite": "Select a site"
+    "selectSite": "Select a site",
+    "newCompany": "New company",
+    "companyName": "Company name",
+    "primarySite": "Primary site",
+    "siteAddress": "Address",
+    "sitePostalCode": "Postal code",
+    "siteCity": "City",
+    "siteCountry": "Country",
+    "companyNameProvided": "Company name provided",
+    "siteNameProvided": "Primary site name provided",
+    "companyCreated": "Company created",
+    "siteCreated": "Primary site created"
 
   }, 
 

@@ -370,7 +370,18 @@
     "useExistingCompany": "Utiliser une société existante",
     "createNewCompany": "Créer une nouvelle société",
     "selectCompany": "Sélectionner une société",
-    "selectSite": "Sélectionner un site"    
+    "selectSite": "Sélectionner un site",
+    "newCompany": "Nouvelle société",
+    "companyName": "Nom de la société",
+    "primarySite": "Site principal",
+    "siteAddress": "Adresse",
+    "sitePostalCode": "Code postal",
+    "siteCity": "Ville",
+    "siteCountry": "Pays",
+    "companyNameProvided": "Nom société renseigné",
+    "siteNameProvided": "Nom site principal renseigné",
+    "companyCreated": "Société créée",
+    "siteCreated": "Site principal créé"   
 
   },
 

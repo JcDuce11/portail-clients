@@ -45,6 +45,22 @@ function Users() {
   useState("");
   const [selectedSiteId, setSelectedSiteId] =
   useState("");
+  const [newCompanyName, setNewCompanyName] =
+  useState("");
+  const [newPrimarySiteName, setNewPrimarySiteName] =
+  useState("");
+  const [newSiteAddress, setNewSiteAddress] =
+  useState("");
+  const [newSitePostalCode, setNewSitePostalCode] =
+  useState("");
+  const [newSiteCity, setNewSiteCity] =
+  useState("");
+  const [newSiteCountry, setNewSiteCountry] =
+  useState("France");
+  const [companyCreated, setCompanyCreated] =
+  useState(false);
+  const [siteCreated, setSiteCreated] =
+  useState(false);
   const [siteValidated, setSiteValidated] =
   useState(false);
   const [showRejectModal, setShowRejectModal] =
@@ -115,6 +131,27 @@ const adminCannotManageSuperAdmin = (user) =>
   activeSuperAdmins.length === 1;
 
 const canApproveUser = (user) => {
+
+  if (companyAction === "new") {
+
+    return (
+      (newCompanyName ||
+        user.requested_company_name) &&
+
+      (newPrimarySiteName ||
+        user.requested_site_name) &&
+
+      newSiteAddress.trim() &&
+
+      newSitePostalCode.trim() &&
+
+      newSiteCity.trim() &&
+
+      newSiteCountry.trim()
+    );
+
+  }
+
   return (
     user.company_id ||
     selectedCompanyId
@@ -1090,9 +1127,125 @@ setShowDisableModal(false);
 
   <div className="validation-section">
 
-    <p>
-      {t("users.createCompanyAndSite")}
-    </p>
+    <h3>
+      {t("users.newCompany")}
+    </h3>
+
+    <label>
+      {t("users.companyName")}
+    </label>
+
+    <input
+      className="users-input"
+      value={
+        newCompanyName ||
+        userToApprove.requested_company_name ||
+        ""
+      }
+      onChange={(e) =>
+        setNewCompanyName(
+          e.target.value
+        )
+      }
+    />
+
+    <label
+      style={{
+        marginTop: "15px",
+        display: "block",
+      }}
+    >
+      {t("users.primarySite")}
+    </label>
+
+    <input
+      className="users-input"
+      value={
+        newPrimarySiteName ||
+        userToApprove.requested_site_name ||
+        ""
+      }
+      onChange={(e) =>
+        setNewPrimarySiteName(
+          e.target.value
+        )
+      }
+    />
+
+<label
+  style={{
+    marginTop: "15px",
+    display: "block",
+  }}
+>
+  {t("users.siteAddress")}
+</label>
+
+<input
+  className="users-input"
+  value={newSiteAddress}
+  onChange={(e) =>
+    setNewSiteAddress(
+      e.target.value
+    )
+  }
+/>
+
+<label
+  style={{
+    marginTop: "15px",
+    display: "block",
+  }}
+>
+  {t("users.sitePostalCode")}
+</label>
+
+<input
+  className="users-input"
+  value={newSitePostalCode}
+  onChange={(e) =>
+    setNewSitePostalCode(
+      e.target.value
+    )
+  }
+/>
+<label
+  style={{
+    marginTop: "15px",
+    display: "block",
+  }}
+>
+  {t("users.siteCity")}
+</label>
+
+<input
+  className="users-input"
+  value={newSiteCity}
+  onChange={(e) =>
+    setNewSiteCity(
+      e.target.value
+    )
+  }
+/>
+
+<label
+  style={{
+    marginTop: "15px",
+    display: "block",
+  }}
+>
+  {t("users.siteCountry")}
+</label>
+
+<input
+  className="users-input"
+  value={newSiteCountry}
+  onChange={(e) =>
+    setNewSiteCountry(
+      e.target.value
+    )
+  }
+/>
 
   </div>
 
@@ -1194,22 +1347,92 @@ setShowDisableModal(false);
   </h3>
 
   <p>
-  {(userToApprove.company_id ||
-    selectedCompanyId)
+  {(
+    userToApprove.company_id ||
+    selectedCompanyId ||
+    (
+      companyAction === "new" &&
+      (
+        newCompanyName ||
+        userToApprove.requested_company_name
+      )
+    )
+  )
     ? "✅"
     : "❌"}{" "}
   {t("users.companyAssigned")}
 </p>
 
 <p>
-  {(userToApprove.primary_site_id ||
-    selectedSiteId)
+  {(
+    userToApprove.primary_site_id ||
+    selectedSiteId ||
+    (
+      companyAction === "new" &&
+      (
+        newPrimarySiteName ||
+        userToApprove.requested_site_name
+      )
+    )
+  )
     ? "✅"
     : "❌"}{" "}
   {t("users.siteAssigned")}
 </p>
 
-  </div>
+  {companyAction === "new" && (
+
+    <>
+
+      <p>
+        {newSiteAddress.trim()
+          ? "✅"
+          : "❌"}{" "}
+        {t("users.siteAddress")}
+      </p>
+
+      <p>
+        {newSitePostalCode.trim()
+          ? "✅"
+          : "❌"}{" "}
+        {t("users.sitePostalCode")}
+      </p>
+
+      <p>
+        {newSiteCity.trim()
+          ? "✅"
+          : "❌"}{" "}
+        {t("users.siteCity")}
+      </p>
+
+      <p>
+        {newSiteCountry.trim()
+          ? "✅"
+          : "❌"}{" "}
+        {t("users.siteCountry")}
+      </p>
+
+<hr />
+
+<p>
+  {companyCreated
+    ? "✅"
+    : "❌"}{" "}
+  {t("users.companyCreated")}
+</p>
+
+<p>
+  {siteCreated
+    ? "✅"
+    : "❌"}{" "}
+  {t("users.siteCreated")}
+</p>
+
+    </>
+
+  )}
+
+</div>
   
   </div>
 

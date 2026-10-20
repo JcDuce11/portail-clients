@@ -503,3 +503,15 @@
 
   margin-top: 10px;
 }
+
+.users-input {
+  width: 100%;
+
+  padding: 10px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  margin-top: 8px;
+}
