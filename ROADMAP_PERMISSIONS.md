@@ -830,3 +830,25 @@ Informations conservées :
 - motif du refus
 
 Suppression automatique après expiration.
+
+## RG-013
+
+Les codes société et site sont uniques à vie.
+
+Un code supprimé ne peut jamais être réutilisé.
+
+Exemples :
+
+CLI-000001
+CLI-000002
+CLI-000003
+
+Si CLI-000002 est supprimé :
+
+la société suivante recevra :
+
+CLI-000004
+
+Jamais CLI-000002.
+
+Même principe pour les sites.

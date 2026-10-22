@@ -379,7 +379,11 @@
     "companyNameProvided": "Company name provided",
     "siteNameProvided": "Primary site name provided",
     "companyCreated": "Company created",
-    "siteCreated": "Primary site created"
+    "siteCreated": "Primary site created",
+    "createCompany": "Create company",
+    "companyCreatedSuccess": "The company and primary site were created successfully.",
+    "companyCreatedError": "Unable to create the company or primary site.",
+    "companyAlreadyExists": "A similar company already exists."
 
   }, 
 

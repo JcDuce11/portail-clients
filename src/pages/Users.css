@@ -515,3 +515,35 @@
 
   margin-top: 8px;
 }
+
+.success-box {
+  margin-top: 15px;
+
+  padding: 12px;
+
+  background: #dcfce7;
+
+  border: 1px solid #86efac;
+
+  border-radius: 10px;
+
+  color: #166534;
+
+  font-weight: 600;
+}
+
+.error-box {
+  margin-top: 15px;
+
+  padding: 12px;
+
+  background: #fee2e2;
+
+  border: 1px solid #fca5a5;
+
+  border-radius: 10px;
+
+  color: #991b1b;
+
+  font-weight: 600;
+}

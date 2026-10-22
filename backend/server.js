@@ -55,6 +55,8 @@ const {
   reactivateUser,
   approveUser,
   rejectUser,
+  approveCompanyCreation,
+  checkCompanyDuplicate,
 } = require("./services/usersService");
 
 const app = express();
@@ -1117,6 +1119,66 @@ app.put(
       });
 
     }
+  }
+);
+
+app.put(
+  "/users/:id/approve-company-creation",
+  async (req, res) => {
+
+    try {
+
+      await approveCompanyCreation(
+        req.params.id,
+        req.body
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+
+    }
+
+  }
+);
+
+app.post(
+  "/companies/check-duplicate",
+  async (req, res) => {
+
+    try {
+
+      const companies =
+        await checkCompanyDuplicate(
+          req.body
+        );
+
+      res.json({
+        exists:
+          companies.length > 0,
+        company:
+          companies[0] || null,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+      });
+
+    }
+
   }
 );
 

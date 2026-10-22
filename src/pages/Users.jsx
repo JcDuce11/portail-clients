@@ -61,6 +61,14 @@ function Users() {
   useState(false);
   const [siteCreated, setSiteCreated] =
   useState(false);
+  const [duplicateCompany, setDuplicateCompany] =
+  useState(null);
+  const [duplicateError, setDuplicateError] =
+  useState("");
+  const [companyCreationStatus, setCompanyCreationStatus] =
+  useState("");
+  const [companyCreationError, setCompanyCreationError] =
+  useState("");
   const [siteValidated, setSiteValidated] =
   useState(false);
   const [showRejectModal, setShowRejectModal] =
@@ -1203,9 +1211,10 @@ setShowDisableModal(false);
 <input
   className="users-input"
   value={newSitePostalCode}
+  maxLength={10}
   onChange={(e) =>
     setNewSitePostalCode(
-      e.target.value
+      e.target.value.replace(/\D/g, "")
     )
   }
 />
@@ -1246,6 +1255,161 @@ setShowDisableModal(false);
     )
   }
 />
+
+<button
+  type="button"
+  className="users-approve-button"
+  style={{ marginTop: "20px" }}
+  onClick={async () => {
+
+  try {
+
+    const duplicateResponse =
+      await fetch(
+        "http://localhost:3000/companies/check-duplicate",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+
+            companyName:
+              newCompanyName ||
+              userToApprove.requested_company_name,
+
+            city:
+              newSiteCity,
+
+            postalCode:
+              newSitePostalCode,
+
+          }),
+
+        }
+      );
+
+    const duplicateData =
+      await duplicateResponse.json();
+
+console.log(
+  "DUPLICATE DATA",
+  duplicateData
+);
+
+    if (duplicateData.exists) {
+
+      setDuplicateCompany(
+        duplicateData.company
+      );
+
+      setDuplicateError(
+        t("users.companyAlreadyExists")
+      );
+
+      return;
+
+    }
+
+    setDuplicateCompany(null);
+
+    setDuplicateError("");
+
+    await fetch(
+  `http://localhost:3000/users/${userToApprove.id}/approve-company-creation`,
+  {
+    method: "PUT",
+
+    headers: {
+      "Content-Type":
+        "application/json",
+    },
+
+    body: JSON.stringify({
+
+      companyName:
+        newCompanyName ||
+        userToApprove.requested_company_name,
+
+      siteName:
+        newPrimarySiteName ||
+        userToApprove.requested_site_name,
+
+      address:
+        newSiteAddress,
+
+      postalCode:
+        newSitePostalCode,
+
+      city:
+        newSiteCity,
+
+      country:
+        newSiteCountry,
+
+    }),
+  }
+);
+    
+    setCompanyCreated(true);
+
+    setSiteCreated(true);
+
+    setCompanyCreationStatus(
+      t("users.companyCreatedSuccess")
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    setCompanyCreationStatus("");
+
+    setCompanyCreationError(
+      t("users.companyCreatedError")
+    );
+
+  }
+
+}}
+>
+  {t("users.createCompany")}
+</button>
+
+{companyCreationStatus && (
+
+  <div className="success-box">
+    {companyCreationStatus}
+  </div>
+
+)}
+
+{companyCreationError && (
+
+  <div className="error-box">
+    {companyCreationError}
+  </div>
+
+)}
+
+{duplicateError && (
+
+  <div className="error-box">
+
+    {duplicateError}
+
+    <br />
+
+    {duplicateCompany?.company_code}
+    {" - "}
+    {duplicateCompany?.name}
+
+  </div>
+
+)}
 
   </div>
 

@@ -381,7 +381,12 @@
     "companyNameProvided": "Nom société renseigné",
     "siteNameProvided": "Nom site principal renseigné",
     "companyCreated": "Société créée",
-    "siteCreated": "Site principal créé"   
+    "siteCreated": "Site principal créé",
+    "createCompany": "Créer la société",
+    "companyCreatedSuccess": "La société et le site principal ont été créés avec succès.",
+    "companyCreatedError": "Impossible de créer la société ou le site principal.",
+    "companyAlreadyExists": "Une société similaire existe déjà."
+   
 
   },
 
