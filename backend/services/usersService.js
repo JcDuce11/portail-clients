@@ -226,6 +226,7 @@ console.log(
 );
 
   return {
+  success: true,
   companyId,
   companyCode,
   siteId,

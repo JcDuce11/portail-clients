@@ -369,7 +369,7 @@
     "createNewCompany": "Create a new company",
     "selectCompany": "Select a company",
     "selectSite": "Select a site",
-    "newCompany": "New company",
+    "newCompany": "Company information",
     "companyName": "Company name",
     "primarySite": "Primary site",
     "siteAddress": "Address",
@@ -383,7 +383,14 @@
     "createCompany": "Create company",
     "companyCreatedSuccess": "The company and primary site were created successfully.",
     "companyCreatedError": "Unable to create the company or primary site.",
-    "companyAlreadyExists": "A similar company already exists."
+    "companyAlreadyExists": "A similar company already exists.",
+    "companyAddress": "Company address",
+    "companyPostalCode": "Company postal code",
+    "companyCity": "Company city",
+    "companyCountry": "Company country",
+    "mainSiteName": "Primary site name",
+    "mainSiteUsesCompanyAddress": "The primary site will automatically use the company's address.",
+    "useThisCompany": "Use this company"
 
   }, 
 

@@ -314,6 +314,40 @@ app.get("/users", async (req, res) => {
   }
 );
 
+app.get(
+  "/companies",
+  async (req, res) => {
+
+    try {
+
+      const [rows] =
+        await db.execute(
+          `
+          SELECT
+            id,
+            company_code,
+            name
+          FROM companies
+          WHERE deleted = 0
+          ORDER BY name
+          `
+        );
+
+      res.json(rows);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+      });
+
+    }
+
+  }
+);
+
 app.put(
   "/users/:id/reactivate",
   async (req, res) => {

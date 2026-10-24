@@ -371,7 +371,7 @@
     "createNewCompany": "Créer une nouvelle société",
     "selectCompany": "Sélectionner une société",
     "selectSite": "Sélectionner un site",
-    "newCompany": "Nouvelle société",
+    "newCompany": "Informations société",
     "companyName": "Nom de la société",
     "primarySite": "Site principal",
     "siteAddress": "Adresse",
@@ -385,9 +385,15 @@
     "createCompany": "Créer la société",
     "companyCreatedSuccess": "La société et le site principal ont été créés avec succès.",
     "companyCreatedError": "Impossible de créer la société ou le site principal.",
-    "companyAlreadyExists": "Une société similaire existe déjà."
-   
-
+    "companyAlreadyExists": "Une société similaire existe déjà.",
+    "companyAddress": "Adresse société",
+    "companyPostalCode": "Code postal société",
+    "companyCity": "Ville société",
+    "companyCountry": "Pays société",
+    "mainSiteName": "Nom du site principal",
+    "mainSiteUsesCompanyAddress": "Le site principal utilisera automatiquement l'adresse de la société.",
+    "useThisCompany": "Utiliser cette société"
+  
   },
 
   "table": {

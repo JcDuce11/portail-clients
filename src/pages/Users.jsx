@@ -21,6 +21,8 @@ function Users() {
   const isAdmin = currentUser?.role === "ADMIN";
   const isSuperAdmin = currentUser?.role === "SUPER_ADMIN";
   const [users, setUsers] = useState([]);
+  const [companies, setCompanies] =
+  useState([]);
   const [selectedUser, setSelectedUser] =
   useState(null);
   const [showUserModal, setShowUserModal] =
@@ -79,8 +81,11 @@ function Users() {
   useState("");
   
   useEffect(() => {
-    loadUsers();
-  }, []);
+
+  loadUsers();
+  loadCompanies();
+
+}, []);
 
   async function loadUsers() {
     try {
@@ -96,6 +101,26 @@ function Users() {
       console.error(error);
     }
   }
+
+async function loadCompanies() {
+
+  try {
+
+    const response = await fetch(
+      "http://localhost:3000/companies"
+    );
+
+    const data = await response.json();
+
+    setCompanies(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
 
   const pendingUsers = users.filter(
     (user) =>
@@ -172,6 +197,10 @@ const canApproveUser = (user) => {
 
 const approvalScenario = (user) => {
 
+  if (!user) {
+    return "UNKNOWN";
+  }
+
   if (
     user.company_id &&
     user.primary_site_id &&
@@ -186,10 +215,15 @@ const approvalScenario = (user) => {
   ) {
     return "SITE_CREATION_REQUEST";
   }
-
+  
   if (
     user.requested_company_name
   ) {
+
+    console.log(
+  "COMPANY_CREATION_REQUEST DETECTED"
+);
+
     return "COMPANY_CREATION_REQUEST";
   }
 
@@ -198,6 +232,10 @@ const approvalScenario = (user) => {
 
 const approvalScenarioLabel = (user) => {
 
+if (!user) {
+    return t("users.scenarioUnknown");
+  }
+  
   switch (approvalScenario(user)) {
 
     case "COMPANY_AND_SITE_FOUND":
@@ -358,10 +396,14 @@ const approvalScenarioLabel = (user) => {
           <td>
 
             <button
-              className="users-action-button"
-            >
-              <Eye size={16} />
-            </button>
+  className="users-action-button"
+  onClick={() => {
+    setSelectedUser(user);
+    setShowUserModal(true);
+  }}
+>
+  <Eye size={16} />
+</button>
 
             <button
   className="users-action-button success"
@@ -738,18 +780,49 @@ setShowUserModal(true);
       </p>
 
       <p>
-        <strong>
-          {t("users.company")} :
-        </strong>{" "}
-        {selectedUser.company}
-      </p>
+  <strong>
+    {t("users.company")} :
+  </strong>{" "}
+  {
+  selectedUser?.company
+    ? selectedUser.company
+    : selectedUser?.requested_company_name
+      ? `${selectedUser.requested_company_name} (${t("users.requestedCompany")})`
+      : t("users.notFound")
+}
+</p>
+
+<p>
+  <strong>
+    {t("users.site")} :
+  </strong>{" "}
+ {
+  selectedUser?.primary_site_id
+    ? selectedUser.primary_site_id
+    : selectedUser?.requested_site_name
+      ? `${selectedUser.requested_site_name} (${t("users.requestedSite")})`
+      : t("users.notAssigned")
+}
+</p>
 
       <p>
-        <strong>
-          {t("users.status")} :
-        </strong>{" "}
-        {selectedUser.status}
-      </p>
+  <strong>
+    {t("users.status")} :
+  </strong>{" "}
+  {
+    selectedUser.status === "PENDING_APPROVAL"
+      ? t("users.statusPendingApproval")
+      : selectedUser.status === "ACTIVE"
+      ? t("users.statusActive")
+      : selectedUser.status === "DISABLED"
+      ? t("users.statusDisabled")
+      : selectedUser.status === "REJECTED"
+      ? t("users.statusRejected")
+      : selectedUser.status === "DELETED"
+      ? t("users.statusDeleted")
+      : selectedUser.status
+  }
+</p>
 
 <p>
   <strong>
@@ -764,7 +837,7 @@ setShowUserModal(true);
   <strong>
     {t("users.validationScenario")} :
   </strong>{" "}
-  {approvalScenarioLabel(userToApprove)}
+  {approvalScenarioLabel(selectedUser)}
 </p>
 
 <p>
@@ -1081,23 +1154,34 @@ setShowDisableModal(false);
     </h3>
 
     <select
-      className="users-select"
-      value={selectedCompanyId}
-      onChange={(e) =>
-        setSelectedCompanyId(
-          e.target.value
-        )
-      }
+  className="users-select"
+  value={selectedCompanyId}
+  onChange={(e) =>
+    setSelectedCompanyId(
+      e.target.value
+    )
+  }
+>
+
+  <option value="">
+    {t("users.selectCompany")}
+  </option>
+
+  {companies.map((company) => (
+
+    <option
+      key={company.id}
+      value={company.id}
     >
-      <option value="">
-        {t("users.selectCompany")}
-      </option>
+      {company.company_code}
+      {" - "}
+      {company.name}
+    </option>
 
-      <option value="1">
-        Société Test
-      </option>
+  ))}
 
-    </select>
+</select>
+
 <p
   style={{
     marginTop: "15px",
@@ -1117,12 +1201,13 @@ setShowDisableModal(false);
     )
   }
 >
+
   <option value="">
     {t("users.selectSite")}
   </option>
 
   <option value="1">
-    Siège Social
+    Site principal
   </option>
 
 </select>
@@ -1157,36 +1242,13 @@ setShowDisableModal(false);
       }
     />
 
-    <label
-      style={{
-        marginTop: "15px",
-        display: "block",
-      }}
-    >
-      {t("users.primarySite")}
-    </label>
-
-    <input
-      className="users-input"
-      value={
-        newPrimarySiteName ||
-        userToApprove.requested_site_name ||
-        ""
-      }
-      onChange={(e) =>
-        setNewPrimarySiteName(
-          e.target.value
-        )
-      }
-    />
-
 <label
   style={{
     marginTop: "15px",
     display: "block",
   }}
 >
-  {t("users.siteAddress")}
+  {t("users.companyAddress")}
 </label>
 
 <input
@@ -1205,7 +1267,7 @@ setShowDisableModal(false);
     display: "block",
   }}
 >
-  {t("users.sitePostalCode")}
+  {t("users.companyPostalCode")}
 </label>
 
 <input
@@ -1224,7 +1286,7 @@ setShowDisableModal(false);
     display: "block",
   }}
 >
-  {t("users.siteCity")}
+  {t("users.companyCity")}
 </label>
 
 <input
@@ -1243,7 +1305,7 @@ setShowDisableModal(false);
     display: "block",
   }}
 >
-  {t("users.siteCountry")}
+  {t("users.companyCountry")}
 </label>
 
 <input
@@ -1255,6 +1317,30 @@ setShowDisableModal(false);
     )
   }
 />
+
+<hr />
+
+<h4>
+  {t("users.primarySite")}
+</h4>
+
+    <input
+      className="users-input"
+      value={
+        newPrimarySiteName ||
+        userToApprove.requested_site_name ||
+        ""
+      }
+      onChange={(e) =>
+        setNewPrimarySiteName(
+          e.target.value
+        )
+      }
+    />
+
+<p className="users-help-text">
+  {t("users.mainSiteUsesCompanyAddress")}
+</p>
 
 <button
   type="button"
@@ -1407,6 +1493,38 @@ console.log(
     {" - "}
     {duplicateCompany?.name}
 
+    <br />
+    <br />
+
+    <button
+      type="button"
+      className="users-approve-button"
+      onClick={() => {
+
+console.log(
+  "DUPLICATE COMPANY",
+  duplicateCompany
+);
+
+        setCompanyAction(
+          "existing"
+        );
+
+        setSelectedCompanyId(
+          String(
+            duplicateCompany.id
+          )
+        );
+
+        setDuplicateError("");
+
+        setDuplicateCompany(null);
+
+      }}
+    >
+      {t("users.useThisCompany")}
+    </button>
+
   </div>
 
 )}
@@ -1427,13 +1545,17 @@ console.log(
   </p>
 
   <p>
-    <strong>
-      {t("users.site")} :
-    </strong>{" "}
-    {userToApprove.primary_site_id
-      ? userToApprove.primary_site_id
-      : t("users.notAssigned")}
-  </p>
+  <strong>
+    {t("users.site")} :
+  </strong>{" "}
+  {
+  selectedUser?.primary_site_id
+    ? selectedUser.primary_site_id
+    : selectedUser?.requested_site_name
+      ? `${selectedUser.requested_site_name} (${t("users.requestedSite")})`
+      : t("users.notAssigned")
+}
+</p>
 
 <p>
       <strong>
@@ -1452,7 +1574,7 @@ console.log(
 </p>
 
 {userToApprove.requested_site_name &&
- companyAction !== "existing" && (
+ companyAction !== "new" && (
 
   <div className="validation-section">
 
@@ -1637,6 +1759,9 @@ console.log(
 
     await loadUsers();
 
+    setCompanyCreated(true);
+    setSiteCreated(true);
+    setCompanyCreationStatus( t("users.companyCreatedSuccess"));
     setUserToApprove(null);
     setShowApproveModal(false);
 

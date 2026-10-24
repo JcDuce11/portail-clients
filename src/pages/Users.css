@@ -547,3 +547,13 @@
 
   font-weight: 600;
 }
+
+.users-help-text {
+  margin-top: 8px;
+
+  color: #6b7280;
+
+  font-size: 0.9rem;
+
+  font-style: italic;
+}
