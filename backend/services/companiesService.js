@@ -2,10 +2,44 @@ const db = require("../config/db");
 
 async function getAllCompanies() {
   const [rows] = await db.execute(`
-    SELECT *
-    FROM companies
-    WHERE deleted = 0
-    ORDER BY id
+    SELECT
+
+  c.*,
+
+  (
+    SELECT COUNT(*)
+    FROM sites s
+    WHERE s.company_id = c.id
+      AND s.deleted = 0
+  ) AS site_count,
+
+  (
+    SELECT COUNT(*)
+    FROM users u
+    WHERE u.company_id = c.id
+  ) AS user_count,
+
+  (
+    SELECT site_name
+    FROM sites s
+    WHERE s.company_id = c.id
+      AND s.is_main_site = 1
+    LIMIT 1
+  ) AS main_site_name,
+
+  (
+    SELECT site_code
+    FROM sites s
+    WHERE s.company_id = c.id
+      AND s.is_main_site = 1
+    LIMIT 1
+  ) AS main_site_code
+
+FROM companies c
+
+WHERE c.deleted = 0
+
+ORDER BY c.id
   `);
 
   return rows;

@@ -189,11 +189,9 @@ letter-spacing: 1px;
     flex-direction: column;
     gap: 12px;
 
-    flex: 1;
-    overflow-y: auto;
-
     padding-bottom: 20px;
 }
+
 
 .sidebar nav button:hover {
   background: rgba(255,255,255,.08);

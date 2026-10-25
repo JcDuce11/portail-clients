@@ -390,7 +390,15 @@
     "companyCountry": "Company country",
     "mainSiteName": "Primary site name",
     "mainSiteUsesCompanyAddress": "The primary site will automatically use the company's address.",
-    "useThisCompany": "Use this company"
+    "useThisCompany": "Use this company",
+    "availableSites": "{{count}} available site(s)",
+    "duplicateCompaniesFound": "⚠ WARNING: {{count}} companie(s) named \"{{company}}\" were found. The list was automatically filtered.",
+    "notProvided": "Not provided",
+    "userCount": "Number of users",
+    "companyCode": "Company code",
+    "siteCount": "Number of sites",
+    "createdAt": "Creation date",
+    "mainSite": "Primary site"
 
   }, 
 

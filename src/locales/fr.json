@@ -392,8 +392,15 @@
     "companyCountry": "Pays société",
     "mainSiteName": "Nom du site principal",
     "mainSiteUsesCompanyAddress": "Le site principal utilisera automatiquement l'adresse de la société.",
-    "useThisCompany": "Utiliser cette société"
-  
+    "useThisCompany": "Utiliser cette société",
+    "availableSites": "{{count}} site(s) disponible(s)",
+    "duplicateCompaniesFound": "⚠ ATTENTION : {{count}} société(s) portant le nom \"{{company}}\" ont été trouvées. La liste a été filtrée automatiquement.",
+    "notProvided": "Non renseigné",
+    "userCount": "Nombre d'utilisateurs",
+    "companyCode": "Code société",
+    "siteCount": "Nombre de sites",
+    "createdAt": "Date de création",
+    "mainSite": "Site principal"
   },
 
   "table": {

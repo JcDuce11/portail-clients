@@ -45,6 +45,12 @@ function Users() {
   useState("");
   const [selectedCompanyId, setSelectedCompanyId] =
   useState("");
+  const [selectedCompany, setSelectedCompany] =
+  useState(null);
+  const [showCompanyModal, setShowCompanyModal] =
+  useState(false);
+  const [companyDetails, setCompanyDetails] =
+  useState(null);
   const [selectedSiteId, setSelectedSiteId] =
   useState("");
   const [newCompanyName, setNewCompanyName] =
@@ -61,10 +67,14 @@ function Users() {
   useState("France");
   const [companyCreated, setCompanyCreated] =
   useState(false);
+  const [sites, setSites] =
+  useState([]);
   const [siteCreated, setSiteCreated] =
   useState(false);
   const [duplicateCompany, setDuplicateCompany] =
   useState(null);
+  const [duplicateCompanyName, setDuplicateCompanyName] =
+  useState("");
   const [duplicateError, setDuplicateError] =
   useState("");
   const [companyCreationStatus, setCompanyCreationStatus] =
@@ -86,6 +96,18 @@ function Users() {
   loadCompanies();
 
 }, []);
+
+useEffect(() => {
+
+  if (selectedCompanyId) {
+
+    loadSites(
+      selectedCompanyId
+    );
+
+  }
+
+}, [selectedCompanyId]);
 
   async function loadUsers() {
     try {
@@ -112,8 +134,49 @@ async function loadCompanies() {
 
     const data = await response.json();
 
+console.log(
+  "COMPANIES DATA",
+  data
+);
+
+console.log(
+  "IS ARRAY",
+  Array.isArray(data)
+);
+
     setCompanies(data);
 
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
+
+async function loadSites(
+  companyId
+) {
+
+  try {
+
+    const response =
+      await fetch(
+        `http://localhost:3000/companies/${companyId}/sites`
+      );
+
+    const data =
+  await response.json();
+
+setSites(data);
+
+if (data.length > 0) {
+
+  setSelectedSiteId(
+    String(data[0].id)
+  );
+
+}
   } catch (error) {
 
     console.error(error);
@@ -253,6 +316,44 @@ if (!user) {
   }
 
 };
+
+console.log(
+  "DUPLICATE COMPANY",
+  duplicateCompany
+);
+
+console.log(
+  "DUPLICATE COMPANY NAME",
+  duplicateCompanyName
+);
+
+console.log(
+  "COMPANIES FULL",
+  JSON.stringify(companies, null, 2)
+);
+
+const requestedCompany =
+  userToApprove?.requested_company_name
+    ?.trim()
+    ?.toUpperCase();
+
+console.log(
+  "REQUESTED COMPANY",
+  requestedCompany
+);
+
+const filteredCompanies =
+  requestedCompany
+
+    ? companies.filter(
+        (company) =>
+          company.name
+            ?.trim()
+            ?.toUpperCase()
+            .includes(requestedCompany)
+      )
+
+    : companies;
 
   return (
     <div className="users-page">
@@ -779,30 +880,63 @@ setShowUserModal(true);
         {selectedUser.role}
       </p>
 
-      <p>
+<p>
+  DEBUG companyId = [{String(selectedCompanyId)}]
+</p>
+
+<p>
+  DEBUG siteId = [{String(selectedSiteId)}]
+</p>
+
+     <p>
   <strong>
     {t("users.company")} :
   </strong>{" "}
   {
-  selectedUser?.company
-    ? selectedUser.company
-    : selectedUser?.requested_company_name
-      ? `${selectedUser.requested_company_name} (${t("users.requestedCompany")})`
-      : t("users.notFound")
-}
+    (() => {
+
+      const company =
+        companies.find(
+          (c) =>
+            String(c.id) ===
+            String(selectedCompanyId)
+        );
+
+      return company
+        ? `${company.company_code} - ${company.name}`
+        : (
+            selectedUser?.company ||
+            selectedUser?.requested_company_name ||
+            t("users.notFound")
+          );
+
+    })()
+  }
 </p>
 
 <p>
   <strong>
     {t("users.site")} :
   </strong>{" "}
- {
-  selectedUser?.primary_site_id
-    ? selectedUser.primary_site_id
-    : selectedUser?.requested_site_name
-      ? `${selectedUser.requested_site_name} (${t("users.requestedSite")})`
-      : t("users.notAssigned")
-}
+  {
+    (() => {
+
+      const site =
+        sites.find(
+          (s) =>
+            String(s.id) ===
+            String(selectedSiteId)
+        );
+
+      return site
+        ? `${site.site_code} - ${site.site_name}`
+        : (
+            selectedUser?.requested_site_name ||
+            t("users.notAssigned")
+          );
+
+    })()
+  }
 </p>
 
       <p>
@@ -1149,6 +1283,20 @@ setShowDisableModal(false);
 
   <div className="validation-section">
 
+{filteredCompanies.length > 0 && (
+
+  <div className="warning-box">
+
+    {t("users.duplicateCompaniesFound", {
+      count: filteredCompanies.length,
+      company:
+        userToApprove?.requested_company_name,
+    })}
+
+  </div>
+
+)}
+
     <h3>
       {t("users.chooseExistingCompany")}
     </h3>
@@ -1167,7 +1315,7 @@ setShowDisableModal(false);
     {t("users.selectCompany")}
   </option>
 
-  {companies.map((company) => (
+  {filteredCompanies.map((company) => (
 
     <option
       key={company.id}
@@ -1192,6 +1340,12 @@ setShowDisableModal(false);
   {t("users.selectSite")}
 </p>
 
+<p className="users-help-text">
+  {t("users.availableSites", {
+    count: sites.length,
+  })}
+</p>
+
 <select
   className="users-select"
   value={selectedSiteId}
@@ -1203,12 +1357,21 @@ setShowDisableModal(false);
 >
 
   <option value="">
-    {t("users.selectSite")}
-  </option>
+  {t("users.selectSite")}
+</option>
 
-  <option value="1">
-    Site principal
-  </option>
+  {sites.map((site) => (
+
+    <option
+      key={site.id}
+      value={site.id}
+    >
+      {site.site_code}
+      {" - "}
+      {site.site_name}
+    </option>
+
+  ))}
 
 </select>
 
@@ -1223,6 +1386,95 @@ setShowDisableModal(false);
     <h3>
       {t("users.newCompany")}
     </h3>
+
+{filteredCompanies.length > 0 && (
+
+  <div className="warning-box">
+
+    <p>
+      {t("users.duplicateCompaniesFound", {
+        count: filteredCompanies.length,
+        company:
+          userToApprove?.requested_company_name,
+      })}
+    </p>
+
+    {filteredCompanies.map((company) => (
+
+      <div
+        key={company.id}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          marginTop: "10px",
+        }}
+      >
+
+        <button
+  type="button"
+  className="users-action-button"
+  onClick={() => {
+
+    setSelectedCompany(company);
+
+console.log("COMPANY OBJECT", company);
+
+    setCompanyDetails({
+      
+      code: company.company_code,
+
+      name: company.name,
+
+      address:
+        company.address ||
+        t("users.notProvided"),
+
+      city:
+        company.city ||
+        t("users.notProvided"),
+
+      postalCode:
+        company.postal_code ||
+        t("users.notProvided"),
+
+      createdAt:
+  company.created_at,
+
+siteCount:
+  company.site_count || 0,
+
+userCount:
+  company.user_count || 0,
+
+mainSiteName:
+  company.main_site_name,
+
+mainSiteCode:
+  company.main_site_code,
+
+    });
+
+    setShowCompanyModal(true);
+
+  }}
+>
+  <Eye size={16} />
+</button>
+
+        <span>
+          {company.company_code}
+          {" - "}
+          {company.name}
+        </span>
+
+      </div>
+
+    ))}
+
+  </div>
+
+)}
 
     <label>
       {t("users.companyName")}
@@ -1388,9 +1640,23 @@ console.log(
 
     if (duplicateData.exists) {
 
+console.log(
+  "DUPLICATE FOUND",
+  duplicateData.company
+);
+
       setDuplicateCompany(
         duplicateData.company
       );
+
+      setDuplicateCompanyName(
+        duplicateData.company.name
+      );
+
+console.log(
+  "SET DUPLICATE COMPANY NAME",
+  duplicateData.company.name
+);
 
       setDuplicateError(
         t("users.companyAlreadyExists")
@@ -1502,23 +1768,17 @@ console.log(
       onClick={() => {
 
 console.log(
-  "DUPLICATE COMPANY",
+  "USE THIS COMPANY CLICK",
   duplicateCompany
 );
 
-        setCompanyAction(
-          "existing"
-        );
+  setCompanyAction("existing");
 
-        setSelectedCompanyId(
-          String(
-            duplicateCompany.id
-          )
-        );
+  setSelectedCompanyId(
+    String(duplicateCompany.id)
+  );
 
-        setDuplicateError("");
-
-        setDuplicateCompany(null);
+  setDuplicateError("");
 
       }}
     >
@@ -1891,8 +2151,120 @@ await loadUsers();
 </div>
 
 )}
+    {showCompanyModal &&
+     companyDetails && (
 
-    </div>
+      <div className="users-modal-overlay">
+
+        <div className="users-modal">
+
+          <h2>
+            {companyDetails.name}
+          </h2>
+
+          <p>
+            <strong>
+              {t("users.companyCode")} :
+            </strong>{" "}
+            {companyDetails.code}
+          </p>
+
+          <p>
+            <strong>
+              {t("users.createdAt")} :
+            </strong>{" "}
+            {
+              companyDetails.createdAt
+                ? new Date(
+                    companyDetails.createdAt
+                  ).toLocaleDateString()
+                : t("users.notProvided")
+            }
+          </p>
+
+          <p>
+            <strong>
+              {t("users.companyAddress")} :
+            </strong>{" "}
+            {companyDetails.address}
+          </p>
+
+          <p>
+            <strong>
+              {t("users.companyPostalCode")} :
+            </strong>{" "}
+            {companyDetails.postalCode}
+          </p>
+
+          <p>
+            <strong>
+              {t("users.companyCity")} :
+            </strong>{" "}
+            {companyDetails.city}
+          </p>
+
+          <p>
+            <strong>
+              {t("users.siteCount")} :
+            </strong>{" "}
+            {companyDetails.siteCount}
+          </p>
+
+          <p>
+            <strong>
+              {t("users.userCount")} :
+            </strong>{" "}
+            {companyDetails.userCount}
+          </p>
+    
+          <p>
+            <strong>
+              {t("users.mainSite")} :
+            </strong>{" "}
+            {companyDetails.mainSiteCode}
+            {" - "}
+            {companyDetails.mainSiteName}
+          </p>
+
+          <div className="users-modal-actions">
+
+            <button
+              className="users-close-button"
+              onClick={() => {
+                setShowCompanyModal(false);
+              }}
+            >
+              {t("users.close")}
+            </button>
+
+            <button
+              className="users-approve-button"
+              onClick={() => {
+
+                setCompanyAction(
+                  "existing"
+                );
+
+                setSelectedCompanyId(
+                  String(selectedCompany.id)
+                );
+
+                setShowCompanyModal(false);
+
+              }}
+            >
+              {t("users.useThisCompany")}
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    )}
+
+  </div>
   );
 }
 

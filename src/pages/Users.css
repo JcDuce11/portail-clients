@@ -557,3 +557,19 @@
 
   font-style: italic;
 }
+
+.warning-box {
+  margin-bottom: 15px;
+
+  padding: 12px;
+
+  background: #fef3c7;
+
+  border: 1px solid #fcd34d;
+
+  border-radius: 10px;
+
+  color: #92400e;
+
+  font-weight: 600;
+}
