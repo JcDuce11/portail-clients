@@ -880,37 +880,28 @@ setShowUserModal(true);
         {selectedUser.role}
       </p>
 
-<p>
-  DEBUG companyId = [{String(selectedCompanyId)}]
-</p>
-
-<p>
-  DEBUG siteId = [{String(selectedSiteId)}]
-</p>
-
-     <p>
+    <p>
   <strong>
     {t("users.company")} :
   </strong>{" "}
   {
-    (() => {
-
-      const company =
-        companies.find(
+    selectedCompanyId
+      ? `${companies.find(
           (c) =>
             String(c.id) ===
             String(selectedCompanyId)
-        );
-
-      return company
-        ? `${company.company_code} - ${company.name}`
-        : (
-            selectedUser?.company ||
-            selectedUser?.requested_company_name ||
-            t("users.notFound")
-          );
-
-    })()
+        )?.company_code || ""} - ${
+          companies.find(
+            (c) =>
+              String(c.id) ===
+              String(selectedCompanyId)
+          )?.name || ""
+        }`
+      : (
+          userToApprove?.company ||
+          userToApprove?.requested_company_name ||
+          t("users.notFound")
+        )
   }
 </p>
 
@@ -919,23 +910,22 @@ setShowUserModal(true);
     {t("users.site")} :
   </strong>{" "}
   {
-    (() => {
-
-      const site =
-        sites.find(
+    selectedSiteId
+      ? `${sites.find(
           (s) =>
             String(s.id) ===
             String(selectedSiteId)
-        );
-
-      return site
-        ? `${site.site_code} - ${site.site_name}`
-        : (
-            selectedUser?.requested_site_name ||
-            t("users.notAssigned")
-          );
-
-    })()
+        )?.site_code || ""} - ${
+          sites.find(
+            (s) =>
+              String(s.id) ===
+              String(selectedSiteId)
+          )?.site_name || ""
+        }`
+      : (
+          userToApprove?.requested_site_name ||
+          t("users.notAssigned")
+        )
   }
 </p>
 
@@ -1801,7 +1791,28 @@ console.log(
     <strong>
       {t("users.company")} :
     </strong>{" "}
-    {userToApprove.company || t("users.notFound")}
+   {
+  selectedCompanyId
+
+    ? `${companies.find(
+        (c) =>
+          String(c.id) ===
+          String(selectedCompanyId)
+      )?.company_code || ""} - ${
+        companies.find(
+          (c) =>
+            String(c.id) ===
+            String(selectedCompanyId)
+        )?.name || ""
+      }`
+
+    : (
+        userToApprove.company ||
+        userToApprove.requested_company_name ||
+        t("users.notFound")
+      )
+
+}
   </p>
 
   <p>
@@ -1809,11 +1820,25 @@ console.log(
     {t("users.site")} :
   </strong>{" "}
   {
-  selectedUser?.primary_site_id
-    ? selectedUser.primary_site_id
-    : selectedUser?.requested_site_name
-      ? `${selectedUser.requested_site_name} (${t("users.requestedSite")})`
-      : t("users.notAssigned")
+  selectedSiteId
+
+    ? `${sites.find(
+        (s) =>
+          String(s.id) ===
+          String(selectedSiteId)
+      )?.site_code || ""} - ${
+        sites.find(
+          (s) =>
+            String(s.id) ===
+            String(selectedSiteId)
+        )?.site_name || ""
+      }`
+
+    : (
+        userToApprove.requested_site_name ||
+        t("users.notAssigned")
+      )
+
 }
 </p>
 
@@ -1833,8 +1858,10 @@ console.log(
     : `❌ ${t("users.no")}`}
 </p>
 
-{userToApprove.requested_site_name &&
- companyAction !== "new" && (
+{
+  userToApprove.requested_site_name &&
+  !selectedCompanyId &&
+  companyAction !== "new" && (
 
   <div className="validation-section">
 
