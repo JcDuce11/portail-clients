@@ -45,6 +45,7 @@ function Users() {
   useState("");
   const [selectedCompanyId, setSelectedCompanyId] =
   useState("");
+
   const [selectedCompany, setSelectedCompany] =
   useState(null);
   const [showCompanyModal, setShowCompanyModal] =
@@ -89,11 +90,30 @@ function Users() {
   useState(null);
   const [rejectReason, setRejectReason] =
   useState("");
-  
+  const [showInviteUserModal, setShowInviteUserModal] =
+  useState(false);
+  const [showCreateUserModal, setShowCreateUserModal] =
+  useState(false);
+  const [firstName, setFirstName] =
+  useState("");
+  const [lastName, setLastName] =
+  useState("");
+  const [email, setEmail] =
+  useState("");
+  const [role, setRole] =
+  useState("");
+  const [companyId, setCompanyId] =
+  useState("");
+  const [siteId, setSiteId] =
+  useState("");
+  const [roles, setRoles] =
+  useState([]);
+
   useEffect(() => {
 
   loadUsers();
   loadCompanies();
+  loadRoles();
 
 }, []);
 
@@ -108,6 +128,19 @@ useEffect(() => {
   }
 
 }, [selectedCompanyId]);
+
+useEffect(() => {
+
+  if (companyId) {
+
+    loadSites(
+      companyId
+    );
+
+  }
+
+}, [companyId]);
+
 
   async function loadUsers() {
     try {
@@ -145,6 +178,28 @@ console.log(
 );
 
     setCompanies(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
+
+async function loadRoles() {
+
+  try {
+
+    const response =
+      await fetch(
+        "http://localhost:3000/roles"
+      );
+
+    const data =
+      await response.json();
+
+    setRoles(data);
 
   } catch (error) {
 
@@ -361,14 +416,33 @@ const filteredCompanies =
   <h1>{t("users.title")}</h1>
 
   <button
-    className="users-add-button"
-    onClick={() =>
-      console.log("Invite user")
-    }
-  >
-    <UserPlus size={18} />
-    {t("users.invite")}
-  </button>
+  className="users-add-button"
+  onClick={() => {
+
+  if (isReferent) {
+
+    setShowInviteUserModal(true);
+
+  } else {
+
+    setShowCreateUserModal(true);
+
+  }
+
+}}
+>
+  <UserPlus size={18} />
+
+  {
+    isReferent
+
+      ? t("users.invite")
+
+      : t("users.createUser")
+  }
+
+</button>
+
 </div>
 
       <div className="users-stats">
@@ -2013,57 +2087,17 @@ console.log(
     <div className="users-modal-actions">
 
       <button
-        className="users-close-button"
-        onClick={async () => {
+  className="users-close-button"
+  onClick={() => {
 
-  if (
-    companyAction === "existing"
-  ) {
+    setUserToApprove(null);
 
-    await fetch(
-      `http://localhost:3000/users/${userToApprove.id}/assign-company-site`,
-      {
-        method: "PUT",
+    setShowApproveModal(false);
 
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-
-        body: JSON.stringify({
-
-          companyId:
-            selectedCompanyId,
-
-          siteId:
-            selectedSiteId,
-
-        }),
-
-      }
-    );
-
-  } else {
-
-    await fetch(
-      `http://localhost:3000/users/${userToApprove.id}/approve`,
-      {
-        method: "PUT",
-      }
-    );
-
-  }
-
-  await loadUsers();
-
-  setUserToApprove(null);
-
-  setShowApproveModal(false);
-
-}}
-      >
-        {t("users.cancel")}
-      </button>
+  }}
+>
+  {t("users.cancel")}
+</button>
 
       <button
   className="users-approve-button"
@@ -2368,6 +2402,225 @@ await loadUsers();
       </div>
 
     )}
+
+{showCreateUserModal && (
+
+  <div className="users-modal-overlay">
+
+    <div className="users-modal">
+
+      <h2>
+        {t("users.createUser")}
+      </h2>
+
+      <label>
+  {t("users.firstname")}
+</label>
+
+<input
+  className="users-input"
+  value={firstName}
+  onChange={(e) =>
+    setFirstName(
+      e.target.value
+    )
+  }
+/>
+
+<label
+  style={{
+    marginTop: "15px",
+    display: "block",
+  }}
+>
+  {t("users.lastname")}
+</label>
+
+<input
+  className="users-input"
+  value={lastName}
+  onChange={(e) =>
+    setLastName(
+      e.target.value
+    )
+  }
+/>
+
+<label
+  style={{
+    marginTop: "15px",
+    display: "block",
+  }}
+>
+  {t("users.email")}
+</label>
+
+<input
+  className="users-input"
+  value={email}
+  onChange={(e) =>
+    setEmail(
+      e.target.value
+    )
+  }
+/>
+
+<label
+  style={{
+    marginTop: "15px",
+    display: "block",
+  }}
+>
+  {t("users.role")}
+</label>
+
+<select
+  className="users-select"
+  value={role}
+  onChange={(e) =>
+    setRole(
+      e.target.value
+    )
+  }
+>
+
+  <option value="">
+    {t("users.selectRole")}
+  </option>
+
+  {roles
+  .filter((roleItem) => {
+
+    if (
+      isSuperAdmin
+    ) {
+      return true;
+    }
+
+console.log("ROLES", roles);
+
+    return (
+      roleItem.name !==
+        "SUPER_ADMIN" &&
+      roleItem.name !==
+        "ADMIN"
+    );
+
+  })
+  .map((roleItem) => (
+
+    <option
+      key={roleItem.id}
+      value={roleItem.name}
+    >
+      {t(`roles.${roleItem.name}`)}
+    </option>
+
+))}
+
+</select>
+
+{(
+  role === "CLIENT" ||
+  role === "REFERENT"
+) && (
+
+  <>
+
+    <label
+      style={{
+        marginTop: "15px",
+        display: "block",
+      }}
+    >
+      {t("users.company")}
+    </label>
+
+    <select
+      className="users-select"
+      value={companyId}
+      onChange={(e) =>
+        setCompanyId(
+          e.target.value
+        )
+      }
+    >
+
+      <option value="">
+        {t("users.selectCompany")}
+      </option>
+
+      {companies.map((company) => (
+
+        <option
+          key={company.id}
+          value={company.id}
+        >
+          {company.company_code}
+          {" - "}
+          {company.name}
+        </option>
+
+      ))}
+
+    </select>
+
+    <label
+      style={{
+        marginTop: "15px",
+        display: "block",
+      }}
+    >
+      {t("users.site")}
+    </label>
+
+    <select
+      className="users-select"
+      value={siteId}
+      onChange={(e) =>
+        setSiteId(
+          e.target.value
+        )
+      }
+    >
+
+      <option value="">
+        {t("users.selectSite")}
+      </option>
+
+      {sites.map((site) => (
+
+        <option
+          key={site.id}
+          value={site.id}
+        >
+          {site.site_code}
+          {" - "}
+          {site.site_name}
+        </option>
+
+      ))}
+
+    </select>
+
+  </>
+
+)}
+
+      <button
+        className="users-close-button"
+        onClick={() =>
+          setShowCreateUserModal(false)
+        }
+      >
+        {t("users.close")}
+      </button>
+
+    </div>
+
+  </div>
+
+)}
 
   </div>
   );

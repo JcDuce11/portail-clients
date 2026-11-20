@@ -178,13 +178,14 @@
 
 },
 
-  "roles": {
-    "super_admin": "Super Administrateur",
-    "admin": "Administrateur",
-    "technician": "Technicien",
-    "commercial": "Commercial",
-    "client": "Client"
-  },
+ "roles": {
+  "CLIENT": "Client",
+  "REFERENT": "Référent",
+  "TECHNICIEN": "Technicien",
+  "COMMERCIAL": "Commercial",
+  "ADMIN": "Administrateur",
+  "SUPER_ADMIN": "Super Administrateur"
+},
 
   "dashboard": {
   "welcome": "Bienvenue",
@@ -400,7 +401,9 @@
     "companyCode": "Code société",
     "siteCount": "Nombre de sites",
     "createdAt": "Date de création",
-    "mainSite": "Site principal"
+    "mainSite": "Site principal",
+    "createUser": "Créer un utilisateur",
+    "selectRole": "Sélectionner un rôle"
   },
 
   "table": {

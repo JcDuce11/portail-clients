@@ -24,7 +24,9 @@
     "noCompanySelected": "Select a company",
     "companyDetails": "Company Details",
     "selectCompany": "Select a company",
-    "count": "Number of Companies"
+    "count": "Number of Companies",
+    "createUser": "Create a user",
+    "selectRole": "Select a role"
     
   },
 
@@ -174,13 +176,14 @@
 
 },
 
-  "roles": {
-    "super_admin": "Super Administrator",
-    "admin": "Administrator",
-    "technician": "Technician",
-    "commercial": "Sales Representative",
-    "client": "Client"
-  },
+ "roles": {
+  "CLIENT": "Client",
+  "REFERENT": "Referent",
+  "TECHNICIEN": "Technician",
+  "COMMERCIAL": "Sales",
+  "ADMIN": "Administrator",
+  "SUPER_ADMIN": "Super Administrator"
+},
 
   "dashboard": {
   "welcome": "Welcome",

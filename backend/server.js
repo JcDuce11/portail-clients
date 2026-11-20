@@ -7,6 +7,10 @@ const {
   getArchivedSites,
   restoreSite,
 } = require("./services/sitesService");
+const {
+  getRolesCount,
+  getAllRoles,
+} = require("./services/rolesService");
 const express = require("express");
 const cors = require("cors");
 const { getSettings, updateSettings } = require( "./services/settingsService" );
@@ -1239,6 +1243,31 @@ app.post(
 
       res.status(500).json({
         success: false,
+      });
+
+    }
+
+  }
+);
+
+app.get(
+  "/roles",
+  async (req, res) => {
+
+    try {
+
+      const roles =
+        await getAllRoles();
+
+      res.json(roles);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message,
       });
 
     }
