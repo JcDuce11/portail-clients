@@ -88,20 +88,6 @@ async function approveCompanyCreation(
   companyData
 ) {
 
-  console.log(
-    "APPROVE COMPANY START"
-  );
-
-  console.log(
-    "USER ID :",
-    userId
-  );
-
-  console.log(
-    "COMPANY DATA :",
-    companyData
-  );
-
   const [companyResult] =
     await db.execute(
       `
@@ -134,16 +120,6 @@ async function approveCompanyCreation(
   const companyId =
   companyResult.insertId;
 
-console.log(
-  "COMPANY INSERT RESULT :",
-  companyResult
-);
-
-console.log(
-  "NEW COMPANY ID :",
-  companyId
-);
-
 const companyCode =
     `CLI-${String(companyId)
       .padStart(6, "0")}`;
@@ -160,11 +136,6 @@ const companyCode =
     ]
   );
 
-  console.log(
-  "COMPANY CODE GENERATED :",
-  companyCode
-);
-
 const siteCode =
   `${companyCode}-01`;
 
@@ -172,35 +143,28 @@ const [siteResult] =
   await db.execute(
     `
     INSERT INTO sites (
-      company_id,
-      site_code,
-      site_name
-    )
-    VALUES (
-      ?,
-      ?,
-      ?
-    )
+  company_id,
+  site_code,
+  site_name,
+  is_main_site
+)
+VALUES (
+  ?,
+  ?,
+  ?,
+  ?
+)
     `,
     [
-      companyId,
-      siteCode,
-      companyData.siteName,
-    ]
+  companyId,
+  siteCode,
+  companyData.siteName,
+  1,
+]
   );
 
 const siteId =
   siteResult.insertId;
-
-console.log(
-  "SITE CREATED :",
-  siteId
-);
-
-console.log(
-  "SITE CODE GENERATED :",
-  siteCode
-);
 
 await db.execute(
   `
@@ -218,11 +182,6 @@ await db.execute(
     siteId,
     userId,
   ]
-);
-
-console.log(
-  "USER UPDATED :",
-  userId
 );
 
   return {
@@ -262,10 +221,33 @@ async function checkCompanyDuplicate(
       ]
     );
 
-console.log("DUPLICATE RESULT");
-console.log(rows);
-
   return rows;
+}
+
+async function assignCompanySite(
+  userId,
+  companyId,
+  siteId
+) {
+
+  await db.execute(
+    `
+    UPDATE users
+    SET
+      company_id = ?,
+      primary_site_id = ?,
+      status = 'ACTIVE',
+      requested_company_name = NULL,
+      requested_site_name = NULL
+    WHERE id = ?
+    `,
+    [
+      companyId,
+      siteId,
+      userId,
+    ]
+  );
+
 }
 
 module.exports = {
@@ -274,6 +256,7 @@ module.exports = {
   reactivateUser,
   approveUser,
   rejectUser,
+  assignCompanySite,
   approveCompanyCreation,
   checkCompanyDuplicate,
 };

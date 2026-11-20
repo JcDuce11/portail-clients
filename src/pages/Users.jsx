@@ -2014,13 +2014,53 @@ console.log(
 
       <button
         className="users-close-button"
-        onClick={() => {
+        onClick={async () => {
 
-          setUserToApprove(null);
+  if (
+    companyAction === "existing"
+  ) {
 
-          setShowApproveModal(false);
+    await fetch(
+      `http://localhost:3000/users/${userToApprove.id}/assign-company-site`,
+      {
+        method: "PUT",
 
-        }}
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+
+          companyId:
+            selectedCompanyId,
+
+          siteId:
+            selectedSiteId,
+
+        }),
+
+      }
+    );
+
+  } else {
+
+    await fetch(
+      `http://localhost:3000/users/${userToApprove.id}/approve`,
+      {
+        method: "PUT",
+      }
+    );
+
+  }
+
+  await loadUsers();
+
+  setUserToApprove(null);
+
+  setShowApproveModal(false);
+
+}}
       >
         {t("users.cancel")}
       </button>
@@ -2037,6 +2077,35 @@ console.log(
 }
   onClick={async () => {
 
+  if (
+    companyAction === "existing"
+  ) {
+
+    await fetch(
+      `http://localhost:3000/users/${userToApprove.id}/assign-company-site`,
+      {
+        method: "PUT",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+
+          companyId:
+            selectedCompanyId,
+
+          siteId:
+            selectedSiteId,
+
+        }),
+
+      }
+    );
+
+  } else {
+
     await fetch(
       `http://localhost:3000/users/${userToApprove.id}/approve`,
       {
@@ -2044,15 +2113,24 @@ console.log(
       }
     );
 
-    await loadUsers();
+  }
 
-    setCompanyCreated(true);
-    setSiteCreated(true);
-    setCompanyCreationStatus( t("users.companyCreatedSuccess"));
-    setUserToApprove(null);
-    setShowApproveModal(false);
+  await loadUsers();
 
-  }}
+  setCompanyCreated(true);
+
+  setSiteCreated(true);
+
+  setCompanyCreationStatus(
+    t("users.companyCreatedSuccess")
+  );
+
+  setUserToApprove(null);
+
+  setShowApproveModal(false);
+
+}}
+
 >
   {t("users.validateUser")}
 </button>

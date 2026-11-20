@@ -1672,3 +1672,122 @@ Actions :
 - Demander suppression
 - Supprimer définitivement
 
+# Gestion des utilisateurs
+
+## Validation utilisateur
+
+✅ Terminé
+
+### Cas couverts
+
+- Société existante + site existant
+- Société existante + sélection manuelle d'un site
+- Nouvelle société + nouveau site principal
+- Détection des doublons
+- Affectation automatique société/site
+- Activation utilisateur
+
+---
+
+## Workflow d'invitation utilisateur
+
+### Objectif
+
+Permettre à un REFERENT d'intégrer rapidement un nouvel utilisateur dans sa société sans passer par le workflow d'inscription et de validation administrative.
+
+### Visibilité
+
+REFERENT :
+- Peut voir le bouton "Inviter un utilisateur"
+
+ADMIN :
+- Ne voit pas ce bouton
+
+SUPER_ADMIN :
+- Ne voit pas ce bouton
+
+### Modal d'invitation
+
+Champs :
+
+- Adresse e-mail
+- Site de rattachement
+
+Le rôle est automatiquement :
+
+CLIENT
+
+### Envoi
+
+Création :
+
+- Token d'invitation
+- Date d'expiration
+
+Envoi d'un e-mail sécurisé.
+
+### E-mail
+
+Contient :
+
+- Société
+- Site
+- Lien unique de finalisation
+
+### Finalisation
+
+L'utilisateur renseigne :
+
+- Mot de passe
+- Confirmation du mot de passe
+
+Puis valide.
+
+### Politique mot de passe
+
+Valeurs par défaut :
+
+- 12 caractères minimum
+- 1 majuscule
+- 1 minuscule
+- 1 chiffre
+- 1 caractère spécial
+
+La politique est configurable par le SUPER_ADMIN.
+
+Menu :
+
+Paramètres généraux
+→ Sécurité
+→ Politique de mot de passe
+
+### Création finale du compte
+
+role = CLIENT
+
+company_id = société du référent
+
+primary_site_id = site sélectionné
+
+email_verified = true
+
+status = ACTIVE
+
+### Règles métier
+
+- Un REFERENT ne peut inviter que dans sa société.
+- Un REFERENT ne peut inviter que sur un site existant de sa société.
+- Un REFERENT ne peut inviter que des CLIENTS.
+- Le rôle n'est jamais sélectionné manuellement.
+- Aucun passage dans PENDING_APPROVAL.
+- L'utilisateur devient ACTIVE après création de son mot de passe.
+
+### Priorité
+
+Haute
+
+### Dépendances
+
+- Module e-mail
+- Gestion des tokens d'invitation
+- Politique de mot de passe configurable

@@ -56,7 +56,7 @@ const {
   approveUser,
   rejectUser,
   approveCompanyCreation,
-  checkCompanyDuplicate,
+  assignCompanySite,
 } = require("./services/usersService");
 
 const app = express();
@@ -1127,6 +1127,36 @@ app.put(
       });
 
     }
+  }
+);
+
+app.put(
+  "/users/:id/assign-company-site",
+  async (req, res) => {
+
+    try {
+
+      await assignCompanySite(
+        req.params.id,
+        req.body.companyId,
+        req.body.siteId
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+
+    }
+
   }
 );
 
