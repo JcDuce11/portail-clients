@@ -403,7 +403,20 @@
     "createdAt": "Date de création",
     "mainSite": "Site principal",
     "createUser": "Créer un utilisateur",
-    "selectRole": "Sélectionner un rôle"
+    "selectRole": "Sélectionner un rôle",
+    "manualPassword": "Définir un mot de passe manuellement",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmation du mot de passe",
+    "forcePasswordChange": "Obliger le changement du mot de passe à la première connexion",
+    "manualPasswordHelp": "Si non coché, un mot de passe temporaire sera généré et envoyé par e-mail.",
+    "passwordRuleLength": "12 caractères minimum",
+    "passwordRuleUppercase": "Au moins une majuscule",
+    "passwordRuleLowercase": "Au moins une minuscule",
+    "passwordRuleNumber": "Au moins un chiffre",
+    "passwordRuleSpecial": "Au moins un caractère spécial",
+    "passwordMatch": "Les mots de passe correspondent",
+    "emailAlreadyExists": "Cette adresse e-mail existe déjà"
+
   },
 
   "table": {

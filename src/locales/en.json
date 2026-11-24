@@ -401,7 +401,19 @@
     "companyCode": "Company code",
     "siteCount": "Number of sites",
     "createdAt": "Creation date",
-    "mainSite": "Primary site"
+    "mainSite": "Primary site",
+    "manualPassword": "Set password manually",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forcePasswordChange": "Require password change at first login",
+    "manualPasswordHelp": "If unchecked, a temporary password will be generated and sent by email.",
+    "passwordRuleLength": "At least 12 characters",
+    "passwordRuleUppercase": "At least one uppercase letter",
+    "passwordRuleLowercase": "At least one lowercase letter",
+    "passwordRuleNumber": "At least one number",
+    "passwordRuleSpecial": "At least one special character",
+    "passwordMatch": "Passwords match",
+    "emailAlreadyExists": "This email address already exists"
 
   }, 
 

@@ -106,8 +106,81 @@ function Users() {
   useState("");
   const [siteId, setSiteId] =
   useState("");
+  const [manualPassword, setManualPassword] =
+  useState(false);
+  const [password, setPassword] =
+  useState("");
+  const [confirmPassword, setConfirmPassword] =
+  useState("");
+  const [emailExists, setEmailExists] =
+  useState(false);
+  const [emailCheckLoading, setEmailCheckLoading] =
+  useState(false);
+  const [forcePasswordChange, setForcePasswordChange] =
+  useState(true);
   const [roles, setRoles] =
   useState([]);
+  const isValidEmail = (email) => {
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    email
+  );
+
+};
+
+  const isValidPassword = (password) => {
+
+  return (
+    password.length >= 12 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /\d/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
+  );
+
+};
+
+const checkEmailExists = async (
+  emailToCheck
+) => {
+
+  if (
+    !emailToCheck ||
+    !isValidEmail(emailToCheck)
+  ) {
+
+    setEmailExists(false);
+    return;
+
+  }
+
+  try {
+
+    setEmailCheckLoading(true);
+
+    const response =
+      await fetch(
+        `http://localhost:3000/users/email-exists/${encodeURIComponent(emailToCheck)}`
+      );
+
+    const data =
+      await response.json();
+
+    setEmailExists(
+      data.exists
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+  } finally {
+
+    setEmailCheckLoading(false);
+
+  }
+
+};
 
   useEffect(() => {
 
@@ -302,6 +375,8 @@ const canApproveUser = (user) => {
     );
 
   }
+
+console.log("ROLES", roles);
 
   return (
     user.company_id ||
@@ -2463,7 +2538,41 @@ await loadUsers();
       e.target.value
     )
   }
+  onBlur={() =>
+    checkEmailExists(email)
+  }
 />
+
+{
+  email &&
+  !isValidEmail(email) && (
+
+    <p
+      style={{
+        color: "red",
+        marginTop: "5px",
+      }}
+    >
+      {t("users.invalidEmail")}
+    </p>
+
+  )
+}
+
+{
+  emailExists && (
+
+    <p
+      style={{
+        color: "red",
+        marginTop: "5px",
+      }}
+    >
+      {t("users.emailAlreadyExists")}
+    </p>
+
+  )
+}
 
 <label
   style={{
@@ -2496,8 +2605,6 @@ await loadUsers();
     ) {
       return true;
     }
-
-console.log("ROLES", roles);
 
     return (
       roleItem.name !==
@@ -2606,6 +2713,215 @@ console.log("ROLES", roles);
   </>
 
 )}
+
+<hr
+  style={{
+    margin: "20px 0",
+  }}
+/>
+
+<div
+  style={{
+    marginTop: "20px",
+    marginBottom: "20px",
+  }}
+>
+
+<label>
+
+  <input
+    type="checkbox"
+    checked={manualPassword}
+    onChange={(e) =>
+      setManualPassword(
+        e.target.checked
+      )
+    }
+  />
+
+  {" "}
+
+  {t("users.manualPassword")}
+
+</label>
+
+</div>
+
+<p className="users-help-text">
+  {t("users.manualPasswordHelp")}
+</p>
+
+{manualPassword && (
+
+  <>
+
+    <label
+      style={{
+        marginTop: "15px",
+        display: "block",
+      }}
+    >
+      {t("users.password")}
+
+    </label>
+
+    <input
+      type="password"
+      className="users-input"
+      value={password}
+      onChange={(e) =>
+        setPassword(
+          e.target.value
+        )
+      }
+    />
+
+<div
+  style={{
+    marginTop: "10px",
+    fontSize: "13px",
+  }}
+>
+
+  <div>
+    {password.length >= 12
+      ? "✅"
+      : "❌"}{" "}
+    {t("users.passwordRuleLength")}
+  </div>
+
+  <div>
+    {/[A-Z]/.test(password)
+      ? "✅"
+      : "❌"}{" "}
+    {t("users.passwordRuleUppercase")}
+  </div>
+
+  <div>
+    {/[a-z]/.test(password)
+      ? "✅"
+      : "❌"}{" "}
+    {t("users.passwordRuleLowercase")}
+  </div>
+
+  <div>
+    {/\d/.test(password)
+      ? "✅"
+      : "❌"}{" "}
+    {t("users.passwordRuleNumber")}
+  </div>
+
+  <div>
+    {/[^A-Za-z0-9]/.test(password)
+      ? "✅"
+      : "❌"}{" "}
+    {t("users.passwordRuleSpecial")}
+  </div>
+
+  <div>
+    {
+      password &&
+      confirmPassword &&
+      password === confirmPassword
+        ? "✅"
+        : "❌"
+    }{" "}
+    {t("users.passwordMatch")}
+  </div>
+
+</div>
+
+    <label
+      style={{
+        marginTop: "15px",
+        display: "block",
+      }}
+    >
+      {t("users.confirmPassword")}
+    </label>
+
+    <input
+      type="password"
+      className="users-input"
+      value={confirmPassword}
+      onChange={(e) =>
+        setConfirmPassword(
+          e.target.value
+        )
+      }
+    />
+
+    <label
+      style={{
+        marginTop: "15px",
+        display: "block",
+      }}
+    >
+
+      <input
+        type="checkbox"
+        checked={
+          forcePasswordChange
+        }
+        onChange={(e) =>
+          setForcePasswordChange(
+            e.target.checked
+          )
+        }
+      />
+
+      {" "}
+
+      {t("users.forcePasswordChange")}
+
+    </label>
+
+  </>
+
+)}
+
+<button
+  className="users-approve-button"
+  disabled={
+  emailExists ||
+  !firstName.trim() ||
+  !lastName.trim() ||
+  !isValidEmail(email) ||
+  !role ||
+  (
+    (role === "CLIENT" ||
+     role === "REFERENT") &&
+    (
+      !companyId ||
+      !siteId
+    )
+  ) ||
+  (
+    manualPassword &&
+    (
+      !isValidPassword(password) ||
+      password !== confirmPassword
+    )
+  )
+}
+  onClick={() => {
+
+    console.log(
+      "CREATE USER",
+      {
+        firstName,
+        lastName,
+        email,
+        role,
+        companyId,
+        siteId,
+      }
+    );
+
+  }}
+>
+  {t("users.createUser")}
+</button>
 
       <button
         className="users-close-button"

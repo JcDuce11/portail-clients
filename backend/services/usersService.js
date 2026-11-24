@@ -250,6 +250,23 @@ async function assignCompanySite(
 
 }
 
+async function emailExists(email) {
+
+  const [rows] =
+    await db.execute(
+      `
+      SELECT id
+      FROM users
+      WHERE email = ?
+      LIMIT 1
+      `,
+      [email]
+    );
+
+  return rows.length > 0;
+
+}
+
 module.exports = {
   getAllUsers,
   disableUser,
@@ -259,4 +276,5 @@ module.exports = {
   assignCompanySite,
   approveCompanyCreation,
   checkCompanyDuplicate,
+  emailExists,
 };

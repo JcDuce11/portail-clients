@@ -61,6 +61,7 @@ const {
   rejectUser,
   approveCompanyCreation,
   assignCompanySite,
+  emailExists,
 } = require("./services/usersService");
 
 const app = express();
@@ -1260,6 +1261,35 @@ app.get(
         await getAllRoles();
 
       res.json(roles);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+
+    }
+
+  }
+);
+
+app.get(
+  "/users/email-exists/:email",
+  async (req, res) => {
+
+    try {
+
+      const exists =
+        await emailExists(
+          req.params.email
+        );
+
+      res.json({
+        exists,
+      });
 
     } catch (error) {
 
