@@ -267,12 +267,84 @@ async function emailExists(email) {
 
 }
 
+async function createUser(
+  userData
+) {
+
+  const [roleRow] =
+    await db.execute(
+      `
+      SELECT id
+      FROM roles
+      WHERE name = ?
+      LIMIT 1
+      `,
+      [userData.role]
+    );
+
+  if (
+    roleRow.length === 0
+  ) {
+
+    throw new Error(
+      "Role not found"
+    );
+
+  }
+
+  const roleId =
+    roleRow[0].id;
+
+  await db.execute(
+    `
+    INSERT INTO users (
+      email,
+      password_hash,
+      firstname,
+      lastname,
+      role_id,
+      company_id,
+      primary_site_id,
+      status,
+      email_verified,
+      force_password_change
+    )
+    VALUES (
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      'ACTIVE',
+      1,
+      ?
+    )
+    `,
+    [
+      userData.email,
+      userData.passwordHash,
+      userData.firstName,
+      userData.lastName,
+      roleId,
+      userData.companyId || null,
+      userData.siteId || null,
+      userData.forcePasswordChange
+        ? 1
+        : 0,
+    ]
+  );
+
+}
+
 module.exports = {
   getAllUsers,
   disableUser,
   reactivateUser,
   approveUser,
   rejectUser,
+  createUser,
   assignCompanySite,
   approveCompanyCreation,
   checkCompanyDuplicate,

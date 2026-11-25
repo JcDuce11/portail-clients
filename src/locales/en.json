@@ -413,8 +413,11 @@
     "passwordRuleNumber": "At least one number",
     "passwordRuleSpecial": "At least one special character",
     "passwordMatch": "Passwords match",
-    "emailAlreadyExists": "This email address already exists"
-
+    "emailAlreadyExists": "This email address already exists",
+    "userCreatedSuccess": "The user was created successfully.",
+    "userCreatedError": "Unable to create the user.",
+    "invalidEmail": "Invalid email address"
+    
   }, 
 
   "table": {

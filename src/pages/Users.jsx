@@ -110,6 +110,10 @@ function Users() {
   useState(false);
   const [password, setPassword] =
   useState("");
+  const [createUserSuccess, setCreateUserSuccess] =
+  useState("");
+  const [createUserError, setCreateUserError] =
+  useState("");
   const [confirmPassword, setConfirmPassword] =
   useState("");
   const [emailExists, setEmailExists] =
@@ -2880,6 +2884,22 @@ await loadUsers();
 
 )}
 
+{createUserSuccess && (
+
+  <div className="success-box">
+    {createUserSuccess}
+  </div>
+
+)}
+
+{createUserError && (
+
+  <div className="error-box">
+    {createUserError}
+  </div>
+
+)}
+
 <button
   className="users-approve-button"
   disabled={
@@ -2904,33 +2924,109 @@ await loadUsers();
     )
   )
 }
-  onClick={() => {
+  onClick={async () => {
 
-    console.log(
-      "CREATE USER",
+  console.log("CREATE USER CLICK");
+  
+    try {
+
+    await fetch(
+      "http://localhost:3000/users/create",
       {
-        firstName,
-        lastName,
-        email,
-        role,
-        companyId,
-        siteId,
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+
+          firstName,
+
+          lastName,
+
+          email,
+
+          role,
+
+          companyId:
+            companyId || null,
+
+          siteId:
+            siteId || null,
+
+          passwordHash:
+            "TEMP_PASSWORD",
+
+          forcePasswordChange,
+
+        }),
+
       }
     );
 
-  }}
+await loadUsers();
+
+setCreateUserError("");
+
+setCreateUserSuccess(
+  t("users.userCreatedSuccess")
+);
+
+setFirstName("");
+setLastName("");
+setEmail("");
+setRole("");
+setCompanyId("");
+setSiteId("");
+
+setPassword("");
+setConfirmPassword("");
+
+setManualPassword(false);
+
+setForcePasswordChange(true);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}}
 >
   {t("users.createUser")}
 </button>
 
       <button
-        className="users-close-button"
-        onClick={() =>
-          setShowCreateUserModal(false)
-        }
-      >
-        {t("users.close")}
-      </button>
+  className="users-close-button"
+  onClick={() => {
+
+    setCreateUserSuccess("");
+    setCreateUserError("");
+
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setRole("");
+
+    setCompanyId("");
+    setSiteId("");
+
+    setPassword("");
+    setConfirmPassword("");
+
+    setManualPassword(false);
+
+    setForcePasswordChange(true);
+
+    setShowCreateUserModal(false);
+
+  }}
+>
+  {t("users.close")}
+</button>
 
     </div>
 

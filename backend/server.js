@@ -62,6 +62,7 @@ const {
   approveCompanyCreation,
   assignCompanySite,
   emailExists,
+  createUser,
 } = require("./services/usersService");
 
 const app = express();
@@ -1289,6 +1290,34 @@ app.get(
 
       res.json({
         exists,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+
+    }
+
+  }
+);
+
+app.post(
+  "/users/create",
+  async (req, res) => {
+
+    try {
+
+      await createUser(
+        req.body
+      );
+
+      res.json({
+        success: true,
       });
 
     } catch (error) {

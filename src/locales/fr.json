@@ -415,8 +415,11 @@
     "passwordRuleNumber": "Au moins un chiffre",
     "passwordRuleSpecial": "Au moins un caractère spécial",
     "passwordMatch": "Les mots de passe correspondent",
-    "emailAlreadyExists": "Cette adresse e-mail existe déjà"
-
+    "emailAlreadyExists": "Cette adresse e-mail existe déjà",
+    "userCreatedSuccess": "L'utilisateur a été créé avec succès.",
+    "userCreatedError": "Impossible de créer l'utilisateur.",
+    "invalidEmail": "Adresse e-mail invalide"
+    
   },
 
   "table": {
