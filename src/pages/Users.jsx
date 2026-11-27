@@ -1297,18 +1297,33 @@ setShowDisableModal(false);
       <button
         className="users-delete-button"
         disabled={!deleteReason.trim()}
-        onClick={() => {
+        onClick={async () => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/users/${userToDelete.id}/delete`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reason: deleteReason,
+        }),
+      }
+    );
 
-  console.log(
-    "DELETE USER",
-    userToDelete.id,
-    deleteReason
-  );
+    const data = await response.json();
 
-  setDeleteReason("");
-  setUserToDelete(null);
-  setShowDeleteModal(false);
+    console.log("DELETE RESPONSE", data);
 
+    await loadUsers();
+
+    setDeleteReason("");
+    setUserToDelete(null);
+    setShowDeleteModal(false);
+  } catch (error) {
+    console.error("DELETE ERROR", error);
+  }
 }}
       >
         {t("users.deleteForever")}

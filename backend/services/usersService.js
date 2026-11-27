@@ -363,6 +363,61 @@ async function createUser(
 
 }
 
+async function deleteUser(userId, reason) {
+  
+  const [users] = await db.execute(
+  `
+  SELECT
+    email,
+    firstname,
+    lastname
+  FROM users
+  WHERE id = ?
+  `,
+  [userId]
+);
+
+if (users.length > 0) {
+  const user = users[0];
+
+  await db.execute(
+    `
+    INSERT INTO audit_logs (
+      user_id,
+      action,
+      target_type,
+      target_id,
+      details
+    )
+    VALUES (?, ?, ?, ?, ?)
+    `,
+    [
+      null,
+      "DELETE_USER",
+      "USER",
+      userId,
+      JSON.stringify({
+        email: user.email,
+        firstName: user.firstname,
+        lastName: user.lastname,
+        reason,
+      }),
+    ]
+  );
+}
+ 
+  await db.execute(
+    `
+    UPDATE users
+    SET
+      status = 'DELETED',
+      rejection_reason = ?
+    WHERE id = ?
+    `,
+    [reason, userId]
+  );
+}
+
 module.exports = {
   getAllUsers,
   disableUser,
@@ -370,6 +425,7 @@ module.exports = {
   approveUser,
   rejectUser,
   createUser,
+  deleteUser,
   assignCompanySite,
   approveCompanyCreation,
   checkCompanyDuplicate,

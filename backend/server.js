@@ -63,6 +63,7 @@ const {
   assignCompanySite,
   emailExists,
   createUser,
+  deleteUser,
 } = require("./services/usersService");
 
 const app = express();
@@ -1331,6 +1332,29 @@ app.post(
 
     }
 
+  }
+);
+
+app.put(
+  "/users/:id/delete",
+  async (req, res) => {
+    try {
+      await deleteUser(
+        req.params.id,
+        req.body.reason
+      );
+
+      res.json({
+        success: true,
+      });
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
   }
 );
 
