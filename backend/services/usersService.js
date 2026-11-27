@@ -295,7 +295,7 @@ async function createUser(
   const roleId =
     roleRow[0].id;
 
-  await db.execute(
+  const [result] = await db.execute(
     `
     INSERT INTO users (
       email,
@@ -335,6 +335,31 @@ async function createUser(
         : 0,
     ]
   );
+
+  await db.execute(
+  `
+  INSERT INTO audit_logs (
+    user_id,
+    action,
+    target_type,
+    target_id,
+    details
+  )
+  VALUES (?, ?, ?, ?, ?)
+  `,
+  [
+    null,
+    "CREATE_USER",
+    "USER",
+    result.insertId,
+    JSON.stringify({
+      email: userData.email,
+      role: userData.role,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+    }),
+  ]
+);
 
 }
 
